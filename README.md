@@ -1,5 +1,7 @@
 With this webapp code you can make your own public BitTorrent indexer using WebTorrent, totally free. WebTorrent allows torrents to be downloaded in the Browser.
 
+This code was created with the intention of a substantial non-infringing usecase: Graph Search for educational public domain torrents.
+
 The database uses Neo4j and there is a graph visualizer on the front-end. Plus a Quantum Recommendation engine, provided APIs stay up.
 
 My site is hosted at propagate.info, with an original educational use case, a "SEARCH_WRAPPER" for PDFs found on Google.
