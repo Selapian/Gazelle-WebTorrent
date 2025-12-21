@@ -4,21 +4,25 @@ function decodeEntities(encodedString) {
   return textArea.value;
 }
 
- function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
+
+function getCommaSplice(input, term){
+       var pos = $(input).caret();
+       var arr = term.split(",");
+       var value = null;
+       var index = 0;
+       for(var i=0; i<term.length; i++){
+        
+        if(term.charAt(i) === ','){
+            index++;
+        }
+        if(i === pos - 1){
+            j = index;
+            value = arr[index];
+        }
+
+       }
+       return value;
     }
-    return "";
-  }
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -152,4 +156,13 @@ function unicodeStringtoChar(codepointString) {
 
     // 3. Use the decimal integer to generate the character string
     return String.fromCodePoint(decimalCode);
+}
+
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    }
+  );
 }

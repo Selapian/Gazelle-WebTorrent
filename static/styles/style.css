@@ -34,7 +34,7 @@ body{
   background-color:#78717E;
   background: rgb(205,205,205);
 background: linear-gradient(342deg, rgba(205,205,205,1) 16%, rgba(120,113,126,1) 39%, rgba(171,171,171,1) 87%);
-  font-family: "Cairo", serif;
+overflow-x:hidden;
 }
 
 .
@@ -136,13 +136,14 @@ q:before, q:after {
   padding-bottom:16px;
 }
 
-.partial_graph, .search_graph{
+#search_graph{
+  display:none;
   margin:22px 0px 0px 0px;
   width:100%;
   position:relative;
   right:5px;
   left:5px;
-  height:350px;
+  height:333px;
   border-radius:6px;
   width:calc(100% - 10px);
   background-color:black;
@@ -304,6 +305,10 @@ h4{
    transition: width .4s ease-in-out;
 }
 
+#hero{
+  color:lightgoldenrodyellow !important;
+}
+
 body.is-seed .show-seed {
    display: inline;
 }
@@ -341,18 +346,15 @@ body.is-seed .show-leech {
   background-color: blue !important;
   font-family:"Bitcount Prop Single", system-ui;
   font-weight:400;
-  height:137px !important;
 }
 
 #status {
    color: mediumvioletred;
    font-size: 17px;
-   padding: 5px;
+   padding: 13px;
+   padding-left:5px;
 }
 
-#downloaded{
-  padding-left:5px;
-}
 
 #progressBar{
   color:#58C777 !important;
@@ -378,8 +380,8 @@ body.is-seed .show-leech {
   /*background-color:#f7f6e6;
   background-color:#fae1ec;
   background-color:silver;*/
-  padding:5px;
-  height:123px;
+  padding:0px;
+  height:121px !important;
   /*box-shadow:4px 5px 4px lightgoldenrodyellow;*/
 
 }
@@ -502,11 +504,14 @@ h3{
     box-sizing: border-box;
     top: 116px;
     bottom: 0px;
+    overflow-x:hidden;
     background-color:#fcfce8;
     background-color:#ABABAB;
     background-color:#78717E;
   background: rgb(205,205,205);
 background: linear-gradient(342deg, rgba(205,205,205,1) 16%, rgba(120,113,126,1) 39%, rgba(171,171,171,1) 87%);
+background:black;
+
   /*padding: 12px 8px 6px 8px;*/
 }
 
@@ -534,8 +539,8 @@ h2{
   display:block;
   margin:0 auto;
   z-index:1;
-  padding-top:17px;
-  padding-bottom:23px;
+  padding-top:26px !important;
+  padding-bottom:17px;
   /*text-shadow:2px 2px goldenrod;/*#385E5C;*/
 
 }
@@ -546,14 +551,16 @@ h2 span{
   /*color:#196B7D;
   color:#BCBCBC;
   text-shadow: 1px 2px #063A4C;*/
-  /*font-family: "Bitcount Prop Single", system-ui;
-  font-weight:700;*/
-  font-family:serif;
-  font-size: 37px;
+  font-family: serif, system-ui;
+  font-weight:700;
+  font-size: 33px;
   text-decoration:underline;
   color:mediumvioletred;
-  text-shadow:1px 1px cyan; /* PYRAMID */
+  text-shadow:1px 1px silver !important; /* PYRAMID */
+
   font-variant:small-caps;
+  padding:13px;
+  
 }
   
 
@@ -592,7 +599,6 @@ h3 span, h3{
 }
 
 header{
-  display:none;
   height: 116px;
   width: 100%;
   /*background-color: #e6eef5;*/
@@ -609,23 +615,17 @@ background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%
   /*background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
                 radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   */
-  background-color:#063A4C;
+  background: #11D3CC;
+  
     position: fixed;
     z-index: 999;
  
-background: rgb(0,139,139);
-background:palegoldenrod;
-background:darkgoldenrod;
-}
-
-header, #mobile_title{
-  box-shadow:1px 2px 5px goldenrod;
-  background:#50C777;
-  border-bottom:2px solid black;
-}
-
-#mobile_title{
-   border-bottom:1px solid #CDCDCD;
+background: #01D3CC;
+background: linear-gradient(171deg,rgba(17, 211, 204, 1) 0%, rgba(64, 199, 40, 1) 35%, rgba(0, 0, 0, 1) 100%);
+box-shadow:1px 4px 7px palevioletred !important;
+background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  border-bottom:5px solid silver !important; /* PYRAMID */
 }
 
 h2{
@@ -633,10 +633,6 @@ h2{
 }
 
 
-
-button{
-  border-radius:19px;
-}
 
 #buoy_preferences{
   padding:5px;
@@ -658,8 +654,8 @@ select{
 
 .tabs a, .tabs a:visited, .mobile_tabs a, .mobile_tabs a:visited{
   
-  color:palegoldenrod;
   /*font-family:"Atkinson Hyperlegible Mono", serif;*/
+  color:lightgoldenrodyellow;
   text-decoration:underline;
   font-family:serif;
   
@@ -717,10 +713,6 @@ div.home{
   font-size:16px;
 }
 
-.class{
-  color: violetred;
-}
-
 header a{
   color:palegoldenrod
 }
@@ -734,14 +726,7 @@ header a:visited{
   color: palegoldenrod;
 }
 
-#logo{
-  position:fixed;
-  top:10px;
-  left:3px;
-  opacity:.33;
-  width:50px;
-  height:48px;
-}
+
 
 .panel a, .panel a:visited{
   font-size:16px;
@@ -853,13 +838,13 @@ h1{
 
   z-index:9998;
 }
-button:not(.a-enter-vr-button, .a-enter-ar-button){
+button{
   background-color:lightseagreen;
   background-color:#385E5C;
   background-color:lightgoldenrodyellow;
   width:136px;
   height:44px;
-  border-radius:8px;
+  border-radius:5px !important;
   color:#11523E;
   color: #83DAC0;
   color:seagreen;
@@ -870,7 +855,8 @@ button:not(.a-enter-vr-button, .a-enter-ar-button){
   color:seagreen;
   color:lightcyan;
   color:lightgoldenrodyellow;
-  
+  display:block;
+  margin:0 auto;
   font-size:16px;
   
   font-family: "Bitcount Prop Single", system-ui;
@@ -908,10 +894,8 @@ text-align:center;
 
 }
 
-#recommend_source:hover{
-  background-color:goldenrod;
-  color:palegoldenrod;
-  border:2px 3px 1px #50C777;
+#recommend_source, .graph_button{
+  background-color:black;
 }
 
 
@@ -1005,12 +989,22 @@ h1{
 
 }
 
-#stupa{
-  padding:0px 0px 0px 5px;
-  width:70px;
+#logo{
+  width:100%;
   position:fixed;
-  left:5px;
-  top:0px;
+  text-align:center;
+  left:0;
+}
+
+#stupa{
+  padding:0px 0px 0px 0px;
+  width:166px;
+  left:-2px;
+  top:-23px;
+  position:absolute;
+  height:auto;
+  margin:0 auto;
+
 }
 
 
@@ -1085,6 +1079,8 @@ h1{
  filter: alpha(opacity=77);
 }
 
+
+
 #slogan{
   margin:7px;
   position:relative;
@@ -1114,17 +1110,6 @@ h1{
   height:191px;
 }
 
-#LOGOS{
-  position:fixed;
-  font-variant:small-caps;
-  left:86px;
-  top:78px;
-  font-family:"Pirata One", sans-serif;
-  color:lightgoldenrodyellow;
-
-
-  font-size:15px;
-}
 
 .queryInfoHash{
   padding-top:8px;
@@ -1200,19 +1185,18 @@ h1{
   background-color: #256854;
   background-color:#196B7D;
   background-color:#063A4C;
-  font-family: "Bitcount Prop Single", system-ui;
-  font-family:"Atkinson Hyperlegible Mono", sans-serif;
-  font-family:serif;
+  font-family: "Pirata One", "Times New Roman", system-ui;
   color:#33AEA3;
   color:#83DAC0;
-  color:lightcyan;
+  color:black;
+  text-shadow:1px 2px white;
   /*box-shadow:1px 2px 3px palevioletred;*/
   background-color:#17627C;
-  background-color:goldenrod;
   background-color:darkcyan;
   font-variant:small-caps;
-  font-size:23px;
-  border-bottom:2px dotted palevioletred;
+  font-size:24px;
+  border-bottom:7px solid gold !important; 
+  box-shadow:2px 5px 2px darkviolet !important;
   
 
 }
@@ -1283,21 +1267,6 @@ table{
   background-color:#F8F8F8;
 }
 
-.tableHeading{
-  color:#83DAC0;
-  color:#4E6FB7;
-  color:#ABABAB;
-  color:black;
-    font-family:"Atkinson Hyperlegible Mono", sans-serif;
-    font-family:"Times New Roman";
-  
-  
-}
-
-.torrentFile{
-  color:lightcyan;
-}
-
 .dtr-control{
   vertical-align:middle;
 }
@@ -1328,14 +1297,33 @@ table.dataTable tr.dtrg-group th{
   background-color:#ebdec7;
   background-color:goldenrod;
   background-color:lightcyan;
-  border-bottom:3px dotted cyan;
 }
 
-.tabs, .search{
+.tabs{
   width:1080px;
-  margin:0 auto;
-  margin-top:10px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  position:fixed;
+  top:59px;
+  height:37px;
+}
 
+.tabs li{
+  width: 196px !important; 
+  font-family:serif !important;
+}
+
+
+.search{
+  position:fixed;
+  left: 0;
+  right: 0;
+  width:1080px;
+  margin-left: auto;
+  margin-right: auto;
+  top:79px !important;
 }
 
 
@@ -1375,6 +1363,7 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   margin-top:15px
 }
 
+
 .sourceType{
   position:absolute;
   bottom:5px;
@@ -1386,14 +1375,13 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   font-family:"Secular One", Arial;
   font-family:"Secular One", sans-serif;
   color:#385E5C;/*#19e0e3;*/
-  font-family:"Atkinson Hyperlegible Mono", sans-serif;
   
   color:#063A4C;
   color:palegoldenrod;
-  color:mediumvioletred;
+  color:black;
   text-align:center;
-  text-shadow:1px 2px darkcyan; /*GIANT PYRAMID*/
-  font-family: "Pirata One", system-ui;
+  text-shadow:1px 3px white; /*GIANT PYRAMID*/
+  font-family: "Pirata One", sans-serif;
 
 
 }
@@ -1458,7 +1446,7 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 }
 
 .dataTables_wrapper{
-  margin: 25px 5px 77px 5px; /*PYRAMID*/
+  margin: 55px 5px 137px 5px; /*CYBERPUNK ATLANTEAN PYRAMID*/
 }
 
 .dtrg-group{
@@ -1503,14 +1491,13 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 }
 
 .dataTable{
-  font-family:"Times New Roman";
+  font-family:"serif";
   color:palevioletred;
   font-size:19px;
 }
 
 .dataTable a{
-  font-family:"Bitcount Prop Single", system-ui;
-  font-weight:500;
+  font-family:"serif";
 }
 
 td{
@@ -1550,15 +1537,18 @@ a:visited:not(".adv_toggle"){
 
 
 
-.tableHeading a, .tableHeading a:visited{
+.tableHeading, .tableHeading a, .tableHeading a:visited{
   color:#063A4C;
   color:#196B7D;
   color:darkcyan;
     font-family:"Atkinson Hyperlegible Mono", sans-serif;
-    font-family:"Times New Roman";
-    font-family:"Pirata One";
-
+    font-family:sans-serif;
+    font-size:16px;
   
+}
+
+.tableHeading{
+  color:#BCBCBC !important;
 }
 
 .torrentClasses{
@@ -1579,11 +1569,6 @@ a.class, a.class:visited,{
   color:darkgoldenrod;
 }
 
-
-
-.tableHeading{
-  font-size: 16px;
-}
 
 
 
@@ -1614,26 +1599,7 @@ a.class, a.class:visited,{
 
 /* HEADER SILOS */
 
-.buoys{
-  margin-top: 5px;
-}
 
-.buoy_select{
-  width: 238px;
-  height: 33px;
-  display: none;
-  font-family: "Pirata One", sans-serif;
-  font-size: 18px;
-  font-weight:bold;
-  background-color:black;
-  border-top-right-radius: 37px;
-  border-bottom-right-radius:34px;
-  color:white;
-}
-
-.buoy_select option{
-  font-size:16px; 
-}
 
 /*HEADER TABS */
 
@@ -1668,13 +1634,23 @@ a.class, a.class:visited,{
 .tabs li a{
   display:block;
   height:24px;
+  font-family:serif !important; /*serf*/
+}
+
+#anonymous{
+  padding-left:5px;
+}
+
+
+#remaining{
+  color:goldenrod !important;
 }
 
 .search input{
   border-radius: 5px 5px 6px;
-  margin: 0px 5px 0px 0px;
+  margin: 0px 16px 0px 0px;
   background-color:#FBFBF6;
-  width:203px;
+  width:180px;
   color:black;
 }
 
@@ -1694,10 +1670,6 @@ input{
 
 .tabs{
 
-}
-
-.tabs li{
-  width:208px;
 }
 
 
@@ -1734,15 +1706,13 @@ body .ui-menu-item {
 }
 .ui-autocomplete{
   max-height:310px;
-  width:299px;
-  background-color:lightcoral;
-  color:mediumvioletred;
-  text-shadow:1px 1px cyan;
-  border:2px dotted black;
-  box-shadow:2px 3px 2px palevioletred;
+  width:180px;
+  color:cyan !important;
+  border:3px dotted black;
   font-family: "Bitcount Prop Single", system-ui;
   font-weight:400px;
-
+  position:relative;
+  z-index:9999;
   overflow-y:auto;
 }
 
@@ -1857,11 +1827,6 @@ svg{
     stroke-opacity: 0.6;
   }
 
-#worldSpirit text, #source_spirit text{
-    font-size:16px;;
-    font-family:"Pirata One", sans-serif;
-}
-
 .text_opaque{
 
     opacity:.23;
@@ -1873,148 +1838,6 @@ svg{
     margin-top:5px;
   }
 
-
-/*div.world_spirit{
-   display: flex;
-   align-items: center;
-}*/
-
-#worldSpirit{
-  position:fixed;
-  top:173px;
-  height:calc(100% - 173px);
-  width:100%;
-}
-
-#overWorld, #src_overWorld{
-    display:none;
-    height:78%;
-    width:88%;
-    background-color:#f7f6e6;
-    padding-left:13px;
-    padding-right:13px;
-    padding-top:22px;
-    padding-bottom:22px;
-    position:relative;
-    z-index:956;
-    margin:0 auto;
-}
-
-.user_dialectic{
-  font-family:"Pirata Sans", sans-serif;
-}
-
-#src_close_overworld{
-  position:relative;
-}
-
-.nodes{
-    font-family:"Pirata One", sans-serif;
-}
-
-#dialectic_submit, #new_aphorism, #fresh_aphorism, #src_dialectic_submit, #src_new_aphorism, #src_fresh_aphorism{
-    
-}
-
-#src_new_aphorism{
-  margin-top:15px;
-}
-
-#close_overworld, #src_close_overworld{
-    position:absolute;
-    right:13px;
-    z-index:977;
-    top:7px;
-    width:55px;
-    height:55px;
-    font-family:"Pirata One", sans-serif;
-    background-color:palevioletred;
-    box-shadow:1px 2px 4px goldenrod;
-}
-
-#fresh_aphorism{
-    position:absolute;
-    left:8px;
-    top:75px;
-    z-index:901;
-}
-
- #src_fresh_aphorism{
-    position:relative;
-    left:8px;
-    top:8px;
-    z-index:901;
- }
-
-
-#worldSpiritHeader{
-    top:0px;
-    position:relative;
-    padding-top:13px;
-    left:8px;
-    float:left;
-}
-
-#new_aphorism, #src_new_aphorism{
-    width:266px;
-    background-color:goldenrod;
-    box-shadow:1px 2px 4px darkgoldenrod;
-}
-
-#oldOverWorld, #src_oldOverWorld{
-    height:100%;
-    width:100%;
-    position:absolute;
-    top:0px;
-}
-
-#cite, #src_cite{
-    width:100px;
-}
-
-#cite_source_span, #src_cite_source_span{
-    font-family:"Pirata One", sans-serif;
-    font-weight:bold;
-}
-
-.dialectic_input{
-    width:90%;
-}
-
-#dialectic_sources, #src_dialectic_sources{
-    width:calc(90% - 160px);
-}
-
-#aphorism_classes a, #src_aphorism_classes a{
-    color:#385E5C;
-}
-
-#newOverWorld, #src_newOverWorld{
-    height:100%;
-    width:100%;
-    position:absolute;
-    top:0px;
-    overflow-y:auto;
-}
-
-#src_overWorld{
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  z-index:9999;
-}
-
-#cite_pages, #src_cite_pages{
-    width:60px;
-}
-
-.dialectic_citations li a{
-    color:lightseagreen;
-    font-family:"Pirata One", sans-serif;
-    font-size:18px;
-}
-
-.search_dialectic_classes_input, .src_search_dialectic_classes_input{
-    width:90%;
-}
 
 .stats span{
   margin-left:8px;
@@ -2036,83 +1859,9 @@ svg{
   display:block;
   position:relative;
   bottom:29px;
+  margin-bottom:5px !important;
 }
 
-#paranoia{
-  margin-left:5px;
-}
-
-.stats_span{
-  color:palevioletred;
-  float:left;
-  font-family:"Pirata One", sans-serif;
-  font-size:20px;
-}
-
-#aphorism_title, #src_aphorism_title{
-    width:90%;
-    padding:8px;
-    padding-top:0px;
-    margin-top:7px;
-    padding-left:0px;
-    font-variant:normal;
-    font-family:"Pirata One", sans-serif;
-}
-
-#aphorism_text, #src_aphorism_text{
-    font-family:"Pirata One", sans-serif;
-    margin-top:45px;
-    width:90%;
-    height:450px;
-    
-}
-#dialectic_title, #src_dialectic_title{
-    width:90%;
-    height:33px;
-}
-
-#dialectic_text, #src_dialectic_text{
-    width:90%;
-    margin:0 auto;
-    margin-top:16px;
-    height:450px;
-}
-
-#newOverWorld, #src_newOverWorld{
-    display:none;
-}
-
-
-#worldSpirit{
-
-    z-index:900;
-    left:0;
-}
-
-
-/* USER */
-
-#buoys_h2{
-  display: none;
-}
-
-#invites_h2{
-  display: none;
-}
-
-.errors_msg{
-  color: red;
-}
-
-.pos_msg{
-  color: palevioletred;
-}
-
-.buoys li{
-  display: block;
-  float: left;
-  clear: left;
-}
 
 .torrentsTable{
   overflow-x:auto;
@@ -2148,11 +1897,9 @@ svg{
  
   font-family:"Atkinson Hyperlegible Mono", sans-serif;
   font-family: "Bitcount Prop Single", system-ui;
-  font-family:"Pirata One", sans-serif;
-  font-family:serif;
 
 
-  font-size:13px;
+  font-size:16px;
 }
 
 .torrentsTable td:first-child, .torrentsTable th:first-child{
@@ -2248,101 +1995,9 @@ td{
 
 /* ST_GEORGE */
 
-#st_george_header{
-  background-color: cyan;
-  height: 30px;
-  position: fixed;
-  right: 0;
-  bottom: 312px;
-  width: 240px;
-  box-shadow: -3px -3px 2px 0 goldenrod;
-  text-align: right;
-  overflow_hidden;
-  opacity: .7;
-  font-family:  "Maven Pro", serif;
-  z-index: 9998;
-  border-top-left-radius: 13px;
-}
 
 
-#st_george input, #st_george button{
-  height: 60px;
-}
-
-#st_george{
-  position: fixed;
-  right: 0;
-  bottom: 0px;
-  opacity: .8;
-  height: 312px;
-  box-shadow: -3px -3px 2px 0 palegoldenrod;
-  width: 240px;
-  z-index: 9998;
-}
-
-#st_george p{
-  font-family : "Imperial Script", sans-serif;
-  height: 279px;
-  width: 240px;
-  position: absolute;
-  bottom: 33px;
-  background-color: lightcyan;
-  
-  overflow-y: auto;
-  font-size: 20px;
-}
-
-#st_george a{
-  position: relative;
-  z-index: 9999;
-}
-
-#st_george_hide{
-  position: relative;
-  right: 0px;
-  font-size: 18px;
-  padding: 13px;
-  z-index: 9998;
-}
-
-#st_george_show{
-  position: relative;
-  right: 0px; 
-  font-size: 18px;
-  padding: 13px;
-  z-index: 9998;
-}
-
-
-#st_george button{
-  width: 50px;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-
-#st_george input{
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 190px;
-}
-
-#st_george img{
-  width: 206px;
-  height: 188px;
-  position: absolute;
-  left: 17px;
-  bottom: 94px;
-  z-index: 800;
-  opacity: .3;
-}
-
-#torrentsTitle{
-  font-family:"Noto Sans Egyptian Hieroglyphs";
-}
-
-.mobile_title, .mobile_menu{
+.mobile_title, .mobile_menu, #mobile_menu{
   display:none;
 }
 
@@ -2382,25 +2037,23 @@ div.home{
 .adv_toggle{
   font-family: "Secular One", sans-serif;
   font-variant:small-caps;
-  font-size:40px;
+  font-size:36px;
   position:relative;
-  left:0px;
-  top:7px;
   width:40px;
   float:left;
   
 }
 
 .adv_plus{
-  top:8px;  
+
 }
 
 .adv_minus{
-  top:4px;
+
 }
 
 .adv_toggle{
-  padding-left:5px;
+
 }
 
 a.adv_toggle{
@@ -2409,18 +2062,20 @@ a.adv_toggle{
 
 a.class{
   color:darkgoldenrod !important;
+  font-family:serif !important;
 }
+
+/* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:darkgoldenrod !important;
-  color:white !important;
+  background-color:black !important;
+  color:lightgoldenrodyellow !important;
 }
 
 
 .adv_search{
   width:301px;
-  height: 480px;
-  height:60px;
+  height:450px;
   margin-left:5px;
   margin-bottom:33px;
   text-align:center;
@@ -2430,34 +2085,28 @@ a.class{
   border-radius:27px;*/
   
   margin:0 auto;
+  margin-bottom:14px !important;
   --angle: 0deg;
   /*border: 3px solid;
   border-image: conic-gradient(from var(--angle), red, yellow, lime, aqua, blue, magenta, red) 1;
   
   animation: 10s rotate linear infinite;
   box-shadow:4px 3px 5px black;*/
-  border-radius:15px;
-  background-color:#58C777;
-  border:3px dotted mediumvioletred;
+  border-radius:17px !important;
+
+  background: lightgoldenrodyellow !important;
+  box-shadow:2px 3px 5px white;
+  border:2px solid silver;
 
   
 }
+
+.stream{
+  padding:5px 0px 5px 0px;
+}
+
 #publishers a, #publishers a:visited{
   color:steelblue;
-}
-
-@keyframes rotate {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-
-  
 }
 
 .upload a:not(.removeAuthor, .torrentArea a){
@@ -2484,20 +2133,28 @@ a.class{
   margin-top:13px;
 }
 
-
+/*
 #recommend_source{
-  font-family:"Noto Sans Egyptian Hieroglyphs";
-  font-size:32px;
+  font-family:"Bitcount Prop Single";
+  font-size:16px;
   height:77px;
-  width:77;
+  width:78px;
   padding:0px;
-  box-shadow:1px 3px 1px lightgoldenrodyellow;
-  border:2px solid black;
-  color:darkgoldenrod;
-  background-color:palegoldenrod;
-  margin-top:13px;
+  box-shadow:2px 3px 1px lightgoldenrodyellow;
+  border-radius:5px;
+  border:3px solid goldenrod;
+  color:white;
+  background-color:black;
+  margin-top:13px !important;
+  margin-bottom:18px !important;
 }
 
+#recommend_source:hover{
+  background-color:white;
+  color:black;
+  border:5px solid lightgoldenrodyellow;
+}
+*/
 .adv_class, .graph_class{
   width:33px;
   color:black;
@@ -2528,23 +2185,25 @@ a.class{
 }
 
 #adv_heading, #graph_heading{
-  font-family: serif;
+  font-family: "Pirata One";
   font-variant:small-caps;
-  font-size:21px;
+  font-size:29px;
   text-align:center;
   float:left;
-  
+  display:block;
+  margin:0 auto;
   font-weight:bold;
-  position:relative;
-  top:17px;
-  left:38px;
-  
+  width:100%;
+  text-align:center;
+  color:black !important;
+  text-shadow: 1px 2px white;
+    
 
 }
 
 #adv_heading:not(.adv_heading_violet){
-  color:#58C777;
-  color:white !important;
+  color:#58C777 !important;
+  padding:16px;
   font-weight:bold; 
 
 }
@@ -2611,7 +2270,7 @@ a.class{
 
 
 .authors a{
-  color:cyan !important;
+  color:blue !important;
 }
 
 .classes a{
@@ -2675,24 +2334,6 @@ a.class{
   position:relative;
 }
 
-.AtlantisCoin p{
-  font-size:16px;
-  font-family:"Pirata One", sans-serif;
-  color:darkcyan;
-  margin-left:8px;
-}
-
-.AtlantisCoin input{
-  width:300px;
-  height:32px;
-  margin-left:8px;
-}
-
-.AtlantisCoin button{
-  width:200px;
-  margin-left:8px;
-}
-
 .adv_plus{
   display:none;
 }
@@ -2729,9 +2370,9 @@ a.class{
   font-family:"Markazi Text", serif;
   font-family:"Atkinson Hyperlegible Mono", sans-serif;
   font-family: "Times New Roman";
-  font-family:"Pirata One", "Times New Roman";
+  font-family:"sans-serif", "Times New Roman";
   
-  font-size:17px;
+  font-size:16px;
 }
 
 .sourceTab{
@@ -2743,12 +2384,12 @@ a.class{
 }
 
 .torrentClasses a, .torrentClasses a:visited{
-  font-family:"Times New Roman",serif;
-  font-size:12px;
+  font-family:sans-serif;
+  font-size:13px;
 }
 
  .adv_show{
-    display:none;
+    display:block;
   }
   
   .adv_plus{
@@ -2766,6 +2407,7 @@ a.class{
     background:black;
     background-color:lightgoldenrodyellow;
     background-color:lightcyan;
+    background-color:#CDCDCD !important;
     
   }
 
@@ -2801,8 +2443,12 @@ a.class{
   color:mediumvioletred !important;
 }
 
+h2 span{
+  text-shadow:none;
+}
+
 #torrentsTitle span{
-  color:black;
+  color:goldenrod;
 }
 
 #sourceTitle span{
@@ -2810,7 +2456,7 @@ a.class{
 }
 
 #authorTitle span{
-  color:cyan;
+  color:blue;
 }
 
 #classTitle span{
@@ -2821,6 +2467,17 @@ a.class{
   color:mediumvioletred;
 }
 
+div.authors h2 span{
+  color:blue !important;
+}
+
+div.classes h2 span{
+  color:darkgoldenrod !important;
+}
+
+div.publishers h2 span{
+  color:mediumvioletred !important;
+}
 
   .upload p{
     font-family:"Bitcount Prop Single", system-ui;
@@ -2829,15 +2486,20 @@ a.class{
   }
 
 
+
   
 
   .upload label{
     color:darkgoldenrod;
   }
 
+
+
+
 @media only screen and (max-width: 1079px) {
   .partial_graph, .search_graph{
    /* display:none; */
+   display:none;
    margin-top:17px;
   }
   
@@ -2847,37 +2509,10 @@ a.class{
   
   #adv_heading{
     font-size:20px;
-    top:4px;
-    left:27px;
-  }
-  
-  .adv_toggle{
-    top:-4px;
-  }
 
-  .adv_minus{
-    top:-7px;
   }
   
  
-  
-  #logo{
-    top:4px;
-    left:-3px;
-  }
-  
- 
-  
-  .adv_toggle{
-    left:-9px;
-  }
-
-  
-  .download_all{
-    padding-top:8px;
-  }
-
-  
   
   .mobile{
     display:block;
@@ -2894,10 +2529,6 @@ a.class{
     width:300px;
   }
 
-  #home{
-    width:300px;
-  }
-
   .dtr-control{
     width:200px;
   }
@@ -2906,33 +2537,20 @@ a.class{
     overflow-x:auto;
   }
 
-  .titleBreak{
-    padding:5px 5px 5px 5px; /*PYRAMID*/
+  .titleBreak{  
     width:100%;
-    height:110px;
+    height:107px !important;
   }
 
   
 
-.dataTables_wrapper{
-  margin: 26px 5px 21px 5px;
-  box-sizing:border-box;
-}
+  .dataTables_wrapper{
+    box-sizing:border-box;
+  }
 
 
   .row:last-child{
     width:93.5%;
-  }
-
-  #graph{
-    top:55px;
-    position:fixed;
-    height:calc(100% - 55px);
-    bottom:0;
-  }
-
-  #3d-graph{
-    bottom:0;
   }
 
   h3{
@@ -2941,17 +2559,11 @@ a.class{
     font-weight:bold;
   }
 
-  .sorting{
-    font-size:24px;
-  }
-  
-  
-
   header{
     height:55px;
-    box-shadow:0;
-    
+    border-bottom:1px solid black !important;
   }
+
   .ui-autocomplete{
     width:299px;
   }
@@ -2963,53 +2575,6 @@ a.class{
     margin:0 auto;
   }
   
-  #LOGOS{
-    left:50px
-  }
-
-  
-  .dataTable{
-    color:lightseagreen;
-    font-size:12px;
-  }
-  
-  #fresh_aphorism{
-    width:200px;
-    font-size:18px;
-    position:relative;
-    left:20px;
-    top:6px;
-  }
-
-  #worldSpiritHeader{
-    top:0px;
-    position:relative;
-    padding-top:13px;
-    left:5px;
-    width:100px;
-    float:left;
-  }
-
-  #worldSpirit{
-    
-  }
-
-  .health a, .health span{
-    font-size:24px;
-  }
-  
-
-  #LOGOS{
-    left:50px;
-    top:39px;
-    font-size:9px;
-  }
-
-  #overlay{
-    top:55px;
-    height:calc(100% - 55px);
-  }
-
   .ANCHOR_partial{
     top:55px;
     height:calc(100% - 55px);
@@ -3056,31 +2621,13 @@ background:darkgoldenrod;
 background:#58C777;
 background-color:#fae1ec;
 background-color:lightgoldenrodyellow;
-background:#BCBCBC;
+background:darkcyan !important;
   }
-
   
-
-
-  .mobile_buoy_div{
-    margin-left:6px;
-    display:block;
-    position:relative;
-    top:5px;
-    left:200px;
-    width:100%;
-    z-index:9999;
-  }
-
-  .buoy_select{
-    font-size:24px;
-    height:40px;
-    width:260px;
-  }
 
   h1{
     position:fixed;
-    top:9px;
+    top:10px;
     left:0px;
     z-index:9998;
   }
@@ -3099,17 +2646,17 @@ background:#BCBCBC;
     float:left;
     left:5px;
     width:100%;
+    opacity:1;
+
   }
 
   .search input{
     width:299px;
+    padding-top:2px;
 
   }
 
-  #worldSpirit{
-    top:55px;
-    height:calc(100% - 55px);
-  }
+  
 
   .mobile_panel{
     float:left;
@@ -3124,15 +2671,6 @@ background:#BCBCBC;
   }
 
   
-
-
-  #slogan{
-    position:fixed;
-    top:28px;
-    left:200px;
-    color:coral;
-  }
-
   .buoy_select{
     width:299px;
     margin-top:13px;
@@ -3142,7 +2680,7 @@ background:#BCBCBC;
     display:none;
   }
 
-  .mobile_title{
+  header{
     display:block;
     width:100%;
 
@@ -3173,25 +2711,6 @@ background:#BCBCBC;
     z-index:9999;
 }
 
-@keyframes rotate {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-
-  
-   
-  }
-
-  .download_all_top{
-    margin-left:5px;
-  }
-  
 
   .graph_search{
     width:100%;
@@ -3203,33 +2722,6 @@ background:#BCBCBC;
     padding:5px;
   }
 
-  .graph_mobile{
-    font-family: "Pirata One", sans-serif;
-    font-size:32px;
-    text-align:center;
-    color:darkcyan;
-    position:fixed;
-    z-index:9998;
-    color:mediumvioletred;
-    text-shadow:1px 2px lightgoldenrodyellow;
-    margin:20px 0px 20px 32px;
-  }
-
-  .graph_toggle{
-    font-weight:bold;
-    font-family:"Pirata One", sans-serif;
-    font-size:55px;
-    color:cyan;
-    padding-top:7px;
-    position:fixed;
-    z-index:9998;
-  }
-
-  .graph_toggle:visited{
-    color:cyan;
-  }
-  
-
   .mobile_tabs{
     margin-top:0px;
     margin-left:5px;
@@ -3238,7 +2730,7 @@ background:#BCBCBC;
   }
 
   .mobile_panel{
-    margin-top:26px;
+    margin-top:19px;
     margin-left:5px;
     width:100%;
 
@@ -3249,8 +2741,10 @@ background:#BCBCBC;
     margin:16px 0 17px 0;
   }
    .mobile_panel li{
-    margin:16px 0 0px 0;
+    padding:5px;
    }
+
+ 
 
    h2{
     
@@ -3259,8 +2753,6 @@ background:#BCBCBC;
 
   .mobile_panel li a{
       font-size:16px;
-      padding:7px 0px 7px 0px;
-      margin:15px 0px 15px 0px;
       /*background: linear-gradient(to right, #ef5350, #f48fb1, #7e57c2, #2196f3, #26c6da, #43a047, #eeff41, #f9a825, #ff5722);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;*/
@@ -3268,27 +2760,16 @@ background:#BCBCBC;
     color:seagreen;
     color:lightcoral;
     color:palevioletred;
-    color:#fae1ec;
+
+    color:black;
+    font-family:"Bitcount Prop Single", system-ui;
   }
   
-  .stat{
-    color:palegoldenrod;
-    font-size:16px;
-    
-  }
-
-  .health a, .health span{
-      padding:13px 0px 13px 0px;
-      margin:15px 0px 15px 0px;
-      font-size:16px;
-      
-  }
-
   .mobile_tabs li a{
       font-size:24px;
       padding:13px 0px 13px 0px;
       border-bottom:1px solid #CDCDCD;
-      
+    font-family:serif;
     /*color:lightseagreen;*/
     font-variant:small-caps;
     display:block;
@@ -3299,38 +2780,15 @@ background:#BCBCBC;
     height:40px;
     line-height:40px;
   } 
-
-  .health a{
-    color:#83DAC0;
-  }
-
-  .health span{
-    color:#83DAC0;
-  }
-
   
 
   #search_ul{
     margin-bottom:0px;
   }
 
-  /* MISC PARTIALS */
-
-  #invites li{
-    display: block;
-  }
-
-  .flagler{
-    position: fixed;
-    bottom: 0px;
-    height: 6px;
-    width: 100%;
-    z-index: 999;
-  }
-
   h2{
     font-size: 40px;
-    padding: 8px 0px 5px 0px;
+    padding: 13px 0px 5px 0px !important;
     text-align:center;
     margin:0 auto;
     width:100%;
@@ -3338,7 +2796,7 @@ background:#BCBCBC;
   }
 
   h2 span{
-    font-size:27px;
+    font-size:29px;
   }
 
 
@@ -3352,11 +2810,6 @@ background:#BCBCBC;
 
   /* TORRENT */
 
-
-  #links{
-    position: relative;
-    z-index: 999;
-  }
 
   /* HEADER */
 
@@ -3372,9 +2825,9 @@ background:#BCBCBC;
   .mobile_panel li a:not(.health a){
     display:block;
     width:290px;
-    padding:16px;
     padding-left:0px;
-    border-bottom:1px solid #CDCDCD
+    border-bottom:1px solid #CDCDCD;
+    font-family:"Bitcount Prop Single", serif;
   }
 
   #upload_inst{
@@ -3401,14 +2854,6 @@ background:#BCBCBC;
 }
 
 
-  .tableHeading{
-    font-size: 16px;
-  }
-  
-  .tableHeading a, .tableHeading a:visited{
-    font-size:16px;
-  }
-
  
 
   /* UPLOAD */
@@ -3420,7 +2865,7 @@ background:#BCBCBC;
     margin-top:33px;
     width:301px;
     padding:13px;
-    height:60px;
+    height:478px;
   }
   
   .mobile_h1{
@@ -3433,15 +2878,12 @@ background:#BCBCBC;
   
   
   #stupa{
-    top:0px;
-    display:block;
-    z-index:9999;
-    width:auto;
-    height:55px;
-    left:auto;
-    right:5px;
-    position:fixed;
-    padding-left:0px;
+    width:88px !important;
+    height:auto;  
+    top:-17px !important /*GREAT PYRAMID*/;
+    left:13px;
+    margin:0 auto;
+
   }
   
   h3{
@@ -3450,8 +2892,6 @@ background:#BCBCBC;
 
  
   .recommend{
-    margin-left:5px;
-    position:static;
     margin-top:11px;
   }
   
@@ -3485,7 +2925,6 @@ background:#BCBCBC;
   
   .sorting{
     letter-spacing:0px;
-    font-size:18px;
     /*background-color:palevioletred;*/
   }
   
@@ -3503,17 +2942,61 @@ background:#BCBCBC;
 
  
  
-
-
-  .adv_minus{
-    top:-8px;
+  /* OBELISK */
+  .mobile_search input{
+    width:250px;
   }
 
+  .search{
+    top:17px !important;
+  }
 
-
-  
+  /* WHY DID I AUTOCOMPLETE */
+  .ui-autocomplete{
+    width:250px;
+  }
   
 
 
 }
 
+/* CAPTAIN'S LOG 12/19/2025 "9:05" */
+a.author{
+  color:blue !important;
+}
+
+/* 12;22 */
+label.adv_class, input.adv_class{
+  padding-top:10px;
+}
+
+#top10Title span{
+  color: black;
+}
+
+/* 9:16; */
+.loading:not(.violet){
+  color:seagreen !important;
+ }
+
+.red{
+  color:red !important;
+}
+
+.torrentClasses{
+  padding-top:13px;
+  padding-bottom:13px;
+}
+
+.mobile_menu{
+  background-color:mediumvioletred !important;
+}
+
+/* GOT */
+ a.class{
+  padding:4px;
+ }
+
+.violet{
+  color:violet !important;
+}

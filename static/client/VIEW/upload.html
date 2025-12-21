@@ -1,0 +1,290 @@
+<div class="titleBreak">
+  <h2><span id="uploadHeading">Upload</span></h2>
+</div>
+<h3>Legal</h3>
+<p>This is a Public Domain Educational BitTorrent Indexer, so please ensure that your upload respects U.S. Copyright Law.</p><br>
+<p>We are not responsible for any infringing content uploaded by end-users, and will promptly respond to DMCA requests.</p>
+<h3>Good Librarian!</h3>
+<p>According to "Gazelle Table Logic," Editions of the same Source (for example, two translations of Plato's Republic) should be listed under the same Gazelle Table Heading. So before you upload anything, 1) Type the Source title into autocomplete. 2) If it exists, you will go to the Source's Upload page; 3) Then add the new Edition from that Source's Upload Page. If the Source doesn't come up, simply type the Title into the input field to upload a "New Source."</p>
+<br><p>More Advanced: 4) If, for example, an audiobook and ebook have the same edition (or translation), select the existing EDITION from the Edition drop-down menu after autocompleting the Source Title. This way, Diamond Sutra Trans. Red Pine will list a PDF and mp3 under the same Edition heading when the Gazelle Table is rendered.</p>
+<br><p>Ebooks, Audiobooks, Classical Music, and Documentaries are allowed.</p>
+<br><p>Thus the Graph Logic is Source->Edition->Torrent.</p>
+<p><br>When you add a New Author, be sure to click the "Create Author" button, after providing the name in APA Format (Last Name, Initials.) If the Author already exists on the site, find the name in the dropdown bubble. If you do not autocomplete or Create an Author, no Author will be established. If the APA format of an Author already exists, but it is not the same as your Source Author, put that author's genre in (Paranthesis) - e.g., Smith, J. (Alchemist)</p>
+<h3>How to Seed:</h3>
+<p>Please only upload if you can seed willingly, very preferrably with BiglyBT (using their WebTorrent plugin) or WebTorrent Desktop. In the Upload Prompt, you must upload the media you wish to distribute, not the ".torrent" file. An infoHash will be generated using WebTorrent in the Browser as soon as you upload your media. After WebTorrent generates the infoHash, please download the MagnetURI or Torrent File, and seed from a Desktop client or seedbox for as long as you can.</p>
+<h3>Self-Publishing</h3>
+<br><p>propagate.info is also a Self-Publishing platform! To self-publish your media, add yourself as an Author, and Set "propagate.info" as your publisher under Editions. Then anyone can see a "Vanity House" of our own authors by going to the publisher page "propagate.info!"</p>
+<h3>My Thank You</h3>
+<p>Thank you for taking the time to index your infoHash.</p>
+<h3 id="newUploadHeader"><span>Uploading</span><a href="#"></a></h3>
+<form>
+	<div class="newUpload">
+		<div class="grid_0">
+			<label for="type">Type: </label>
+		</div>
+		<div class="grid_1">
+			<select id="type">
+				
+			</select>
+		</div>
+    <br>
+		<br>
+		<br>
+		<div class="grid_0">
+			<label for="title">Source Title: </label>
+		</div>
+		<div class="grid_1">
+			<div class="search_sources">
+				<input id="title" class="searchField search_upload_sources_input" name="title" placeholder="Source Title"><ul class="autosuggestBox"></ul>
+			</div>
+			<input id="uuid" name="uuid" placeholder="uuid">
+		</div>
+		
+		<br>
+		<br>
+		<br>
+		<div class="grid_0">
+			<label for="date">Original Date: </label>	
+		</div>
+		<div class="grid_1">
+			<input id="date" placeholder="First Edition Date" name="date">
+		</div>
+		<br>
+		<br>
+		<br>
+		<div class="grid_1" id="authors_area">
+		</div>
+		<div class="grid_0">
+			<label for="author_input">Author: </label>
+		</div>
+		<div class="grid_1">
+			<div class="search_authors">
+				<input name="author" class="searchField search_upload_authors_input" autocomplete="off" id="author_input" placeholder="Author"><ul class="autosuggestBox"></ul>
+			</div>
+			<!--<button id="add_author">Add Author</button>!-->
+			<button id="create_author">New Author</button><!-- TODO: warning if not already created !-->
+		</div>
+		<br><br><br>
+	  <div class="grid_0">
+			<label for="classes_input">Classes (comma-separated): </label>
+		</div>
+		<div class="grid_1">
+			<div class="search_classes">
+				<input name="classes" class="searchField search_upload_classes_input" id="classes_input" placeholder="Classes, comma separated"><ul class="autosuggestBox"></ul>
+			</div>
+		</div>
+    <br><br><br>
+
+		<script>
+			var authorCount = 0;
+			function addAuthorArea(id, author, cb){
+				var a = document.createElement("a");
+				$(a).text(decodeEntities(decodeEntities(author)) + " ");
+				$(a).attr("href", "#author?uuid=" + id)
+				$(a).click(function(e){
+					e.preventDefault();
+					ANCHOR.route("#author?uuid=" + id);
+				})
+				var div = document.createElement("div");
+				$(div).attr("id", "authors_div")
+				$(div).attr("data-id", id)
+
+				if(authorCount === 0){
+					$(div).append("<label id='authors_grid' class='grid_0'>Authors: </label>")
+				}
+				$("#authors_area").append(div);
+
+				authorCount++;
+
+				$(div).attr("id", "#author_" + id);
+
+				$(div).append(a);
+        
+				var select = document.createElement("select")
+				$(select).attr("id", "author_importance");
+
+				//$(div).append(select);
+        
+				var input = document.createElement("input");
+				$(input).attr("placeholder", "Author role (optional)");
+				//$(div).append(input);
+
+				$("#author_input").val("");
+      
+				var remove = document.createElement("a");
+				$(div).append(remove);
+				$(remove).addClass("removeAuthor");
+				$(remove).text("[RM]");
+				$(remove).attr("href", "javascript:;");
+				$(remove).after("<id='author_break_" + id + "' class='author_break'>")
+				$("#authors_grid").after("<div class='grid_1'><br id='author_break_" + id + "' class='author_break'><br id='author_break_" + id + "' class='author_break'></div>")
+				cb(null, div, select, input, remove, id);
+			}
+
+			function removeAuthorArea(div, id){
+				$(div).remove();
+				$("#author_break_" + id).remove();
+			}
+
+		</script>
+	</div>
+	<br><br><br><br><br><br><br><br><br>
+	<div class="grid_0">
+		<label for="edition_check">Edition Info (APA)</label>
+	</div>
+	<div class='grid_1'>
+		<input id="edition_check" name="edition_check" type="checkbox" value="edition">
+	</div>
+	<br><br>
+	<div id="edition">
+		<br>
+		<!--<label>Enter edition information, such as publisher or "2nd Edition." Tags in edition title should be divided by a /</label>!-->
+		<div class="grid_0 existing_edition">
+			<label for="edition_select">Existing Edition?</label>
+		</div>
+		<div class="grid_1 existing_edition">
+			<select id="edition_select" name="edition_select">
+			</select>
+		</div><br><br><br>
+		<div id="newEdition">
+			<div class="grid_0">
+				<label for="edition_publisher">Publisher/Journal: </label>
+			</div>
+			<div class="grid_1">
+				<input name="edition_publisher" id="edition_publisher" placeholder="Publisher or Journal (e.g. Viking)"><ul class="autosuggestBox"></ul>
+			</div><br><br><br>
+			<div class="grid_0">
+				<label for="edition_title">Translator-Edition-Volume:</label> 
+			</div>
+			<div class="grid_1">
+				<input name="edition" id="edition_title" placeholder="1st Edition. Vol I. Trans. Robert Fagles.">
+			</div>
+			<br><br><br>
+			<div class="grid_0">
+				<label for="edition_no">No. (for Journal Articles):</label> 
+			</div>
+			<div class="grid_1">
+				<input name="edition_no" id="edition_no" placeholder="No.">
+			</div>
+			<br><br><br>
+			<div class="grid_0">
+				<label for="edition_pages">Pages (for Jounal Articles): </label>
+			</div>
+			<div class="grid_1">
+				<input id="edition_pages" placeholder="Pages">
+			</div>
+			<br><br><br>
+			<div class="grid_0">
+				<label for="edition_date">Edition Date (if Different from Original Source): </label>
+			</div>
+			<div class="grid_1">
+				<input id="edition_date" name="edition_date" placeholder="Edition Date Published">
+			</div>
+		</div>
+	</div>
+	
+  <br><br><br><br><br><br>
+	<div class="grid_0">
+		<label for="media">Torrent media: </label>
+	</div>
+	<div class="grid_1">
+		<select id="media">
+		</select>
+		<select id="format">
+		</select>
+	</div>
+  <br><br><br><br><br><br>
+  <div class="APA">
+		<div class="grid_0">
+			<label for="rename_file">Rename File to APA Format</label>
+		</div>
+		<div class="grid_1">
+			<button id="APA">Copy Filename</button>
+		</div>
+	</div>
+  <br><br><br><br><br><br>
+	<div id="torrent_area">
+			<div class="grid_0">
+				<label for="upload_files">Upload files: </label>
+			</div>
+			<div class="grid_1">
+				<input type="file" id="upload_files" multiple>
+			</div><br><br><br>
+			<div class="grid_0">
+				<label for="infoHash">infoHash</label>
+			</div>
+      
+			<div class="grid_1">
+				<!--<input type="file" id="upload_files" multiple name="files">!-->
+				<input disabled id="infoHash" placeholder="infoHash (required)">
+			</div>
+			<br><br><br>
+      <div class="grid_0">
+        <label for="seed_torrent">Remember to seed (preferrably using WebTorrent.)</label>  
+      </div>
+      <div class="grid_1">
+        <div class="torrentArea">
+          
+        </div>
+			  <div class="torrent_message">
+              
+        </div>
+		  </div>
+	</div>
+	<br><br><br><br><br><br>
+  <div class="grid_0">
+		<label>Copyright</label>
+	</div>
+	<div class="grid_1">
+		<input checked type="radio" class="copyright" name="copyrightz" id="public_domain">
+		<label for="public_domain">Public Domain</label>
+    <!--
+		<input type="radio" class="copyright" name="copyrightz" id="copyrighted">
+		<label for="copyrighted">Copyrighted ($LINK)</label>!-->
+	</div>
+  <!--
+	<div class="copyrighted">
+		<div class="grid_0 paid copy">
+			<label for="LINK_price">Payment</label>
+		</div>
+		<div class="grid_1 paid copy">
+			<input id="link_price" name="LINK_price"><br>
+			<input id="link_address" placeholder = "$LINK ADDRESS" name="LINK_address">
+      
+		</div>
+	</div>
+!-->
+
+	<div class="grid_0">
+		<button id="submit">Upload!</button>
+	</div><br><br><br>
+	<div class="grid_1" id="errorsDiv">
+	</div>
+	<script>
+		function addError(msg){
+			console.log(msg);
+			$("#errorsDiv").empty();
+			$("#errorsDiv").append(msg + "<br>");
+			$("#errorsDiv").css({color : "red"});
+		}
+	</script>
+
+</form>
+<br><br><br>
+
+<!--
+<div class="merge_source">
+	<label for="merge_source_input">Merge source: </label>
+	<input id="merge_source_input" placeholder="source uuid"><button id="merge_source_button">Merge into</button>
+</div>!-->
+<script>
+	$("#merge_source_button").click(function(e){
+		var uuid = $("#merge_source_input").val();
+		e.preventDefault();
+		$.post("merge_source/" + ANCHOR.getParams().uuid, {mergeInto : uuid}, function(){
+			ANCHOR.route("#source?silo="+ getSilo().uuid + "&uuid=" + uuid);
+		})
+	})
+	
+
+</script>

@@ -64,7 +64,6 @@ var ANCHOR = {
 	,
 	route : function(origin){		
 		this._hide_partial();
-		console.log(origin)
 		if(origin === "#undefined"){
 			origin = "#"
 		}
@@ -94,16 +93,9 @@ var ANCHOR = {
 	,
 	removeParams : function(param){
 		var url = window.location.href;
-		console.log(url);
 		const params = new URLSearchParams(window.location.hash.split("?")[1]);
 		params.delete(param)
-		console.log(params.toString());
-		if(params.length > 0){
-			console.log("TRUE")
-		}
-		else{
-			console.log("FALSE");
-		}
+		
 		window.history.replaceState(null, '', window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash.split("?")[0] 
 			+ (params.length > 0 ? "?" : "") + params);
 
@@ -111,6 +103,9 @@ var ANCHOR = {
 	,
 	getParams : function(){
 		  var search = window.location.hash.split("?")[1]
+		  if(!search){
+		  	return undefined;
+		  }
 		  if(search){
 		  	  if(search.indexOf('?') > -1){
 			    search = search.split('?')[1];
@@ -148,13 +143,10 @@ var ANCHOR = {
 	}
 	,
 	_show_div : function(path){
-		console.log(path)
 		if(!path){
 			path = this._default;
 		}
-		console.log(this._default)
-		console.log ("div." + path)
-		$("div." + path).show();;
+		$("div." + path).fadeIn(777);;
 	}
 	,
 	_anchor_path : function(href){
@@ -166,7 +158,7 @@ var ANCHOR = {
 	}
 	,
 	_hide_partial : function(){
-		$(".ANCHOR_partial").hide();
+		$(".ANCHOR_partial").fadeOut(222);
 	},
 	setDefault : function(page){
 		this._default = page;

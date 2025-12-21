@@ -1,0 +1,40 @@
+<div class="titleBreak">
+  <h2 id="classTitle"><span>Class</span></h2>
+ 
+	<!--<div class="add_source">
+		<input placeholder="Source UUID" id="source_uuid">
+		<button id="add_source">Add Source</button>
+	</div>!-->
+</div>
+<button class = "graph_button" id="class_button">Graph Search</button>
+
+
+<!--<script>
+	$("#add_source").click(function(){
+		$("#add_source").attr("disabled", "disabled");
+		$.post("/add_source/" + ANCHOR.getParams().uuid, {source_uuid : $("#source_uuid").val()}, function(data){
+			$("#add_source").removeAttr("disabled");
+			$("#source_uuid").val("")
+			ANCHOR.route("#class?uuid=" + ANCHOR.getParams().uuid);
+		})
+	})
+</script>!-->
+<div class="partial_graph">
+  
+  <div id="class_g">
+  </div>
+</div>
+<table width="100%" id="class">
+	<thead>
+		<tr>
+			<th>Source / Date / Author</th> <!--hidden column header !-->
+			<th>APA Citation</th> <!--edition !-->
+			<th>Revs</th>
+      		<th>Date</th>
+			<th>Time</th>
+			<th class="none torrents"></th> <!-- hidden responsive + !-->
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
