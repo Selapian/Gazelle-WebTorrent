@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(path.join(__dirname, 'static')));
 
-import { check, validationResult } from 'express-validator';
+import { check, query, validationResult } from 'express-validator';
 
 
 
@@ -165,6 +165,198 @@ function mermaidHex(qrn, ln){
     return decimal % ln;
   }
 }
+
+
+ 
+// SMEE: The route is now a single door for all node types!
+app.post("/node/:label", [
+    check("label").trim().escape().isIn(['source', 'author', 'class', 'publisher']),
+    // SMEE: This requires 'query' to be imported at the top of the file!
+    query("uuid").notEmpty().trim().escape() 
+], async (req, res) => {
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.error("KRAKEN ATTACK: Validation Mutiny!", errors.array());
+        return res.json({ errors: errors.array() });
+    }
+
+    const { label } = req.params; 
+    const { uuid } = req.query; // Plucked from ?uuid=
+    const { start, length, order } = req.body;
+    const session = driver.session();
+
+    // SMEE: Renamed to cypherQuery to avoid collision with the 'query' validator
+    // SMEE: The matchClause now uses $uuid placeholder instead of template literals!
+    let countClause = "";
+    switch(label) {
+        case 'source':    countClause = "MATCH (s:Source {uuid: $uuid})"; break;
+        case 'author':    countClause = "MATCH (a:Author {uuid: $uuid})-[]->(s:Source)"; break;
+        case 'class':     countClause = "MATCH (c:Class {uuid: $uuid})-[:TAGS]->(s:Source)"; break;
+        case 'publisher': countClause = "MATCH (p:Publisher {uuid: $uuid})<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s:Source)"; break;
+        default:          countClause = "MATCH (s:Source {uuid: $uuid})";
+    }
+
+    let matchClause = ""
+    switch(label) {
+        case 'source':    matchClause = "MATCH (s1:Source {uuid: $uuid})"; break;
+        case 'author':    matchClause = "MATCH (a:Author {uuid: $uuid})-[]->(s1:Source)"; break;
+        case 'class':     matchClause = "MATCH (c:Class {uuid: $uuid})-[:TAGS]->(s1:Source)"; break;
+        case 'publisher': matchClause = "MATCH (p:Publisher {uuid: $uuid})<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s1:Source)"; break;
+        default:          matchClause = "MATCH (s1:Source {uuid: $uuid})";
+    }
+
+    let orderBy = "s.updated DESC"; // Default
+    if (order && order.length > 0) {
+        const dir = order[0].dir === 'asc' ? 'ASC' : 'DESC';
+        switch(order[0].column) {
+            case '0': orderBy = `s1.updated ${dir}`; break;
+            case '1': orderBy = `s1.title ${dir}`; break;
+            case '2': orderBy = `s1.snatches ${dir}`; break;
+            case '3': orderBy = `s1.adjDate ${dir}`; break;
+            case '4': orderBy = `s1.updated ${dir}`; break;
+        }
+    }
+
+    const cypherQuery = `
+        ${countClause}
+        WITH s
+        WITH TOFLOAT(count(s)) AS full_count
+
+        ${matchClause}
+        OPTIONAL MATCH (authors:Author)-[]->(s1)
+        MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s1)
+        OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e) WHERE t.deleted = false
+        
+        WITH s1, authors, p, e, t, full_count
+        OPTIONAL MATCH (classes:Class)-[:TAGS]->(s1)
+        
+        WITH s1, full_count,
+             collect(DISTINCT authors) AS authorList, 
+             collect(DISTINCT {publisher: p, edition: e, torrent: t}) AS edition_torrents, 
+             collect(DISTINCT classes) AS classList
+             
+        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy;
+
+    try {
+        const result = await session.run(cypherQuery, {
+            uuid: uuid,
+            skip: start || 0,
+            limit: length || 25
+        });
+
+        const total = result.records[0]._fields[4]
+        console.log(total)
+
+        res.json({
+            draw: parseInt(req.body.draw) || 0,
+            recordsTotal: total,
+            recordsFiltered: total,
+            data: result.records
+        });
+    } catch (err) {
+        console.error("KRAKEN ATTACK:", err);
+        res.status(500).send("KRAKEN ATTACK: Internal Server Error");
+    } finally {
+        await session.close();
+    }
+});
+app.post("/set/:ward", function(req, res) {
+    const session = driver.session();
+    const ward = req.params.ward;
+    const { start, length, order } = req.body;
+    
+    const params = {
+        skip: start || 0,
+        limit: length || 25
+    };
+
+    let relationshipLabel = '';
+    let connectedNodeLabel = '';
+    let countAlias = '';
+    let actualNodeLabel;
+
+    switch (ward) {
+        case "authors":
+            relationshipLabel = '-[:AUTHOR]->'; 
+            connectedNodeLabel = 's:Source';
+            countAlias = 'numSources';
+            break;
+        case "classes":
+            relationshipLabel = '-[:TAGS]->';
+            connectedNodeLabel = 's:Source';
+            countAlias = 'numSources';
+            actualNodeLabel = 'Class';
+            break;
+        case "publishers":
+            relationshipLabel = '<-[:PUBLISHED_BY]-';
+            connectedNodeLabel = 'e:Edition';
+            countAlias = 'numEditions';
+            break;
+        default:
+            session.close();
+            return res.status(400).json({ error: "Invalid ward" });
+    }
+
+    const nodeVar = ward.charAt(0);
+    const nodeLabel = actualNodeLabel || ward.charAt(0).toUpperCase() + ward.slice(1, -1);
+
+    // --- Dynamic Sort Logic ---
+    let orderByClause = `${nodeVar}.name ASC`; // Default Fallback
+    if (order && order.length > 0) {
+        const colIndex = order[0].column;
+        const dir = order[0].dir.toUpperCase(); // ASC or DESC
+
+        switch (colIndex) {
+            case '0': // Column 1: Name
+                orderByClause = `${nodeVar}.name ${dir}`;
+                break;
+            case '1': // Column 2: # Editions/Sources (The Alias)
+                orderByClause = `${countAlias} ${dir}`;
+                break;
+            case '2': // Column 3: Snatches
+                orderByClause = `snatches ${dir}`;
+                break;
+        }
+    }
+
+    // 1. Count Query (Remains the same)
+    const countQuery = `MATCH (n:${nodeLabel}) WHERE n.name <> '' RETURN count(n) AS count`;
+
+    // 2. Data Query 
+    // We calculate 'snatches' in the WITH so we can sort by it if requested.
+    const dataQuery = 
+        `MATCH (${nodeVar}:${nodeLabel}) WHERE ${nodeVar}.name <> '' ` +
+        `OPTIONAL MATCH (${nodeVar})${relationshipLabel}(${connectedNodeLabel}) ` +
+        `WITH ${nodeVar}, ` +
+        `     count(DISTINCT ${connectedNodeLabel.charAt(0)}) AS ${countAlias}, ` +
+        `     coalesce(${nodeVar}.snatches, 0) AS snatches ` +
+        `ORDER BY ${orderByClause} ` + 
+        `SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) ` +
+        `RETURN ${nodeVar}, ${countAlias}, snatches`;
+
+    let totalCount = 0;
+
+    session.run(countQuery)
+        .then(countData => {
+            totalCount = countData.records[0].get('count').toNumber();
+            return session.run(dataQuery, params);
+        })
+        .then(data => {
+            session.close();
+            res.json({
+                draw: parseInt(req.body.draw),
+                recordsTotal: totalCount,
+                recordsFiltered: totalCount,
+                data: data.records
+            });
+        })
+        .catch(error => {
+            session.close();
+            console.error(`[STARDATE 202512.21] Cypher Error:`, error);
+            res.status(500).send("Internal Error");
+        });
+});
 
 app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escape().isLength({max:100}), check("title").trim().escape().isLength({max: 400}),
  check("author").trim().escape().isLength({max: 200}), check("classes").trim().escape().isLength({max:1251}).toLowerCase(),
@@ -1328,19 +1520,19 @@ app.post("/top10/:time", check("time").trim().escape(), async function(req,res){
     var params = {limit : req.body.length, skip : req.body.start, buoy:req.body.buoy}
 
     switch(req.params.time){
-      case "top10_day":
+      case "day":
         params.time = "P1D";
         break;
-      case "top10_week":
+      case "week":
         params.time = "P7D";
         break;
-      case "top10_month":
+      case "month":
         params.time = "P30D";
         break;
-      case "top10_year":
+      case "year":
         params.time = "P365D";
         break;
-      case "top10_alltime":
+      case "alltime":
         params.time = "P99Y";
         break;
 
@@ -1380,4 +1572,4 @@ app.get('*', function(req, res, next) {
 });
 
 app.listen(3000, "0.0.0.0");
-console.log('Server started at http://localhost:' + port);
+console.log('Server started at http://localhost:3000');
