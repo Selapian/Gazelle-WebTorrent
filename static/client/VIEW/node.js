@@ -93,7 +93,7 @@ function assertGraphButton(searchable){
             case "source":
               TEMPLAR.route(
                   "#titles?search=true&title=" +
-                    encodeURIComponent(searchable) +
+                    searchable +
                     "&author=" +                    
                     "&classes=" +                    
                     "&class_all=false" +                    
@@ -107,7 +107,7 @@ function assertGraphButton(searchable){
                 TEMPLAR.route(
                       "#titles?search=true" +
                       "&title=" +                         
-                        "&author=" + encodeURIComponent(searchable) +                        
+                        "&author=" + searchable +                        
                         "&classes=" +                        
                         "&class_all=false" +                        
                         "&publisher=" +
@@ -121,7 +121,7 @@ function assertGraphButton(searchable){
                       "#titles?search=true" +
                       "&title=" +                         
                         "&author=" +                         
-                        "&classes=" + '"' + encodeURIComponent(searchable) + '"' +               
+                        "&classes=" + JSON.stringify(searchable) +               
                         "&class_all=false" +                        
                         "&publisher=" +
                         "&type=all" +
@@ -136,7 +136,7 @@ function assertGraphButton(searchable){
                         "&author=" +                      
                         "&classes=" +                        
                         "&class_all=false" +                        
-                        "&publisher=" + encodeURIComponent(searchable) +  
+                        "&publisher=" + searchable +  
                         "&type=all" +
                         "&media=all" +                   
                         "&format=all"                 
