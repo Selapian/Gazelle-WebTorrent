@@ -6,7 +6,7 @@ My site is propagate.info, meant for public domain PDFs and audiobooks. Starting
 
 **GETTING STARTED**
 
-The server is express/node.js, and the Database is Neo4j; downloads work using WebTorrent in the Browser (different from web-seeds). The Library renders JQuery DataTables and a d3 graph to the client.
+The server is express/node.js, and the Database is Neo4j; downloads work using WebTorrent in the Browser (different from web-seeds). The Library renders JQuery DataTables and a d3 graph to the client. I have developed a lightweight #ANCHOR client-side SPA-router called TEMPLAR as an alternative to AngularJS.
 
 To get started, you will need to:
 
