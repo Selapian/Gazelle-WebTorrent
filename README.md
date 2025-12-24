@@ -1,6 +1,6 @@
 **WELCOME**
 
-Gazelle-Webtorrent is a BitTorrent indexer for WebTorrent based on Project Gazelle. But the writer of this code has no association with any members of Project Gazelle. It is simply an Open Source JQuery/WebTorrent Library generated based on their architecture.
+Gazelle-Webtorrent is a BitTorrent indexer for WebTorrent based on Project Gazelle. Please note that the organizer of this code has no association with any members of Project Gazelle. It is simply an Open Source JQuery/WebTorrent Library generated based on their architecture.
 
 My site is propagate.info, meant for public domain PDFs and audiobooks. Starting with an original educational use-case, I have decided to Open-Source this Software, because the way that Gazelle structures Libraries could be very innovative for research, ethics, and scholarship.
 
