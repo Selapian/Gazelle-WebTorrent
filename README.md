@@ -34,10 +34,12 @@ To get started, you will need to:
 
 This BitTorrent Indexer uses the very innovative and profound Gazelle Methodology for Organization, with (Source)-[]->(Edition)->(Torrent). Two editions, with different translators, are listed under the same Datatable dtrg-group, called a Source (as in, "Primary Source"). If there exists both an audiobook (mp3) and an Ebook (PDF) for a particular translator (Edition), the two torrents are listed under that edition in a 'torrentsTable'.  
 
-I have also added Graph Visualization based on Gazelle's "Similar Artists" web. 
+I have also added Graph Visualization based on Gazelle's "Similar Artists" web, using the powerful Neo4j Java database.
 
 Finally, downloads work as follows. While qBitTorrent is the only client capable of handling thousands of individual torrents, and libtorrent has added support for WebTorrent in v2.0, qBitTorrent's implementation of the WebTorrent architecture has been delayed for several years. After struggling for literally years with getting thousands of Torrents to seed on WebTorrent Desktop and BiglyBT (which has a WebTorrent plugin), I realized I could seed one Torrent with thousands of files. Now WebTorrent.js begins with all pieces of the torrent deselected, then matches the "length" (size) of the file in bytes from the DB to the metadata of torrent.files[], and runs file.select on the file.length that matches the "id" (Torrent).size stored from Neo4j. 
 
 Indiviudal files currently do not have their own torrent infoHash, unfortunately, because of the arbitrary delay in torrent-client support for WebTorrent. I simply could not seed 4000 individual torrents. So there is one torrent infoHash, which includes all your files.
 
+**AMAZON-APACHE-TEMPLAR**
+I use **Apache** as a reverse proxy and **TEMPLAR** as a client-side router. The Apache reverse-proxy and express app are hosted on an **Amazon** EC2 micro-instance.
 
