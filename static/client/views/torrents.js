@@ -6,8 +6,10 @@ function initializeTorrents(table) {
         $(".search_graph").hide();
     }
 
-    if ($(table) instanceof $.fn.dataTable.Api) {
-        $(table).destroy();
+    // 2. PRECISE DESTROY: Kill existing instance and clear HTML
+    if ($.fn.DataTable.isDataTable("#" + table)) {
+        $("#" + table).DataTable().destroy();
+        $("#" + table).empty(); // Clear the thead/tbody completely
     }
 
     assertTitleLoading();
@@ -91,13 +93,18 @@ function initializeTorrents(table) {
             },
             dataSrc: function(data) {
                 setRecords();
-                if (data && data.data[0]) {
+
+                if (!data || !data.records || data.records.length === 0) {
+                    console.log("No results found.");
+                    return []; // Returns empty array to DataTable
+                }
+                else {
                     insertTableData(data)
                 }
-
+                console.log(data.records.length)
                 var editionsAdded = [];
 
-                tableData.data.forEach(function(record) {
+                tableData.records.forEach(function(record) {
                     var authorField = "";
                     record._fields[1].forEach(function(field, i) {
                         if (i > 0) authorField += ", ";

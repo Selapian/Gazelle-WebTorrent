@@ -7,6 +7,7 @@ function setRecords(){
 
 function insertTableData(data){
 	tableData = data;
+	console.log(tableData)
 }
 
 var types = ["Nonfiction", "Fiction", "Holy Book", "Tome", "Encyclopedia", "Textbook", "Short Story", "Poetry", "Children Book", "Essay", "Journal Article" ]

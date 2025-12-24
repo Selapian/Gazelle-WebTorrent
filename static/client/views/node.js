@@ -4,7 +4,7 @@ function assertNodeNameFromData() {
     const targetLabel = params?.label; // 'source', 'author', 'class', 'publisher'
 
     // We must use the raw data, not the HTML strings array
-    const dataSource = (typeof tableData !== 'undefined' && tableData.data) ? tableData.data : null;
+    const dataSource = (typeof tableData !== 'undefined' && tableData.records) ? tableData.records : null;
 
     if (!dataSource || !Array.isArray(dataSource) || !targetUuid) {
         return;

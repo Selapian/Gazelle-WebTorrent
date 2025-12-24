@@ -56,6 +56,36 @@ function remove_stopwords(str) {
     return(res.join(' '))
 }
 
+/**
+ * Removes stop words and common business suffixes from publisher names.
+ * Targeted for graph search optimization.
+ */
+function remove_publisher_stopwords(str) {
+    if (!str) return "";
+
+    // 1. Define Publisher-specific stop words (Case-Insensitive)
+    const stopWords = [
+        "and", "the", "of", "for", "in", "by", "with", "a", "an",
+        "ltd", "limited", "inc", "incorporated", "corp", "corporation",
+        "publishers", "publisher", "publishing", "publications", "press",
+        "books", "company", "co", "llc", "group", "house", "intl", "international"
+    ];
+
+    // 2. Normalize and split into tokens
+    // We remove common trailing punctuation like periods or commas first
+    let cleanStr = str.replace(/[,.]/g, ' ');
+    let words = cleanStr.split(/\s+/);
+
+    // 3. Filter out the stop words
+    let filteredWords = words.filter(word => {
+        let lowerWord = word.toLowerCase();
+        return !stopWords.includes(lowerWord);
+    });
+
+    // 4. Rejoin and clean up extra whitespace
+    return filteredWords.join(' ').trim();
+}
+
 app.post("/mermaid/:uuid", check("publisher").trim().escape(), check("uuid").trim().escape(), function(req,res){
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -252,7 +282,7 @@ app.post("/node/:label", [
             draw: parseInt(req.body.draw) || 0,
             recordsTotal: total,
             recordsFiltered: total,
-            data: result.records
+            records: result.records
         });
     } catch (err) {
         console.error("KRAKEN ATTACK:", err);
@@ -388,7 +418,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     req.body.title = req.body.title.replace(":", ' ')
     req.body.author = req.body.author.replace(":", ' ')
-    req.body.publisher = req.body.publisher.replace(':', ' ')
+    req.body.publisher = req.body.publisher.replace(':', ' ');
     if(req.body.publisher.toLowerCase() === "propagate" || req.body.publisher.toLowerCase() === "propagateinfo"){
       req.body.publisher = "propagate.info"
     }
@@ -420,13 +450,13 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     query += "WITH s, a "
    if(req.body.publisher){
-  // Use a subquery or strict match that carries the publisher context through
-  query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node AS pubNode " +
-           "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
-           "WHERE p.uuid = pubNode.uuid ";
-} else {
-  query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) ";
-}
+    // Use a subquery or strict match that carries the publisher context through
+      query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node AS pubNode " +
+               "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
+               "WHERE p.uuid = pubNode.uuid ";
+    } else {
+      query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) ";
+    }
   query += "WITH s,a,e "
   if(req.body.media !== "all" && req.body.format !== "all"){
     query += "OPTIONAL MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
@@ -493,13 +523,13 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     query += "WITH s, a, count "
     if(req.body.publisher){
-  // Use a subquery or strict match that carries the publisher context through
-  query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node AS pubNode " +
-           "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
-           "WHERE p.uuid = pubNode.uuid ";
-} else {
-  query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) ";
-}
+      // Use a subquery or strict match that carries the publisher context through
+      query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node AS pubNode " +
+               "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
+               "WHERE p.uuid = pubNode.uuid ";
+    } else {
+      query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) ";
+    }
   query += "WITH s,a,p,e, count "
   if(req.body.media !== "all" && req.body.format !== "all"){
     query += "MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
@@ -617,140 +647,145 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
         console.log("TOTAL: " + recordsTotal)
         
       }
-      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, data: data.records});
+      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, records: data.records});
     })
 })
+app.post("/graph_search", 
+  check("class_all").trim().escape().isLength({max:100}), 
+  check("title").trim().escape().isLength({max: 400}),
+  check("author").trim().escape().isLength({max: 200}), 
+  check("classes").trim().escape().isLength({max:1251}).toLowerCase(),
+  check("publisher").trim().escape().isLength({max: 612}), 
+  check("type").trim().escape().isLength({max:200}), 
+  check("media").trim().escape().isLength({max:350}),
+  check("format").trim().escape().isLength({max:360}), 
+  function(req,res){
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.json({ errors: errors.array() });
 
-app.post("/graph_search", check("class_all").trim().escape().isLength({max:100}), check("title").trim().escape().isLength({max: 400}),
- check("author").trim().escape().isLength({max: 200}), check("classes").trim().escape().isLength({max:1251}).toLowerCase(),
-  check("publisher").trim().escape().isLength({max: 612}), check("type").trim().escape().isLength({max:200}), check("media").trim().escape().isLength({max:350}),
-  check("format").trim().escape().isLength({max:360}), function(req,res){
-    console.log("HERE!!!!", validationResult(req))
-    const errors = validationResult(req);
-    console.log(errors);
-
-    if (!errors.isEmpty()) {
-      return res.json({ errors: errors.array() });
-    }
-
-    let classes = null; 
-    
-    console.log("WELCOME TO GRAPH SEARCH")
-    if(req.body.classes && req.body.classes !== "undefined"){
-        classes = JSON.parse(he.decode(req.body.classes)).split(",");
-      if(classes[0] === ['']){
-        classes = []
-      }
-      else{
-        for (var i = 0; i < classes.length; i++) {
-         classes[i] = he.decode(classes[i].trim()).replace(/['"]+/g, '')
-        }  
-      }
-    }
-    req.body.title = remove_stopwords(req.body.title);
-    const session = driver.session();
-    var query = ""
-    req.body.title = req.body.title.replace(":", ' ')
-    req.body.author = req.body.author.replace(":", ' ')
-    req.body.publisher = req.body.publisher.replace(':', ' ')
-    if(req.body.publisher.toLowerCase() === "propagate" || req.body.publisher.toLowerCase() === "propagateinfo"){
-      req.body.publisher = "propagate.info"
+    let classes = null; 
+    if(req.body.classes && req.body.classes !== "undefined"){
+        classes = JSON.parse(he.decode(req.body.classes)).split(",");
+        classes = classes[0] === [''] ? [] : classes.map(c => he.decode(c.trim()).replace(/['"]+/g, ''));
     }
+
+    req.body.title = remove_stopwords(req.body.title).replace(":", ' ');
+    req.body.author = req.body.author.replace(":", ' ');
+    req.body.publisher = req.body.publisher.replace(':', ' ');
+    
+    if(req.body.publisher.toLowerCase().startsWith("propagate")) req.body.publisher = "propagate.info";
+
+    const session = driver.session();
+    var query = "";
+
     // --- 1. FILTERING BLOCK (Defining 's') ---
-    if(req.body.title && req.body.title !== "undefined" && req.body.type === "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
-      "MATCH (s:Source) WHERE s.uuid = node.uuid "
-    }
-    else if(req.body.title && req.body.title !== "undefined" && req.body.type !== "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
-      "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
-    }
-    else if(!req.body.title && req.body.title !== "undefined" && req.body.type !== "all" && req.body.type){
-      query += "MATCH (s:Source {type : $type}) "
-    }
-    else if(req.body.classes && req.body.classes !== "undefined"){
-      query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
-    }
-    else{
-      query += "MATCH (s:Source) "
-    }   
-    query += "WITH s "
-
-    if(req.body.author && req.body.author !== "undefined"){
-      query += "CALL db.index.fulltext.queryNodes('authorSearch', $author) YIELD node " +
-      "MATCH (a1:Author)-[:AUTHOR]->(s:Source) WHERE a1.uuid = node.uuid " 
-    }
-    
-    query += "WITH s " 
-    
-   if(req.body.media !== "all" && req.body.format !== "all" && req.body.media && req.body.format){
-    query += "OPTIONAL MATCH (x:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE x.deleted = false " 
-  }
-  else if(req.body.media !== "all" && req.body.media){
-    query += "OPTIONAL MATCH (x:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE x.deleted = false " 
-  }
-  else if(req.body.format !== "all" && req.body.format){
-    query += "OPTIONAL MATCH (x:Torrent {format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE x.deleted = false " 
-  }
-  
-    if(req.body.classes && req.body.classes !== "undefined" && req.body.class_all === "true"){
-        query += "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
-        "WITH s,collect(c1) AS classes " +
-        "WITH s,head(classes) as head, tail(classes) as classes " +
-        "MATCH (head)-[:TAGS]->(s) " +
-        "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
-    }      
-    
-    if(req.body.publisher){
-      query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node " +
-        "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) WHERE p.uuid = node.uuid "
-      }
+    if(req.body.title && req.body.title !== "undefined" && req.body.type === "all"){
+      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+               "MATCH (s:Source) WHERE s.uuid = node.uuid "
+    }
+    else if(req.body.title && req.body.title !== "undefined" && req.body.type !== "all"){
+      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+               "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
+    }
+    else if(!req.body.title && req.body.type !== "all" && req.body.type){
+      query += "MATCH (s:Source {type : $type}) "
+    }
+    else if(req.body.classes && req.body.classes !== "undefined" && req.body.class_all !== "true"){
+      query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
+    }
     else{
-      query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " 
+      query += "MATCH (s:Source) "
+    }    
 
+    // --- 2. INITIALIZE SCOPE VARIABLES ---
+    query += "WITH s, null as a1UUID, null as pUUID ";
+
+    // --- 3. AUTHOR BLOCK ---
+    if(req.body.author && req.body.author !== "undefined"){
+        query += "CALL db.index.fulltext.queryNodes('authorSearch', $author) YIELD node " +
+                 "MATCH (a1:Author)-[:AUTHOR]->(s) WHERE a1.uuid = node.uuid " +
+                 "WITH s, a1.uuid as a1UUID, pUUID "; 
     }
 
-    // --- 2. RECOMMENDATION BLOCK ---
-    // Get recommendations based on the filtered results
-    query += "WITH s " +
-           "CALL { " +
-               "WITH s " +
-               "MATCH (s)<-[:TAGS]-(c:Class) " +
-               "MATCH (c)-[:TAGS]->(s2:Source) " + 
-               "RETURN s2 " +
-               "ORDER BY rand() DESC LIMIT 8 " +
-           "} " + 
+    // --- 4. CLASS LOGIC (RESTORED BOTH PATHS) ---
+    if(req.body.class_all === "true" && classes){
+      query += 
+      "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
+      "WITH s, a1UUID, pUUID, collect(c1) as classes " + 
+      "WITH s, a1UUID, pUUID, head(classes) as head, tail(classes) as classes " + 
+      "MATCH (head)-[:TAGS]->(s) " + 
+      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
+    }
+    else if(req.body.classes && req.body.classes !== "undefined"){
+      // This is the block that was missing: handle standard class search
+      query += "MATCH (c:Class)-[:TAGS]->(s) " + 
+               "WITH s, a1UUID, pUUID, c " + 
+               "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
+    }
 
-           // --- 3. MERGE SOURCES ---
-           // We perform one collection here just to merge the two lists (s + s2)
-           // This is safe and necessary to create a single stream of sources.
+    // --- 5. PUBLISHER BLOCK ---
+    if(req.body.publisher){
+        query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node " +
+                 "MATCH (searchedP:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) WHERE searchedP.uuid = node.uuid " +
+                 "WITH s, a1UUID, searchedP.uuid as pUUID ";
+    }
 
-           // --- 4. DATA RETRIEVAL (No Collects, No Union) ---
-           // This uses standard matches. If a source has 2 authors and 2 classes,
-           // this will generate 4 rows (Cartesian product), which your client code handles fine.
-           
-           "OPTIONAL MATCH (s2)<-[:AUTHOR]-(a:Author) " +
-           "OPTIONAL MATCH (s2)<-[:TAGS]-(c:Class) " +
-           "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s2) " +
-           
-           // Return the distinct columns.
-           // Columns: [0]=source, [1]=a (Author), [2]=c (Class), [3]=e (Edition)
-           "RETURN s2, a, c, p " +
-           "ORDER BY rand() LIMIT 100 "
+    // --- 6. RECOMMENDATION & RETRIEVAL ---
+    query += "WITH s, s.uuid as sUUID, a1UUID, pUUID " +
+         "CALL { " +
+             // Segment 1: The Seed
+             "WITH s, a1UUID, pUUID " +
+             "MATCH (s) RETURN s as s2 " +
+             "UNION ALL " + 
+             
+             // Segment 2: The Author Books
+             "WITH a1UUID, pUUID " + // <--- Missing bridge fixed here
+             "MATCH (author:Author {uuid: a1UUID})-[:AUTHOR]->(s2:Source) RETURN s2 " +
+             "UNION ALL " +
+             
+             // Segment 3: The Publisher Books
+             "WITH pUUID " + // <--- Missing bridge fixed here
+             "MATCH (pub:Publisher {uuid: pUUID})<-[:PUBLISHED_BY]-(:Edition)<-[:PUB_AS]-(s2:Source) RETURN s2 " +
+             "UNION ALL " +
+             
+             // Segment 4: The Related Classes
+             "WITH s " + // <--- Missing bridge fixed here
+             "MATCH (s)<-[:TAGS]-(c:Class)-[:TAGS]->(s2:Source) " + 
+             "RETURN s2 ORDER BY rand() LIMIT 12 " +
+         "} " +
 
-      console.log(query)
-    
-    var params = {skip : req.body.start, limit : req.body.length, title : he.encode(remove_stopwords(he.decode(he.decode(req.body.title)))), author : he.encode(he.decode(he.decode(req.body.author))), 
-  classes: classes, publisher : he.encode(he.decode(he.decode(req.body.publisher))), type : he.encode(he.decode(he.decode(req.body.type))), media: req.body.media, format : req.body.format}
-  
-  session.run(query , params).then(data => {
-      session.close()      
+             "OPTIONAL MATCH (s2)<-[:AUTHOR]-(a:Author) " +
+             "OPTIONAL MATCH (s2)<-[:TAGS]-(c:Class) " +
+             "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s2) " +
+             
+             "WITH s2, a, c, p, sUUID, a1UUID, pUUID, " + 
+             "CASE " +
+             "  WHEN (p.uuid = pUUID OR s2.uuid = sUUID OR a.uuid = a1UUID) THEN 1 " +
+             "  ELSE 0 " +
+             "END AS priority " + 
+             
+             "RETURN s2, a, c, p " +
+             "ORDER BY priority DESC, rand() " +
+             "LIMIT 126";
 
-      return res.json({data: data.records});
-    })
-})
+    var params = {
+      skip : req.body.start, limit : req.body.length, 
+      title : he.encode(he.decode(he.decode(req.body.title))), 
+      author : he.encode(he.decode(he.decode(req.body.author))), 
+      classes: classes, 
+      publisher : he.encode(he.decode(he.decode(req.body.publisher))), 
+      type : req.body.type, media: req.body.media, format : req.body.format
+    }
 
-
+    session.run(query , params).then(data => {
+      session.close();
+      return res.json({gData: data.records});
+    }).catch(err => {
+      session.close();
+      console.error(err);
+      res.status(500).json({error: err.message});
+    });
+});
 app.get("/search", check("term").trim().escape(), check("field").not().isEmpty().trim().escape(), function(req,res){
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -759,8 +794,12 @@ app.get("/search", check("term").trim().escape(), check("field").not().isEmpty()
   const session = driver.session()
 
   console.log(req.query.field)
-
-  req.query.term = remove_stopwords(req.query.term);
+  if(search.query.field === "search_publishers"){
+    req.query.term = remove_publisher_stopwords(req.query.term)
+  }
+  else{
+    req.query.term = remove_stopwords(req.query.term);
+  }
   if(req.query.term.toLowerCase() === "propagate" || req.query.term.toLowerCase() === "propagateinfo"){
     req.query.term = "propagate.info"
   }
@@ -922,507 +961,12 @@ app.post("/torrents", [check("start").trim().escape(), check("length").trim().es
         recordsTotal = parseInt(data.records[0]._fields[4]);
         recordsFiltered = parseInt(data.records[0]._fields[4])
       }
-      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, data: data.records});  
+      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, records: data.records});  
 
     })
 })
 
 
- 
-
-app.post("/source/:uuid", check("uuid").trim().escape().not().isEmpty(), function(req,res){
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.json({ errors: errors.array() });
-    }
-    const session = driver.session()
-
-    var query = '';
-
-    query += "MATCH (s:Source {uuid : $uuid}) "
-    query += "OPTIONAL MATCH (a:Author)-[]->(s) " + 
-    "WITH s, a " +  
-    "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
-    "WITH s,a,p,e " +
-    "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e) WHERE t.deleted = false " +
-    "WITH s, a, e, p, t " + 
-    "OPTIONAL MATCH (c:Class)-[:TAGS]->(s) " +
-    "WITH s, a, collect(DISTINCT{publisher :p, edition: e, torrent: t}) AS edition_torrents, c, count(s) AS count "
-    switch(req.body.order[0].column){
-    case '0':
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-    case '1':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      break;
-    case '3':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '2':
-      console.log("SNATCHES SORT")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '4':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    default :
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-
-  }
-
-    var params = {uuid : req.params.uuid, skip : req.body.start, limit : req.body.length};
-
-    session.run(query , params).then(data => {
-        session.close()
-        return res.json({recordsTotal: 1, recordsFiltered: 1, data: data.records});
-    })  
-
-})
-
-app.post("/author/:uuid", check("uuid").trim().escape().not().isEmpty(), function(req,res){
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() });
-  }
-  const session = driver.session()
-
-  var query = '';
-
-  query +=
-  "MATCH (a1:Author {uuid : $uuid})-[]->(so:Source) " + 
-  "WITH a1, count(so) AS count " +
-  "MATCH (a2:Author {uuid : $uuid})-[]->(s:Source) " + 
-  "MATCH (a:Author)-[]-(s) " +
-  "WITH a1, a, s, count " +  
-  "MATCH (e:Edition)<-[:PUB_AS]-(s) " +
-  "WITH a1, s,a,e, count " +
-  "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e)-[:PUBLISHED_BY]->(p:Publisher) WHERE t.deleted = false " +
-  "WITH a1, s, a, e, t, p, count " +
-  "OPTIONAL MATCH (c:Class)-[:TAGS]->(s) " +
-  "WITH a1, s,a, collect(DISTINCT {publisher : p, edition: e, torrent: t}) AS edition_torrents, c, count "
-  switch(req.body.order[0].column){
-    case '0':
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-    case '1':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      break;
-    case '3':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '2':
-      console.log("SNATCHES SORT")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.snatches ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '4':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    default :
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, a1 ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-
-  }
-
-  var params = {skip : req.body.start, limit : req.body.length, uuid : req.params.uuid}
-
-  session.run(query , params).then(data => {
-      session.close()
-      if(data.records && data.records.length > 0){
-        return res.json({recordsTotal: parseInt(data.records[0]._fields[4]), recordsFiltered: parseInt(data.records[0]._fields[4]), data: data.records});
-        
-      }
-      else{
-        return res.json({recordsTotal: 0, recordsFiltered : 0, data: data.records})
-      }
-  })
-
-})
-
-app.post("/class/:uuid", check("uuid").trim().escape().isLength({max : 256}), 
-  check("skip").trim().escape(),
-  check("length").trim().escape(),
-  function(req,res){
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() });
-  }
-  const session = driver.session()
-
-  var query = 'MATCH (cl:Class {uuid : $uuid}) '
-  query += "WITH cl "
-  query += "OPTIONAL MATCH (cl)-[:TAGS]->(so:Source) " 
-  query += "WITH cl, count(so) AS count "
-  query += "MATCH (c:Class {uuid: $uuid}) "
-  query += "WITH cl, c, count "
-  query += "MATCH (c)-[:TAGS]->(s:Source) " +
-  "WITH cl, count, s " +
-  "OPTIONAL MATCH (cla:Class)-[:TAGS]->(s) " +
-  "WITH cl, count, s, cla " +
-  "OPTIONAL MATCH (a:Author)-[]->(s) " + 
-  "WITH cl, s, a, count, cla " +  
-  "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) " +
-  "WITH cl, s,a,e,p, count, cla " +
-  "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e) WHERE t.deleted = false " +  
-  "WITH s, a, cla,p,t, count, e, cl " +
-  "WITH s, a, cla, collect(DISTINCT {edition: e, publisher: p , torrent: t}) AS edition_torrents, count,cl "
-  switch(req.body.order[0].column){
-    case '0':
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-    case '1':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      break;
-    case '3':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '2':
-      console.log("SNATCHES SORT")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.snatches ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '4':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    default :
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT cla), count,cl ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-
-  }
-  var params = {uuid : he.decode(req.params.uuid), skip: req.body.start, limit: req.body.length};
-  session.run(query , params).then(data => {
-      session.close()
-      var recordsTotal;
-      var recordsFiltered;
-      if(data.records.length > 0){
-        recordsTotal = parseInt(data.records[0]._fields[4]);
-        recordsFiltered = parseInt(data.records[0]._fields[4])
-      }
-      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, data: data.records});
-    })
-})
-
-app.post("/publisher/:uuid", [check("start").trim().escape(), check("uuid").trim().escape().not().isEmpty(), check("length").trim().escape()], function(req,res){
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() });
-  }
-  const session = driver.session()
-
-  var query = '';
-
-  var params = {uuid : req.params.uuid};
-
-  query += "MATCH (so:Source)-[]-(e:Edition)-[:PUBLISHED_BY]->(pb:Publisher {uuid : $uuid}) " +
-  "WITH count(so) AS count "
-  + "MATCH (s:Source)-[]-(e:Edition)-[]->(p:Publisher {uuid : $uuid}) "
-  query += "OPTIONAL MATCH (a:Author)-[]->(s) " + 
-  "WITH s,a, e, p, count " +
-  "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e) WHERE t.deleted = false " +
-  "WITH s,a,e, t,p, count " +  
-  "OPTIONAL MATCH (c:Class)-[:TAGS]->(s) " +
-  "WITH s, a, p, collect(DISTINCT{publisher: p, edition : e, torrent: t} ) AS edition_torrents, c, count "
-  switch(req.body.order[0].column){
-    case '0':
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-    case '1':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      break;
-    case '3':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '2':
-      console.log("SNATCHES SORT")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.snatches ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    case '4':
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-
-      }
-      else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      }
-      break;
-    default :
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count, p  ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
-      break;
-
-  }
-  params = {skip : req.body.start, limit : req.body.length, uuid : req.params.uuid}
-  console.log(params.publisher)
-  session.run(query , params).then(data => {
-      session.close()      
-      var recordsTotal;
-      var recordsFiltered;
-      if(data.records.length > 0){
-        recordsTotal = parseInt(data.records[0]._fields[4]);
-        recordsFiltered = parseInt(data.records[0]._fields[4])
-      }
-      return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, data: data.records});
-    })
-})
-
-app.post("/authors", function(req, res) {
-  const session = driver.session();
-  const skip = parseInt(req.body.start) || 0;
-  const limit = parseInt(req.body.length) || 25;
-
-  // Initializing query with total count and Author-specific relationships
-  let query = `
-    MATCH (a:Author) WHERE a.name <> ''
-    WITH count(DISTINCT a) AS totalCount
-    MATCH (auth:Author) WHERE auth.name <> ''
-    OPTIONAL MATCH (s:Source)<-[:WRITTEN_BY]-(auth)
-    WITH auth, totalCount, toFloat(count(s)) AS numSources, auth.snatches AS snatches
-  `;
-
-  // Dynamic Ordering Logic
-  let orderBy = "auth.name ASC";
-  const col = req.body.order[0].column;
-  const dir = req.body.order[0].dir.toUpperCase();
-
-  if (col === '0') orderBy = `auth.name ${dir}`;
-  else if (col === '1') orderBy = `numSources ${dir}`;
-  else if (col === '2') orderBy = `auth.snatches ${dir}`;
-
-  // Terminal RETURN clause
-  query += ` RETURN auth, totalCount, numSources, snatches ORDER BY ${orderBy} SKIP toInteger($skip) LIMIT toInteger($limit)`;
-
-  const params = { skip: skip, limit: limit };
-
-  session.run(query, params)
-    .then(data => {
-      session.close();
-      if (data.records.length > 0) {
-        const total = data.records[0].get('totalCount').toInt();
-        return res.json({
-          recordsTotal: total,
-          recordsFiltered: total,
-          data: data.records
-        });
-      } else {
-        return res.json({ recordsTotal: 0, recordsFiltered: 0, data: [] });
-      }
-    })
-    .catch(err => {
-      session.close();
-      console.error("Cypher Error:", err);
-      res.status(500).json({ error: "Database error" });
-    });
-});
-app.post("/classes", function(req, res) {
-  const session = driver.session();
-  const skip = parseInt(req.body.start) || 0;
-  const limit = parseInt(req.body.length) || 25;
-
-  // We define the base selection and aggregation logic
-  let query = `
-    MATCH (cl:Class)-[]-(:Source) WHERE cl.name <> ''
-    WITH count(DISTINCT cl) AS totalCount
-    MATCH (c:Class) WHERE c.name <> ''
-    OPTIONAL MATCH (s:Source)<-[:TAGS]-(c)
-    WITH c, totalCount, TOFLOAT(count(s)) AS numSources, c.snatches AS snatches
-  `;
-
-  // Determine Sort Column and Direction
-  let orderBy = "c.name ASC"; 
-  const col = req.body.order[0].column;
-  const dir = req.body.order[0].dir.toUpperCase();
-
-  if (col === '0') orderBy = `c.name ${dir}`;
-  else if (col === '1') orderBy = `numSources ${dir}`;
-  else if (col === '2') orderBy = `c.snatches ${dir}`;
-
-  // The query MUST end with a RETURN clause
-  query += ` RETURN c, totalCount, numSources, snatches ORDER BY ${orderBy} SKIP toInteger($skip) LIMIT toInteger($limit)`;
-
-  const params = { skip: skip, limit: limit };
-
-  session.run(query, params)
-    .then(data => {
-      session.close();
-      if (data.records.length > 0) {
-        // totalCount is now bundled into every row of the result set
-        const total = data.records[0].get('totalCount').toInt();
-        return res.json({
-          recordsTotal: total,
-          recordsFiltered: total,
-          data: data.records
-        });
-      } else {
-        // Return empty structure so DataTables doesn't hang on the last page
-        return res.json({ recordsTotal: 0, recordsFiltered: 0, data: [] });
-      }
-    })
-    .catch(err => {
-      session.close();
-      console.error("Cypher Error:", err);
-      res.status(500).json({ error: "Database error" });
-    });
-});
-app.post("/publishers", function(req,res){
-  const session = driver.session()
-  var query = "MATCH (pe:Publisher) WITH TOFLOAT(count(pe)) AS publisherCount " +
-    "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition) " + 
-    "WHERE NOT p.name = ''" +
-    "WITH p.snatches AS snatches, p AS publisher, publisherCount, TOFLOAT(count(e)) AS count " 
-
-  console.log(req.body.start, req.body.length)
-  var params = {skip : req.body.start, limit : req.body.length};
-
-  switch(req.body.order[0].column){
-    case '0':
-      console.log(req.body.order[0])
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN publisher, snatches, publisherCount, count ORDER BY publisher ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)" 
-
-      }
-      else{
-        query += "RETURN publisher,snatches, publisherCount, count ORDER BY publisher DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)" 
-
-      }      break;
-
-    case '1':
-      console.log("HERE2")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN publisher, snatches, publisherCount, count ORDER BY count ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)" 
-
-      }
-      else{
-        query += "RETURN publisher, snatches, publisherCount, count ORDER BY count DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)" 
-      }
-
-      break;
-    case '2':
-      console.log("HERE3")
-      if(req.body.order[0].dir === 'asc'){
-        query += "RETURN publisher, snatches, publisherCount, count ORDER BY snatches ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) " 
-
-      }
-      else{
-        query += "RETURN publisher, snatches, publisherCount, count, ORDER BY snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) " 
-
-      }
-      break;
-    default :
-      console.log("HERE4")
-        query += "RETURN publisher, snatches, publisherCount, count ORDER BY publisher ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) " 
-        break;
-
-  }
-  console.log(query)
-  session.run(query , params).then(data => {
-    session.close()
-    var count = 0;
-    console.log(data.records[0]._fields[2])
-    if(data.records && data.records[0]){
-      
-      return res.json({recordsTotal: data.records[0]._fields[2], recordsFiltered: data.records[0]._fields[2], 
-        data: data.records});
-    }
-    else{
-      return res.json({ errors : [{msg : "Error loading torrents"}]});
-    }
-  })  
-
-})
 
 function decodeEntities(encodedString) {
     var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
@@ -1440,20 +984,11 @@ function decodeEntities(encodedString) {
         return String.fromCharCode(num);
     });
 }
+
 function camelize(str) {
   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
     return index === 0 ? decodeEntities(decodeEntities(word.toLowerCase())) : decodeEntities(decodeEntities(word.toUpperCase()));
   }).replace(/\s+/g, '');
-}
-
-
-function toTitleCase(str) {
-  return str.replace(
-    /\w\S*/g,
-    function(txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    }
-  );
 }
 
 app.post("/snatched/:id", check("id").trim().escape().not().isEmpty().isInt().isLength({min : 3, max : 10}), function(req,res){
@@ -1552,7 +1087,7 @@ app.post("/top10/:time", check("time").trim().escape(), async function(req,res){
 
         }
 
-      return res.json({recordsTotal : total, recordsFiltered : total, data: data.records});
+      return res.json({recordsTotal : total, recordsFiltered : total, records: data.records});
     })
 
 })

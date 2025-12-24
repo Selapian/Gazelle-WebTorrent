@@ -138,7 +138,7 @@ q:before, q:after {
   height:333px;
   width:100%;
   border-radius:14px;
-  background-color:#ABA2B4;
+  background-color:black;
 
 
 }
@@ -198,13 +198,6 @@ body.is-seed .show-leech {
    display: none;
 }
 
-#status code {
-   font-size: 90%;
-   font-weight: 700;
-   margin-left: 3px;
-   margin-right: 3px;
-   border-bottom: 1px dashed rgba(255,255,255,0.3);
-}
 
 #output object{
     width: 100%;
@@ -297,7 +290,6 @@ label{
 }
 
 h3{
-  padding-top:13px;
   width:calc(100% - 100px);
 }
 
@@ -426,9 +418,9 @@ h2 span{
   color:#BCBCBC;
   text-shadow: 1px 2px #063A4C;*/
   font-weight:700;
-  font-size: 33px;
+  font-size: 45px;
   color:mediumvioletred;
-
+  letter-spacing:7px;
   font-variant:small-caps;
   padding:13px;
   
@@ -492,12 +484,12 @@ background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%
     z-index: 999;
  
 background: #01D3CC;
-background: linear-gradient(171deg,rgba(17, 211, 204, 1) 0%, rgba(64, 199, 40, 1) 35%, rgba(0, 0, 0, 1) 100%);
-background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  border-bottom:3px solid black !important; /* PYRAMID */
-  box-shadow:3px 3px 3px goldenrod !important;
+border-bottom:3px solid gold; /* Can't get enough of that Golden Crisp! */
 
+  box-shadow:4px 4px 8px blue !important; /* PYRAMID */
+background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
+-webkit-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
+-moz-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
 }
 
 h2{
@@ -826,15 +818,14 @@ span{
 .sorting{
   padding:9px 0px 9px 0px;
   /*background-color:#cc70d1;*/
-    font-family: "Atkinson Hyperlegible Next", "Times New Roman", system-ui;
   color:lightgoldenrodyellow;
   /*box-shadow:1px 2px 3px palevioletred;*/
   background-color:goldenrod;
   font-variant:small-caps;
-  font-size:18px;
-  box-shadow:3px 3px 3px darkviolet;
-  font-family:"Red Rose", serif;
-  border-bottom:2px solid gold;
+  font-size:20px;
+  font-family:"Pirata One", serif;
+  box-shadow:3px 3px 3px lightcyan;
+  border-bottom:1px solid gold;
   background-color:#17627C !important;
   
 
@@ -959,7 +950,6 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 
 .torrentSource{
   position:relative;
-  top:-15px;
   width: calc(100% - 111px);
   float: left;
   padding-left: 0;
@@ -985,14 +975,9 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   position:absolute;
   z-index:2;
   font-variant:small-caps;
-  font-size:16px !important;
-  font-family:"Secular One", Arial;
-  font-family:"Secular One", sans-serif;
   color:#385E5C;/*#19e0e3;*/
   
-  color:#BCBCBC;
   text-align:center;
-  font-family: "Red Rose", sans-serif;
 
 
 }
@@ -1067,7 +1052,6 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   position: relative;
   float: left;
   padding: 0px 8px 0px 8px;
-  top: 11px;
   width: 100%;
 }
 
@@ -1316,12 +1300,6 @@ body .ui-autocomplete {
 
 h3{
   font-size: 24px;
-  padding-left: 5px;
-  padding-bottom: 16px;
-}
-
-.bulletin h3{
-  padding-left:0px;
 }
 
 /* SOURCE */
@@ -1557,7 +1535,6 @@ a.class{
 
 .adv_search{
   width:301px;
-  height:450px;
   text-align:center;
   /*border:5px solid transparent;
   border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
@@ -1573,7 +1550,7 @@ a.class{
   box-shadow:4px 3px 5px black;*/
   border-radius:17px !important;
 
-  background: lightgoldenrodyellow !important;
+  background: goldenrod !important;
   border:3px solid #007007;
 
   
@@ -1628,7 +1605,6 @@ a.class{
 
 .adv_search input:not(.adv_class){
   width:270px;
-  margin-top:13px;
   background-color:white;
   
 }
@@ -1641,7 +1617,8 @@ a.class{
 
 
 #adv_submit, #graph_submit{
-  margin-top:18px;
+  margin-top:15px;
+  margin-bottom:15px;
 }
 
 #download_graph_page{
@@ -1651,22 +1628,23 @@ a.class{
 #adv_heading, #graph_heading{
   font-family: "Red Rose", serif;
   font-variant:small-caps;
-  font-size:19px;
+  font-size:20px;
   text-align:center;
   float:left;
   display:block;
   margin:0 auto;
   font-weight:bold;
+  letter-spacing:3px;
   width:100%;
   text-align:center;
+  padding-top:10px;
+  padding-bottom:10px;
+  text-decoration:underline;
     
 
 }
 
-#adv_heading:not(.adv_heading_violet){
-  padding:16px;
 
-}
 
 
 .adv_header_button{
@@ -1826,11 +1804,8 @@ a.class{
 
 
   body, div.TEMPLAR{
-    background-color:black;
-    background:black;
     background-color:lightgoldenrodyellow;
-    background-color:lightcyan;
-    background-color:#CDCDCD;
+
     
   }
 
@@ -1924,6 +1899,7 @@ h1, h1 a, h1 a:visited{
   position:relative;
   top:4px;
   text-shadow:1px 3px white;
+  letter-spacing:3px;
   font-family:"Pirata One", serif;
 }
 
@@ -1984,7 +1960,8 @@ label.adv_class, input.adv_class{
   background-color:cyan;
   box-shadow:3px 3px 3px black;
   color:black;
-  border:3px solid darkviolet;
+  font-weight: bold;
+  border:3px solid goldenrod;
 }
 
 #warp{
@@ -1995,7 +1972,7 @@ label.adv_class, input.adv_class{
 
 #warp:hover{
   background-color:white;
-  color:#CDCDCD;
+  color:black;
   font-weight:bold;
   border:5px solid black;
   box-shadow:3px 4px 6px white;
@@ -2101,7 +2078,7 @@ button{
 #adv_heading{
   font-size:19px !important;
   font-family:"Roboto Flex", sans-serif;
-  color:goldenrod !important;
+  color:white !important;
 }
 
 .mobile_panel{
@@ -2120,12 +2097,8 @@ h2 span:not(.loading){
 
 .sorting{
   text-shadow:2px 3px black;
-  border-bottom:3px solid gold;
 }
 
-header{
-  border-bottom:4px solid #50C777 !important;
-}
 
 #torrentsTitle span:not(.loading), #top10Title span:not(.loading){
   color:black !important;
@@ -2136,16 +2109,17 @@ header{
 }
 
 .sourceType{
-  color:gold !important;
-  text-shadow:1px 1px black;
-  font-size:18px;
-  font-family:"Roboto Flex", sans-serif;
+  color:#385E5C !important;
+  text-shadow:3px 2px goldenrod;
+  font-size:18px !important;
+  font-family:"Pirata One", sans-serif;
   text-align:center !important;
   font-variant:small-caps;
   width:98px;
   position:relative;
   left:-98px;
   top:130px;
+  letter-spacing: 1px;
   text-align:center;
   display:block;
   float:left;
@@ -2157,9 +2131,6 @@ header{
     color: #333 !important; /* Adjust text color for readability */
 }
 
-header{
-  border-bottom:3px solid gold !important;
-}
 
 .search input{
   background-color:#fae1ec !important;
@@ -2181,6 +2152,19 @@ h3{
   font-family:"Roboto Flex", sans-serif;
   text-align:center;
   width:100%;
+}
+
+/* Center all headers in all DataTables */
+table.dataTable thead th {
+    text-align: center !important;
+}
+
+/* If you have sorting icons, you might need to adjust the padding 
+   to ensure the text is truly centered */
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    background-position: center right; /* Moves icon to the edge */
 }
 
 /* Remove sorting icons from all headers */
@@ -2261,6 +2245,11 @@ h3{
     opacity: 1;
 }
 
+.adv_show input{
+  margin:13px 0px 0px 0px;
+}
+
+
 @media only screen and (max-width: 1079px) {
 
   div.TEMPLAR{
@@ -2317,13 +2306,11 @@ h3{
   }
 
   h3{
-    padding-top:40px;
     font-size:24px;
   }
 
   header{
     height:55px;
-    border-bottom:2px solid black;
   }
 
   .ui-autocomplete{
@@ -2350,7 +2337,7 @@ h3{
     height:49px;
     color:palevioletred;
     
-    color:lightcyan;
+    color:mediumvioletred;
     top:7px;
     left:5px;
     z-index:9999;
@@ -2584,25 +2571,13 @@ h3{
   }  
 
   .adv_search{
-    margin-top:33px;
     width:301px;
-    padding:13px;
-    height:478px;
   }
+
 
   
   
-  
-  
-  #stupa{
-    width:88px !important;
-    height:auto;  
-    top:-17px !important /*GREAT PYRAMID*/;
-    left:13px;
-    margin:0 auto;
-
-  }
-  
+ 
   h3{
     width:100%;
     }
@@ -2668,8 +2643,8 @@ h3{
   }
 
   h2 span{
-    font-size:18px;
-    line-height:24px;
+    font-size:24px;
+    line-height:30px;
   }
 
   h3{

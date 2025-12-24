@@ -30,6 +30,6 @@ function assertMermaidComplete(){
   $("#warp").prop("disabled", false)
   setTimeout(function(){
       $("h2 span").css("color", "#17627C").css("font-family", "Red Rose").css("text-shadow", "1px 1px gold");
-  },600)
+  },777)
 }
 

@@ -9,7 +9,7 @@ function du() {
     TEMPLAR.initialize({
         defaultPage: "titles",
         dir: "client/partials",
-        fade: false,
+        fade: true,
         pages: ["top10", "titles", "torrent", "node", "set"],
         helm: [
             {
@@ -17,7 +17,7 @@ function du() {
                 fn: function() {
                     initializeTorrents("torrents");
                     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-                        $(".graph_search").fadeIn(1337)
+                        $(".graph_search").fadeIn(5555)
                         initializeGraph();
 
                     }

@@ -158,6 +158,36 @@ function unicodeStringtoChar(codepointString) {
     return String.fromCodePoint(decimalCode);
 }
 
+/**
+ * Removes stop words and common business suffixes from publisher names.
+ * Targeted for graph search optimization.
+ */
+function remove_publisher_stopwords(str) {
+    if (!str) return "";
+
+    // 1. Define Publisher-specific stop words (Case-Insensitive)
+    const stopWords = [
+        "and", "the", "of", "for", "in", "by", "with", "a", "an",
+        "ltd", "limited", "inc", "incorporated", "corp", "corporation",
+        "publishers", "publisher", "publishing", "publications", "press",
+        "books", "company", "co", "llc", "group", "house", "intl", "international"
+    ];
+
+    // 2. Normalize and split into tokens
+    // We remove common trailing punctuation like periods or commas first
+    let cleanStr = str.replace(/[,.]/g, ' ');
+    let words = cleanStr.split(/\s+/);
+
+    // 3. Filter out the stop words
+    let filteredWords = words.filter(word => {
+        let lowerWord = word.toLowerCase();
+        return !stopWords.includes(lowerWord);
+    });
+
+    // 4. Rejoin and clean up extra whitespace
+    return filteredWords.join(' ').trim();
+}
+
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,

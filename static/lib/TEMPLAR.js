@@ -11,8 +11,8 @@ $(document).on("TEMPLAR", function() {
 });
 
 var TEMPLAR = { 
-    _dir: "client/PARTIALS",
-    _fade: false,
+    _dir: "client/partials",
+    _fade: true,
     _helm: [],
     _page : "home",
     _pages : [],
@@ -23,7 +23,7 @@ var TEMPLAR = {
         const {
             helm = [],
             defaultPage = "home",
-            dir = "client/PARTIALS",
+            dir = "client/partials",
             fade = false,
             pages = []
         } = options;
