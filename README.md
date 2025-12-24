@@ -16,13 +16,19 @@ To get started, you will need to:
 
 *Edit the Torrents model under static/client/models* Insert Source types (such as Documentary, or Renaissance Art), edition_torrent media (such as Ebook or Concert), and edition_torrent format (such as PDF or mp3). We do not currently support codecs or bitrates, so I would recommend editing your formats to be more specific, like mp3 (192kbps), mp3 (V0), x264 (1080p HD), etc. For perspective, an Ebook would be [media] and a PDF vs djvu would be [format]. The s:Source.type could be "Lecture" or "Letter." So "there exists a Letter, holding Ebook media, of the formats PDF and djvu."
 
+*I am not currently providing the code to produce uploads*. I may create a Neo4j uploader based on file names in the future. If you want to write the code yourself, you need to save the file.length in TOFLOAT(bytes) to t:Torrent.size, and set :Torrent.release = "random_sounding_release_name". All the files for one magnetURI should have the same Release Name. Now if you want to have multiple releases, you must have various magnetURIs with different release names, and edit the webTorrent.js controller to add the torrent based on release. 
+
+*You must add Author nodes and Class nodes connected to every Source.* (a:Author)<-[:AUTHOR]-(s:Source)<-[:TAGS]-(c:Class). The :Publisher logic is (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s:Source). Source.name, Author.searchable, Class.name, and Publisher.name all need Indexes, the names of which you may find in the /search REST API route. 
+
+*Editions must be matched based on edition.title*, so multiple edition_torrent.torrent rows show up under their corresponding :Edition. *Set :Torrent.deleted = false on new files.* Note that, as my workaround, a Torrent is more of a File, as there is only one Torrent on the whole site, with all the Files. 
+
+*Create a WebTorrent with all the files you uploaded with your code.*
+
 *Edit the magnetURI in static/client/controllers/webTorrent.js*
 
 *Edit the magnetURI in static/client/partials/header.html*; **there are two, one for mobile, and one for desktop.**
 
 *Host server.js, config.js, static/, and js/ on a node.js platform*
-
-*I am not currently providing the code to produce uploads*. I may create a Neo4j uploader based on file names in the future.
 
 **ABOUT THE ARCHITECTURE**
 
