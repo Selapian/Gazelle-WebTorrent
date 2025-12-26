@@ -644,6 +644,7 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
       return res.json({recordsTotal: recordsTotal, recordsFiltered: recordsFiltered, records: data.records});
     })
 })
+
 app.post("/graph_search", 
   check("class_all").trim().escape().isLength({max:100}), 
   check("title").trim().escape().isLength({max: 400}),
@@ -764,7 +765,7 @@ app.post("/graph_search",
       author : he.encode(he.decode(he.decode(req.body.author))), 
       classes: classes, 
       publisher : he.encode(he.decode(he.decode(req.body.publisher))), 
-      type : req.body.type, media: req.body.media, format : req.body.format
+      type : he.encode(he.decode(he.decode(req.body.type))), media: req.body.media, format : req.body.format
     }
 
     session.run(query , params).then(data => {
