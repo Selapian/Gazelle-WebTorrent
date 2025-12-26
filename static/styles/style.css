@@ -70,6 +70,17 @@ q:before, q:after {
   height: 100%;
 }*/
 
+object{
+  margin-top:0px !important;
+}
+
+#output a{
+  position:absolute !important;
+  top:-40px !important;
+  right:0px !important;
+  margin-bottom:0px !important;
+}
+
 
 
 #upload_inst{
@@ -484,12 +495,14 @@ background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%
     z-index: 999;
  
 background: #01D3CC;
-border-bottom:3px solid gold; /* Can't get enough of that Golden Crisp! */
+border-bottom:4px solid blue; /* Can't get enough of that Golden Crisp! */
 
-  box-shadow:4px 4px 8px blue !important; /* PYRAMID */
+  box-shadow:4px 5px 7px goldenrod !important; /* PYRAMID */
 background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
 -webkit-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
 -moz-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
+
+  
 }
 
 h2{
@@ -1204,8 +1217,9 @@ input{
   color:black;
 }
 
-.search input::placeholder{
-  color:silver;
+.search input::placeholder, .adv_show input::placeholder{
+  color:gold;
+  font-family:"Roboto Flex", sans-serif;
 }
 
 .tabs .searchField{
@@ -1242,19 +1256,23 @@ body .ui-menu-item {
   /* font-family to all */
  /* box-shadow:4px 4px 5px #83DAC0;*/
   background-color:#17627C;
-  background-color:darkcyan;
+  background-color:darkviolet;
 
 }
 .ui-autocomplete{
   max-height:310px;
-  width:180px;
-  color:cyan !important;
+  width:250px;
+  color:violet !important;
   border:3px dotted black;
-  font-family: "Bitcount Prop Single", system-ui;
-  font-weight:400px;
+  font-family: "Roboto Flex", system-ui;
   position:relative;
   z-index:9999;
   overflow-y:auto;
+  border: 3px solid darkgoldenrod !important;
+    
+  /* A soft, deep shadow to give the menu elevation */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 body .ui-autocomplete {
@@ -1628,7 +1646,7 @@ a.class{
 #adv_heading, #graph_heading{
   font-family: "Red Rose", serif;
   font-variant:small-caps;
-  font-size:20px;
+  font-size:21px;
   text-align:center;
   float:left;
   display:block;
@@ -1899,7 +1917,7 @@ h1, h1 a, h1 a:visited{
   position:relative;
   top:4px;
   text-shadow:1px 3px white;
-  letter-spacing:3px;
+  letter-spacing:5px;
   font-family:"Pirata One", serif;
 }
 
@@ -1961,21 +1979,21 @@ label.adv_class, input.adv_class{
   box-shadow:3px 3px 3px black;
   color:black;
   font-weight: bold;
-  border:3px solid goldenrod;
+  border:4px solid gold;
 }
 
 #warp{
-  border:3px solid white;
-  box-shadow:3px 3px 3px black;
+  border:3px solid darkviolet;
+  box-shadow:3px 4px 4px gold;
 }
 
 
 #warp:hover{
-  background-color:white;
+  background-color:#F8F8F8;
   color:black;
   font-weight:bold;
-  border:5px solid black;
-  box-shadow:3px 4px 6px white;
+  border:4px solid gold;
+  box-shadow:3px 4px 5px violet;
 }
 
 .torrentClasses a{
@@ -2109,9 +2127,9 @@ h2 span:not(.loading){
 }
 
 .sourceType{
-  color:#385E5C !important;
-  text-shadow:3px 2px goldenrod;
-  font-size:18px !important;
+  color:black !important;
+  text-shadow:3px 3px gold;
+  font-size:19px !important;
   font-family:"Pirata One", sans-serif;
   text-align:center !important;
   font-variant:small-caps;
@@ -2134,7 +2152,6 @@ h2 span:not(.loading){
 
 .search input{
   background-color:#fae1ec !important;
-  color:gold;
 }
 
 h4{

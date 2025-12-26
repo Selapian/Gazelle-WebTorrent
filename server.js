@@ -224,7 +224,6 @@ app.post("/node/:label", [
         case 'author':    countClause = "MATCH (a:Author {uuid: $uuid})-[]->(s:Source)"; break;
         case 'class':     countClause = "MATCH (c:Class {uuid: $uuid})-[:TAGS]->(s:Source)"; break;
         case 'publisher': countClause = "MATCH (p:Publisher {uuid: $uuid})<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s:Source)"; break;
-        default:          countClause = "MATCH (s:Source {uuid: $uuid})";
     }
 
     let matchClause = ""
@@ -233,7 +232,6 @@ app.post("/node/:label", [
         case 'author':    matchClause = "MATCH (a:Author {uuid: $uuid})-[]->(s1:Source)"; break;
         case 'class':     matchClause = "MATCH (c:Class {uuid: $uuid})-[:TAGS]->(s1:Source)"; break;
         case 'publisher': matchClause = "MATCH (p:Publisher {uuid: $uuid})<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s1:Source)"; break;
-        default:          matchClause = "MATCH (s1:Source {uuid: $uuid})";
     }
 
     let orderBy = "s.updated DESC"; // Default
@@ -433,7 +431,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     else if(!req.body.title && req.body.type !== "all"){
       query += "MATCH (s:Source {type : $type}) "
     }
-    else if(req.body.classes && req.body.classes !== "undefined"){
+    else if(req.body.classes){
       query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
     }
     else{
@@ -449,6 +447,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
       query += "OPTIONAL MATCH (a:Author)-[]->(s) "
     }
     query += "WITH s, a "
+
    if(req.body.publisher){
     // Use a subquery or strict match that carries the publisher context through
       query += "CALL db.index.fulltext.queryNodes('publisherName', $publisher) YIELD node AS pubNode " +
@@ -457,6 +456,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     } else {
       query += "OPTIONAL MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s) ";
     }
+
   query += "WITH s,a,e "
   if(req.body.media !== "all" && req.body.format !== "all"){
     query += "OPTIONAL MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
@@ -475,16 +475,15 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
 
   }
   query+= "WITH s " 
+    console.log(req.body.class_all)
+
   if(req.body.classes){
     
-    console.log(req.body.class_all)
     if(req.body.class_all === "true"){
-      query += "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
-      "WITH s, collect(c1) as classes " +
-      "WITH s, head(classes) as head, tail(classes) as classes " +
-      "MATCH (head)-[:TAGS]->(s) " +
-      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
-      
+      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
+      "WHERE c1.name IN $classes " +
+      "WITH s, count(distinct c1) AS actualCount, size($classes) AS expectedCount "
+      "WHERE actualCount = expectedCount "
     }
     else{
       query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
@@ -498,7 +497,6 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
 
   }
   if(req.body.title && req.body.type === "all"){
-      console.log("THERE!!!")
       query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
       "MATCH (s:Source) WHERE s.uuid = node.uuid "
     }
@@ -560,17 +558,13 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     console.log(req.body.class_all)
     if(req.body.class_all === "true"){
-      query += 
-      "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
-      "WITH s,a,e,t,p, collect(c1) as classes, count " +
-      "WITH s,a,e,t,p, head(classes) as head, tail(classes) as classes, count " +
-      "MATCH (head)-[:TAGS]->(s) " +
-      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
+      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
+      "WHERE c1.name IN $classes " +
+      "WITH s, a, p, e, t, count, count(distinct c1) AS actualCount, size($classes) AS expectedCount "
+      "WHERE actualCount = expectedCount "
     }
     else{
-      query += "MATCH (c:Class)-[:TAGS]->(s) " + 
-      "WITH s,a,p,e,t, count " +
-      "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
+      query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
     }
 
 
@@ -589,11 +583,11 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
       break;
     case '1':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       break;
@@ -609,7 +603,7 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
       break;
     case '3':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, cclasses, count ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
@@ -619,7 +613,7 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
       break;    
     case '4':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes,  ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
@@ -664,14 +658,14 @@ app.post("/graph_search",
     if (!errors.isEmpty()) return res.json({ errors: errors.array() });
 
     let classes = null; 
-    if(req.body.classes && req.body.classes !== "undefined"){
+    if(req.body.classes){
         classes = JSON.parse(he.decode(req.body.classes)).split(",");
         classes = classes[0] === [''] ? [] : classes.map(c => he.decode(c.trim()).replace(/['"]+/g, ''));
     }
 
     req.body.title = remove_stopwords(req.body.title).replace(":", ' ');
     req.body.author = req.body.author.replace(":", ' ');
-    req.body.publisher = req.body.publisher.replace(':', ' ');
+    req.body.publisher = remove_publisher_stopwords(req.body.publisher.replace(':', ' '));
     
     if(req.body.publisher.toLowerCase().startsWith("propagate")) req.body.publisher = "propagate.info";
 
@@ -679,18 +673,18 @@ app.post("/graph_search",
     var query = "";
 
     // --- 1. FILTERING BLOCK (Defining 's') ---
-    if(req.body.title && req.body.title !== "undefined" && req.body.type === "all"){
+    if(req.body.title && req.body.type === "all"){
       query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
                "MATCH (s:Source) WHERE s.uuid = node.uuid "
     }
-    else if(req.body.title && req.body.title !== "undefined" && req.body.type !== "all"){
+    else if(req.body.title && req.body.type !== "all"){
       query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
                "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
     }
     else if(!req.body.title && req.body.type !== "all" && req.body.type){
       query += "MATCH (s:Source {type : $type}) "
     }
-    else if(req.body.classes && req.body.classes !== "undefined" && req.body.class_all !== "true"){
+    else if(req.body.classes && req.body.class_all !== "true"){
       query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
     }
     else{
@@ -701,26 +695,22 @@ app.post("/graph_search",
     query += "WITH s, null as a1UUID, null as pUUID ";
 
     // --- 3. AUTHOR BLOCK ---
-    if(req.body.author && req.body.author !== "undefined"){
+    if(req.body.author){
         query += "CALL db.index.fulltext.queryNodes('authorSearch', $author) YIELD node " +
                  "MATCH (a1:Author)-[:AUTHOR]->(s) WHERE a1.uuid = node.uuid " +
                  "WITH s, a1.uuid as a1UUID, pUUID "; 
     }
 
     // --- 4. CLASS LOGIC (RESTORED BOTH PATHS) ---
-    if(req.body.class_all === "true" && classes){
-      query += 
-      "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
-      "WITH s, a1UUID, pUUID, collect(c1) as classes " + 
-      "WITH s, a1UUID, pUUID, head(classes) as head, tail(classes) as classes " + 
-      "MATCH (head)-[:TAGS]->(s) " + 
-      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
+    if(req.body.class_all === "true"){
+      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
+      "WHERE c1.name IN $classes " +
+      "WITH s, a1UUID, pUUID, count(distinct c1) AS actualCount, size($classes) AS expectedCount  "
+      "WHERE actualCount = expectedCount "
     }
-    else if(req.body.classes && req.body.classes !== "undefined"){
+    else{
       // This is the block that was missing: handle standard class search
-      query += "MATCH (c:Class)-[:TAGS]->(s) " + 
-               "WITH s, a1UUID, pUUID, c " + 
-               "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
+      query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
     }
 
     // --- 5. PUBLISHER BLOCK ---
@@ -751,7 +741,7 @@ app.post("/graph_search",
              // Segment 4: The Related Classes
              "WITH s " + // <--- Missing bridge fixed here
              "MATCH (s)<-[:TAGS]-(c:Class)-[:TAGS]->(s2:Source) " + 
-             "RETURN s2 ORDER BY rand() LIMIT 12 " +
+             "RETURN s2 ORDER BY rand() LIMIT 16 " +
          "} " +
 
              "OPTIONAL MATCH (s2)<-[:AUTHOR]-(a:Author) " +
@@ -766,7 +756,7 @@ app.post("/graph_search",
              
              "RETURN s2, a, c, p " +
              "ORDER BY priority DESC, rand() " +
-             "LIMIT 126";
+             "LIMIT 88";
 
     var params = {
       skip : req.body.start, limit : req.body.length, 
@@ -794,7 +784,7 @@ app.get("/search", check("term").trim().escape(), check("field").not().isEmpty()
   const session = driver.session()
 
   console.log(req.query.field)
-  if(search.query.field === "search_publishers"){
+  if(req.query.field === "search_publishers"){
     req.query.term = remove_publisher_stopwords(req.query.term)
   }
   else{

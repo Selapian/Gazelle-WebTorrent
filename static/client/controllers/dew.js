@@ -17,8 +17,8 @@ function du() {
                 fn: function() {
                     initializeTorrents("torrents");
                     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-                        $(".graph_search").fadeIn(5555)
                         initializeGraph();
+                        $(".graph_search").fadeIn(5555)      
 
                     }
                     htmlSearch();

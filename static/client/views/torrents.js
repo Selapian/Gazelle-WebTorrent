@@ -32,13 +32,6 @@ function initializeTorrents(table) {
         url = "/" + table + "/" + TEMPLAR.paramREC().label + "?uuid=" + TEMPLAR.paramREC().uuid
     }
 
-    var stateSave = false;
-    if (TEMPLAR.pageREC() === "top10" || TEMPLAR.pageREC() === "node") {
-        stateSave = false;
-    } else if (!TEMPLAR.paramREC() || !TEMPLAR.paramREC().search) {
-        stateSave = true;
-    }
-
     $(document).mouseup(function(e) {
         var container = $(".seeAllField");
         if (!container.is(e.target) && container.has(e.target).length === 0) {
@@ -56,7 +49,7 @@ function initializeTorrents(table) {
         },
         serverSide: true,
         bSort: true,
-        pageLength: TEMPLAR.pageREC() === "top10" ? 10 : 25,
+        pageLength: 10,
         "aoColumns": [
             { "sWidth": "0%" },
             { "sWidth": "50%" },

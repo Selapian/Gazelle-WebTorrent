@@ -1,9 +1,3 @@
-/*function assertHieroglyph(){
-  const index = Math.floor(Math.random() * 1071)
-
-  $("#warp").text(hieroglyphs[index])
-}*/
-
 function assertMermaid(){
   $("#warp").unbind("click");
   $("#warp").click(function(e){
@@ -19,10 +13,10 @@ function assertMermaid(){
 
 function assertF8(){
   if(mermaid){
-    $("h2 span").removeClass("loading").text("MERMAID: True-Random!").css("font-family", "Roboto Flex").css("color", "violet")
+    $("h2 span").removeClass("loading").text("True-Random!").css("font-family", "Roboto Flex").css("color", "darkviolet")
   }
   else{
-    $("h2 span").removeClass("loading").text("Consolations, Pseudo-Random...").css("color", "red").css("font-family", "Roboto Flex").css("text-shadow", "none");
+    $("h2 span").removeClass("loading").text("Pseudo-Random").css("color", "red").css("font-family", "Roboto Flex").css("text-shadow", "none");
   }
 }
 

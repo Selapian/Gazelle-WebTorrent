@@ -27,58 +27,6 @@ function htmlSearch(){
     var timeoutId;
     var classes;
 
-    $(".search_dialectic_classes_input").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term.split(",")[request.term.split(",").length - 1]
-                },
-                url: '/search?field=search_classes',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            
-            $(".search_dialectic_classes_input").val($(this).val().substring(0, $(this).val().lastIndexOf(",")) + 
-                                            ($(this).val().indexOf(",") > -1 ? ", " : "") +
-                                         ui.item.label)      
-            return false;         
-        }
-    })
-
-    $(".src_search_dialectic_classes_input").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term.split(",")[request.term.split(",").length - 1]
-                },
-                url: '/search?field=search_classes',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            
-            $(".src_search_dialectic_classes_input").val($(this).val().substring(0, $(this).val().lastIndexOf(",")) + 
-                                            ($(this).val().indexOf(",") > -1 ? ", " : "") +
-                                         ui.item.label)      
-            return false;         
-        }
-    })
-
     $(".search_publishers_input").autocomplete({
         scroll : true,
         source: function( request, response ) {
@@ -325,7 +273,8 @@ function htmlSearch(){
         select: function(event,ui){
              $(".mobile_menu").hide()
             var arr = $("#adv_classes").val().split(",");
-            arr[j] = ui.item.label;
+            console.log(j)
+            arr[j] = j > 0 ? " " + ui.item.label : ui.item.label;
             var value = arr.toString()
             $("#adv_classes").val(value)     
            return false;     

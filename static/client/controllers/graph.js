@@ -128,7 +128,7 @@ function graphRender(selector) {
     /** * Precise Modification: 
      * Calculate scale for 7 clicks out (1/1.3^7 ≈ 0.159)
      */
-    const initialScale = Math.pow(1 / 1.3, 7); 
+    const initialScale = 0.07; 
     
     // Create the identity and center it
     const initialTransform = d3.zoomIdentity
@@ -140,10 +140,10 @@ function graphRender(selector) {
     
     const simulation = d3.forceSimulation(Obelisk.nodes)
     // 1. Increase link distance to push connected nodes further apart
-    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(1337)) 
+    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(5555)) 
     
     // 2. Stronger negative charge (repulsion). -1000 to -1500 is better for high-density text
-    .force("charge", d3.forceManyBody().strength(-2900))
+    .force("charge", d3.forceManyBody().strength(-1775))
     
     // 3. Collision force prevents text labels from sitting directly on top of each other
     .force("collide", d3.forceCollide().radius(512)) 
@@ -152,14 +152,20 @@ function graphRender(selector) {
 
     setTimeout(() => {
         simulation.stop();
-    }, 5000);
+    }, 5555);
 
+    // --- PREVENT PAGE SCROLL & ENABLE HOVER ZOOM ---
     const zoom = d3.zoom()
-        .scaleExtent([0.03, 7]) // Lowered minimum extent to accommodate the new zoom out
+        .scaleExtent([0.0001, 20])
         .on("zoom", (event) => {
             transform = event.transform;
             render(); 
         });
+
+    // Prevent default browser scrolling when the wheel is used over the canvas
+    canvas.addEventListener('wheel', function(e) {
+        e.preventDefault();
+    }, { passive: false });
 
     const d3Canvas = d3.select(canvas);
     
@@ -177,7 +183,7 @@ function graphRender(selector) {
         Obelisk.links.forEach(d => {
             if (d.source && d.target && !d.isGold) {
                 ctx.beginPath();
-                ctx.strokeStyle = "#CDCDCD"; // Subtle gray
+                ctx.strokeStyle = "#555"; // Subtle gray
                 ctx.lineWidth = 1 / transform.k;
                 ctx.shadowBlur = 0;
                 ctx.moveTo(d.source.x, d.source.y);
@@ -255,6 +261,6 @@ function graphRender(selector) {
         }
     });
 
-    simulation.alphaTarget(.0087).restart();
+    simulation.alphaTarget(1.2).restart();
 }
 
