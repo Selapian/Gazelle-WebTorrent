@@ -75,9 +75,6 @@ object{
 }
 
 #output a{
-  position:absolute !important;
-  top:-40px !important;
-  right:0px !important;
   margin-bottom:0px !important;
 }
 
@@ -107,30 +104,6 @@ object{
   font-family:"Pirata One", sans-serif;
 }
 
-#ill{
-  padding-left:5px;
-  color:#fae1ec;
-  font-variant:small-caps;
-  font-family:"Roboto", sans-serif;
-  font-size:18px;
-}
-
-#buoy_preferences img{
-  width:33px;
-}
-
-
-
-#graph_inst{
-  position:absolute;
-  bottom:6px;
-  color:mediumvioletred;
-  width:98%;
-  left:5px;
-  font-size:16px;
-  text-align:center;
-  font-family:"Secular One",sans-serif;
-}
 
 .social{
   padding-left:5px;
@@ -150,7 +123,8 @@ object{
   width:100%;
   border-radius:14px;
   background-color:black;
-
+  border:2px solid lightgoldenrodyellow;
+  box-shadow:2px 3px #CDCDCD;
 
 }
 
@@ -223,17 +197,39 @@ body.is-seed .show-leech {
    transition: .5s .5s background-color ease-in-out;
 }
 
+#research_panel{
+  position:absolute;
+  right:5px;
+  height:16px;
+
+}
+
+.academic, .academic option{
+  font-family:"Space Mono", sans-serif;
+}
+
+#hero{
+  height:86px;
+  width:100%;
+  border-radius:8px;
+  border:2px solid gold;
+}
+
 #hero {
-  background-color: blue !important;
-  font-family:"Roboto Flex", system-ui;
-  font-weight:400;
+  font-family:"Share Tech Mono", system-ui;
 }
 
 #status {
-   color: mediumvioletred;
-   font-size: 17px;
-   padding: 13px;
+   color: gold;
+   font-size: 13px;
+   padding-top: 5px;
    padding-left:5px;
+}
+
+#anonymous{
+  padding-left:6px;
+  padding-top:5px;
+  font-size:12px;
 }
 
 
@@ -322,12 +318,6 @@ h3{
   margin-bottom:55px;
 }
 
-#source_spirit{
-  height:600px;
-  width:100%;
-  margin-top:37px;
-}
-
 .grid_1 input:not(.copyright){
   height:25px;
   font-size:16px;
@@ -368,8 +358,7 @@ h3{
 }*/
 
 .dataTables_length{
-  background-color: #FEFEFE;
-  color:black;
+
   border-radius:13px;
 }
 
@@ -378,10 +367,10 @@ div.TEMPLAR{
     color:black;
     overflow-x: hidden;
     width: 100%;
-    height: calc(100% - 121px);
+    height: calc(100% - 176px);
     position: absolute;
     box-sizing: border-box;
-    top: 116px;
+    top: 88px;
     bottom: 0px;
     overflow-x:hidden;
     background-color:#fcfce8;
@@ -389,7 +378,7 @@ div.TEMPLAR{
     background-color:#78717E;
   background: rgb(205,205,205);
 background: linear-gradient(342deg, rgba(205,205,205,1) 16%, rgba(120,113,126,1) 39%, rgba(171,171,171,1) 87%);
-background:black;
+background:#007007;
 
   /*padding: 12px 8px 6px 8px;*/
 }
@@ -430,10 +419,14 @@ h2 span{
   text-shadow: 1px 2px #063A4C;*/
   font-weight:700;
   font-size: 45px;
+  line-height:40px;
   color:mediumvioletred;
   letter-spacing:7px;
   font-variant:small-caps;
   padding:13px;
+  font-family:"Space Mono", "serif";
+  font-variant:small-caps;
+  text-shadow:1px 2px black;
   
 }
   
@@ -473,7 +466,7 @@ h3 span, h3{
 }
 
 header{
-  height: 121px;
+  height: 88px;
   width: 100%;
   /*background-color: #e6eef5;*/
   /*background-color: #413839;*/
@@ -495,35 +488,34 @@ background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%
     z-index: 999;
  
 background: #01D3CC;
-border-bottom:4px solid blue; /* Can't get enough of that Golden Crisp! */
+border-bottom:2px solid blue !important; 
 
-  box-shadow:4px 5px 7px goldenrod !important; /* PYRAMID */
-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
--webkit-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
--moz-background: linear-gradient(0deg, rgba(228, 210, 17, 1), rgba(1, 211, 204, 0.77), rgba(82, 47, 117, 0.95));
-
-  
+  box-shadow:3px 5px 6px black !important; /* PYRAMID */ /* Can't get enough of that Golden Crisp! */
+background: linear-gradient(0deg, darkviolet, gold, cyan);
+-webkit-background: linear-gradient(0deg, darkviolet, gold, cyan);
+-moz-background: linear-gradient(0deg, darkviolet, gold, cyan);
+/* 180deg: Top-to-Bottom transition */
+    background: linear-gradient(
+        180deg, 
+        blue 0%,    /* Start: Neon Cyan (Glow at the very top) */
+        #CDCDCD 33%, 
+        gold 66%,  /* Mid: Deep Gray (Provides contrast for inputs) */
+        lightseagreen 99%   /* End: DarkViolet (Thin horizon line at the bottom) */
+    );
 }
 
-h2{
-  
-}
 
-
-
-#buoy_preferences{
-  padding:5px;
-  color:darkgoldenrod;
-}
-
-select{
-  background-color:#FEFEEF;
-}
 
 
 
 #classes a, #classes a:visited, #authors a, #authors a:visited{
   color:steelblue;
+}
+
+#header_stream{
+  position:relative;
+  top:5px;
+  margin:0 auto;
 }
 
 
@@ -533,6 +525,7 @@ select{
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  position:relative;
 }
 
 .tabs li{
@@ -556,7 +549,7 @@ select{
 }
 
 .tabs, .mobile_tabs, h2{
-  font-family:"Red Rose", serif;
+  font-family:"Space Mono", serif;
   font-size:21px;
 }
 
@@ -564,7 +557,6 @@ select{
   position:relative;
   left: 0;
   right: 0;
-  top:2px;
   width:1080px;
   margin-left: auto;
   margin-right: auto;
@@ -624,7 +616,6 @@ button{
   color:#11523E;
   letter-spacing:1px;
 
-  background-color:mediumvioletred;
   color:lightgoldenrodyellow;
   display:block;
   margin:0 auto;
@@ -634,7 +625,7 @@ button{
     font-variant:small-caps;
 
 box-shadow:1px 3px 1px #58C777;
-border:2px solid cyan;
+border:2px solid darkviolet;
 margin:0 auto;
 text-align:center;
    
@@ -716,13 +707,6 @@ span{
 }
 
 
-
-#logo{
-  width:100%;
-  position:fixed;
-  text-align:center;
-  left:0;
-}
 
 #stupa{
   padding:0px 0px 0px 0px;
@@ -835,13 +819,60 @@ span{
   /*box-shadow:1px 2px 3px palevioletred;*/
   background-color:goldenrod;
   font-variant:small-caps;
-  font-size:20px;
-  font-family:"Pirata One", serif;
-  box-shadow:3px 3px 3px lightcyan;
-  border-bottom:1px solid gold;
-  background-color:#17627C !important;
+  font-size:18px;
+  font-family:"Space Mono", serif;
+  box-shadow:4px 5px 4px darkcyan;
+  text-shadow:2px 2px black;
+  border-bottom:2px solid cyan;
+  background-color:cyan !important;
+  position:relative;
+  z-index:13;
   
 
+}
+.sorting {
+    /* 180deg makes the gradient move from TOP to BOTTOM */
+   background: linear-gradient(
+        180deg, 
+        lightseagreen 0%,    /* Start: Neon Cyan */
+        #1a1a1a 45%,
+        #1a1a1a 85%,   /* Middle: Deep Gray (larger area for text legibility) */
+        darkslategray 100%   /* End: Gold border-like finish */
+    ) !important;
+    border-top:4px solid goldenrod;
+
+    
+    /* Bottom border to define the end of the cell */
+    
+    background-color: transparent !important;
+}
+
+.sorting {
+    border-collapse: collapse !important;
+}
+
+.sorting {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Target the DataTables "Processing" (Loading) bar */
+.dataTables_wrapper .dataTables_processing {
+    /* Set this higher than your th z-index (which was 10) */
+    z-index: 15 !important;
+    
+    /* Ensure it is positioned to respect the z-index */
+    position: absolute;
+    border-radius:15px;
+    /* Optional: Style it to match your Cyan/Gold theme */
+    background: #1a1a1a !important;
+    color: cyan !important;
+    border: 1px solid darkviolet !important;
+    box-shadow: 0 6px 15px silver !important;
+    
+    /* Center it visually if it's drifting */
+    top: 50% !important;
+    margin-top: -25px !important;
 }
 
 .torrents .sorting:first-child, .top10 .sorting:first-child, .source .sorting:first-child, .author .sorting:first-child, .class .sorting:first-child, .publisher .sorting:first-child{
@@ -874,7 +905,7 @@ thead tr{
 
 
 .odd td, .even td{
-  padding:24px 5px 8px 5px;
+  padding:15px 5px 15px 5px;
 }
 
 
@@ -884,7 +915,8 @@ thead tr{
 
 .torrentsTable{
   position:relative;
-  top:0px;
+  top:-17px;
+  left:0px;
 }
 
 
@@ -908,6 +940,7 @@ table{
   background-color:#fae1ec;
   background-color:#FCEEF3;
   background-color:#F8F8F8;
+  background-color:lightcyan;
 }
 
 .dtr-control{
@@ -933,27 +966,23 @@ table{
   border-bottom:1px solid #CDCDCD;
 }
 
+
 table.dataTable tr.dtrg-group th{
-  background-color:  darkslategray;
-  background-color: #fcfce8;
-  background-color:#e6e7b2;
-  background-color:#ebdec7;
-  background-color:goldenrod;
-  background-color:lightcyan;
-  height:175px;
+  background-color:#555555;
+  background: linear-gradient(90deg, darkslategray 0%, darkcyan 50%, #007bff 100%) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8) !important;
+  border-bottom: 2px solid cyan !important;
+  border-top:4px solid black !important;
+  height:147px;
+  position:relative;
+  z-index:10;
 }
 
-.header_stream{
-  position:fixed;
-  top:71px;
-  width:100%;
-}
 
 
 
 
 table.dataTable tr.dtrg-group th:not(:first-child){
-  border-top:5px dotted mediumvioletred;
 
 }
 
@@ -988,7 +1017,6 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   position:absolute;
   z-index:2;
   font-variant:small-caps;
-  color:#385E5C;/*#19e0e3;*/
   
   text-align:center;
 
@@ -996,13 +1024,26 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 }
 
 .dataTables_wrapper, .dataTables_length{
-  background-color:#EFEFEF;
+  background:transparent;
+  color:lightgoldenrodyellow;
+  font-family:"Share Tech Mono", sans-serif;
+  border:2px solid goldenrod;
+  background-color:#CDCDCD;
 
+}
+
+.dataTables_length input{
+  font-family:"Share Tech Mono", sans-serif;
+}
+
+
+.dataTables_length{
+  border:none;
 }
 
 
 .dataTables_wrapper{
-  margin: 77px 0px 137px 0px; /*CYBERPUNK ATLANTEAN PYRAMID*/
+  margin: 120px 0px 60px 0px; /*CYBERPUNK ATLANTEAN PYRAMID*/
   border-radius:21px;
 
 }
@@ -1032,40 +1073,13 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 }
 
 
-.seeAllField{
-    display: none;
-}
-
-.button_belly{
-    height:134px;
-    margin:8px 5px 0px 5px;
-  }
-
-.buttons_right{
-    width:150px;
-    float:right;
-    
-    position:relative;
-    right:0px;
-    
-    text-align:right;
-  }
-  
-  .buttons_left{
-    width:150px;
-   
-    float:left;
-    position:relative;
-    text-align:left;
-    left:0px;
-  }
-  
-
 .tableHeading{
   position: relative;
   float: left;
   padding: 0px 8px 0px 8px;
   width: 100%;
+  letter-spacing:3px;
+  line-height:23px !important;
 }
 
 .dataTable{
@@ -1085,8 +1099,8 @@ td{
 
 
 .dataTable td, .dataTable td a:not("#edition_span_publisher"){
-  font-family:"Times New Roman";
-  font-size:17px;
+  font-family:"Space Mono", serif;
+  font-size:16px;
 }
 
 a:not(".adv_plus", ".adv_minus"){
@@ -1101,14 +1115,14 @@ a:visited:not(".adv_toggle"){
 
 .dataTable td, #edition_span_publisher{
   color:black;
-  font-size:14px;
+  font-size:16px;
 }
 
 
 
 #edition_span_publisher{
   text-decoration:underline;
-  font-family:"Atkinson Hyperlegible Mono", sans-serif;
+  font-family:"Space Mono", serif;
  
   
 }
@@ -1119,14 +1133,12 @@ a:visited:not(".adv_toggle"){
   color:#063A4C;
   color:#196B7D;
   color:#17627C;
-    font-family:"Atkinson Hyperlegible Mono", sans-serif;
-    font-family:sans-serif;
-    font-size:16px;
+
   
 }
 
 .tableHeading{
-  color:black; !important;
+  color:#ABABAB !important;
 }
 
 .torrentClasses{
@@ -1134,7 +1146,6 @@ a:visited:not(".adv_toggle"){
 }
 
 a.class, a.class:visited,{
-  font-family:"Times New Roman",serif;
   font-style:italic;
   color:/*#19e0e3;*/black;
   color:#83DAC0;
@@ -1155,11 +1166,13 @@ a.class, a.class:visited,{
 }
 
 .tableImg{
-  width:98px;
+  width:95px;
   float: left;
   height: 111px;
   border-radius:14px;
   border:2px dotted cyan;
+  margin-left:3px;
+  margin-top:3px;
 }
 
 .dtr-control{
@@ -1173,7 +1186,6 @@ a.class, a.class:visited,{
   position: relative;
   font-size: 13px;
   width:100%;
-  margin-top:8px;
 }
 
 /* HEADER SILOS */
@@ -1196,10 +1208,6 @@ a.class, a.class:visited,{
 /* HEADER SEARCH */
 
 
-#anonymous{
-  padding-left:5px;
-}
-
 
 #remaining{
   color:goldenrod !important;
@@ -1218,8 +1226,8 @@ input{
 }
 
 .search input::placeholder, .adv_show input::placeholder{
-  color:gold;
-  font-family:"Roboto Flex", sans-serif;
+  color:goldenrod;
+  font-family:"Share Tech Mono", sans-serif;
 }
 
 .tabs .searchField{
@@ -1256,19 +1264,20 @@ body .ui-menu-item {
   /* font-family to all */
  /* box-shadow:4px 4px 5px #83DAC0;*/
   background-color:#17627C;
-  background-color:darkviolet;
-
+  background-color:black;
+  text-align:justify;
+  font-size:15px;
 }
 .ui-autocomplete{
   max-height:310px;
-  width:250px;
-  color:violet !important;
-  border:3px dotted black;
-  font-family: "Roboto Flex", system-ui;
+  width:270px;
+  color:lightcyan !important;
+  font-family: "Share Tech Mono", system-ui;
   position:relative;
   z-index:9999;
   overflow-y:auto;
-  border: 3px solid darkgoldenrod !important;
+  border: 2px solid blue !important;
+  border-radius:15px;
     
   /* A soft, deep shadow to give the menu elevation */
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
@@ -1371,7 +1380,6 @@ h3{
 
 .torrentsTable td, .torrentsTable th{
   padding: 5px;
-  padding-top:0px;
   color:#196B7D;
   color:#060606;
  
@@ -1407,12 +1415,12 @@ h3{
 }
 
 .torrentsTable .tr:last-child td{
-  padding-bottom:20px;
+  padding-bottom:9px;
 }
 
 
 .torrentsTable th{
-  padding-bottom:14px;
+  padding-bottom:4px;
   font-size:14px;
 }
 
@@ -1426,28 +1434,8 @@ h3{
   color:darkolivegreen;
 }
 
-
-
-.torrentsTable a, torrentsTable a:visited{
-  color:#83DAC0;
-  color:#83DAC0;
-  color:#83DAC0;
-  color:lightseagreen;
-  color:goldenrod;
-  color:darkcyan;
-  color:darkviolet;
-  color:goldenrod;
-  color:darkcyan;
-  font-family:"Atkinson Hyperlegible Mono", sans-serif;
-  font-family: "Bitcount Prop Single", system-ui;
-  
-
-  font-size:13px;
-
-}
-
 .torrentsTable{
-  font-size:13px;
+  font-size:14px;
 }
 
 a.link a.visited{
@@ -1457,9 +1445,9 @@ a.link a.visited{
 .torrentsTable{
 
 
-  font-family:"Markazi Text", serif;
-  font-family:"Times New Roman";
+  font-family:"Share Tech Mono", sans-serif;
 }
+
 
 table {
     table-layout:fixed;
@@ -1546,7 +1534,7 @@ a.class{
 /* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:black !important;
+  background-color:#121212 !important;
   color:lightgoldenrodyellow !important;
 }
 
@@ -1567,19 +1555,21 @@ a.class{
   animation: 10s rotate linear infinite;
   box-shadow:4px 3px 5px black;*/
   border-radius:17px !important;
-
-  background: goldenrod !important;
-  border:3px solid #007007;
+  background-color:#CDCDCD;
+  border:3px solid gold !important;
 
   
 }
 
-.stream{
-  padding:5px 0px 5px 0px;
+.adv_search input{
+  font-size:14px;
 }
 
-#publishers a, #publishers a:visited{
-  color:steelblue;
+
+.adv_show select, .adv_show option{
+  font-family:"Share Tech Mono", sans-serif;
+  font-size:14px;
+  height:18px;
 }
 
 .upload a:not(.removeAuthor, .torrentArea a){
@@ -1632,8 +1622,6 @@ a.class{
 
 }
 
-
-
 #adv_submit, #graph_submit{
   margin-top:15px;
   margin-bottom:15px;
@@ -1643,8 +1631,8 @@ a.class{
   margin-top:5px;
 }
 
-#adv_heading, #graph_heading{
-  font-family: "Red Rose", serif;
+#adv_heading{
+  font-family: "Space Mono", serif;
   font-variant:small-caps;
   font-size:21px;
   text-align:center;
@@ -1658,58 +1646,12 @@ a.class{
   padding-top:10px;
   padding-bottom:10px;
   text-decoration:underline;
-    
+  color:goldenrod !important;
 
 }
 
 
 
-
-.adv_header_button{
-  width:301px;
-  height:60px;
-  position:relative;
-  
-  display:block;
-}
-
-.underline{
-  text-decoration:underline;
-}
-
-
-
-.health a, .health a:visited{
-  font-size:16px;
-  font-family: "Roboto", sans-serif;  
-    color:#83DAC0;
-
-}
-
-.buoy_bulletins span{
-  padding-bottom:26px;
-}
-
-.buoy_bulletins span a{
-  color:darkcyan;
-}
-
-.buoy_bulletins p{
-  padding-top:24px;
-}
-
-.health span{
-  font-size:16px;
-  font-weight:bold;
-  font-family: "Roboto", sans-serif;
-  color:#19e0e3;
-  color:#83DAC0;
-
-}
-
-#home a{
-  color:goldenrod;
-}
 
 
 .authors a{
@@ -1795,7 +1737,6 @@ a.class{
 
 .tableHeading, .tableHeading a{
 
-  font-size:16px;
 }
 
 .sourceTab{
@@ -1823,8 +1764,19 @@ a.class{
 
   body, div.TEMPLAR{
     background-color:lightgoldenrodyellow;
+    background-color:darkcyan;
+    background: radial-gradient(
 
-    
+        circle at center, 
+
+        darkslategray 0%,       /* DarkCyan center */
+
+        #007bff 50%,      /* DarkSlateGray transition */
+
+        #007007 100%      /* Near-black corners for depth */
+
+    ) fixed; 
+    background:#565656;
   }
 
 
@@ -1848,28 +1800,15 @@ a.class{
 }
 
 #sourceTab{
-  color:#17627C!important;
+  color:#F8F8F8 !important;
 }
 
 .sourceAuthor{
   color:cyan!important;
 }
 
-#edition_span_publisher{
-  color:mediumvioletred !important;
-}
 
-h2 span{
-  text-shadow:none;
-}
 
-#torrentsTitle span{
-  color:goldenrod;
-}
-
-#sourceTitle span{
-  color:#17627C;
-}
 
 #authorTitle span{
   color:blue;
@@ -1912,10 +1851,9 @@ div.publishers h2 span{
 
 h1, h1 a, h1 a:visited{
   text-align:center;
-  font-size:46px;
+  font-size:38px;
   color:black;
   position:relative;
-  top:4px;
   text-shadow:1px 3px white;
   letter-spacing:5px;
   font-family:"Pirata One", serif;
@@ -1924,7 +1862,11 @@ h1, h1 a, h1 a:visited{
 
 /* CAPTAIN'S LOG 12/19/2025 "9:05" */
 a.author{
-  color:blue !important;
+  color:gold !important;
+}
+
+.tableHeading a.author{
+  padding-left:11px;
 }
 
 a.class{
@@ -1954,7 +1896,7 @@ label.adv_class, input.adv_class{
 }
 
 .torrentClasses{
-  padding:16px 8px 0px 8px;
+  padding:9px;
 }
 
 .torrentClasses a{
@@ -1970,21 +1912,44 @@ label.adv_class, input.adv_class{
 
 #adv_submit, #graph_search{
   background-color:darkcyan;
-  box-shadow:2px 3px 2px #50C777;
-  color:lightgoldenrodyellow;
+  box-shadow:2px 3px 2px gold;
+  color:gold;
+  border:3px solid lightseagreen;
 }
 
 #adv_submit:hover, #graph_search:hover{
-  background-color:cyan;
-  box-shadow:3px 3px 3px black;
+  box-shadow:3px 3px 3px goldenrod;
   color:black;
   font-weight: bold;
-  border:4px solid gold;
+  border:3px solid seagreen;
+}
+
+#adv_submit, #graph_search {
+  background: linear-gradient(to bottom, darkcyan, #005f5f);
+  /* Negating the Y-offset and Spread to create the 'Top Shadow' look from the header */
+  box-shadow: 2px 2px 3px 2px goldenrod; 
+  color: gold;
+  border: 2px solid black;
+  transition: all 0.2s ease-in-out;
+  font-variant:small-caps;
+  font-family:"Share Tech Mono", sans-serif;
+  letter-spacing: 1px;
+}
+
+#adv_submit:hover, #graph_search:hover {
+  background-color: gold;
+  /* Intense top glow on hover */
+  box-shadow: 3px 3px 6px 3px gold;
+  color: goldenrod;
+  font-weight: bold;
+  border: 4px solid seagreen;
+  cursor: pointer;
 }
 
 #warp{
-  border:3px solid darkviolet;
-  box-shadow:3px 4px 4px gold;
+  border:3px solid #F8F8F8;
+  box-shadow:2px 3px 2px gold;
+  color:#F8F8F8;
 }
 
 
@@ -1992,8 +1957,8 @@ label.adv_class, input.adv_class{
   background-color:#F8F8F8;
   color:black;
   font-weight:bold;
-  border:4px solid gold;
-  box-shadow:3px 4px 5px violet;
+  border:4px solid darkviolet;
+  box-shadow:3px 4px 4px gold;
 }
 
 .torrentClasses a{
@@ -2015,8 +1980,8 @@ span.publisher{
 
 
 .tableHeading, .tableHeading a{
-  font-family: "Red Rose" , sans-serif !important;
-  line-height:18px;
+  font-family: "Pirata One" , serif !important;
+  font-size:17px !important;
 }
 
 .tableHeading .source{
@@ -2040,29 +2005,22 @@ button{
 }
 
 .torrentClasses a{
-  font-family:"Roboto Flex", system-ui !important;
+  font-family:"Share Tech Mono", system-ui !important;
 }
+
+
 
 .titles a.source, .node a.source, .top10 a.source{
-  padding-right:7px;
-}
-
-.titles a.author, .node a.author, .top10 a.author{
-  padding-left:7px;
-}
-
-.titles span#bye, .node span#bye, .top10 span#bye{
-  padding-left:7px;
+  padding-right:11px;
 }
 
 .torrentsTable th{
-  font-family:"Red Rose", "Times New Roman";
+  font-family:"Space Mono", "Times New Roman";
   color:#BCBCBC;
 }
 
 .dataTable{
-  font-family:"Roboto Flex", "Times New Roman";
-  color:#0D0D0D !important;
+  font-family:"Space Mono", serif;
 }
 
 .torrentsTable td{
@@ -2070,56 +2028,51 @@ button{
 }
 
 .torrentsTable a{
+  font-weight:bold;
   color:blue !important;
 }
 
 .panel li a, .mobile_panel li a{
-  font-family:"Roboto Flex", system-ui;
+  font-family:"Share Tech Mono", system-ui;
   color:white !important;
 }
 
 .torrentsTable td{
-  font-family:"Roboto Flex", "Times New Roman";
+  font-family:"Share Tech Mono", "Times New Roman";
 
 }
 
 .loading{
-  font-family:"Red Rose", sans-serif;
+  font-family:"Space Mono", sans-serif;
 }
 
 
 
 button{
-  font-family:"Roboto Flex", system-ui !important;
+  font-family:"Share Tech Mono", system-ui !important;
 }
 
 #adv_heading{
   font-size:19px !important;
-  font-family:"Roboto Flex", sans-serif;
-  color:white !important;
+  font-family:"Share Tech Mono", sans-serif;
 }
 
 .mobile_panel{
-  margin-top:15px;
+  position:relative;
+  top:15px;
 }
 
 h2 span{
   
-  font-variant:normal;
   font-size:24px;
 }
 
 h2 span:not(.loading){
-  text-shadow:1px 1px gold;
-}
-
-.sorting{
-  text-shadow:2px 3px black;
 }
 
 
 #torrentsTitle span:not(.loading), #top10Title span:not(.loading){
-  color:black !important;
+  color:gold !important;
 }
 
 .dataTable td:first-child{
@@ -2128,25 +2081,24 @@ h2 span:not(.loading){
 
 .sourceType{
   color:black !important;
-  text-shadow:3px 3px gold;
-  font-size:19px !important;
-  font-family:"Pirata One", sans-serif;
+  text-shadow:1px 1px gold;
+  font-size:13px !important;
+  font-family:"Space Mono", sans-serif;
   text-align:center !important;
   font-variant:small-caps;
   width:98px;
   position:relative;
   left:-98px;
-  top:130px;
-  letter-spacing: 1px;
+  top:121px;
   text-align:center;
   display:block;
   float:left;
 }
 
 .ui-menu .ui-menu-item-wrapper.ui-state-active {
-    background: gold !important;
-    font-weight:normal;
-    color: #333 !important; /* Adjust text color for readability */
+    background: darkcyan !important;
+    font-weight:bold !important;
+    color: gold !important; /* Adjust text color for readability */
 }
 
 
@@ -2156,17 +2108,14 @@ h2 span:not(.loading){
 
 h4{
   font-size:20px !important;
-  font-family:"Red Rose", serif;
+  font-family:"Space Mono", serif;
 }
 
-#bye{
-  color:#ABABAB;
-}
 
 
 h3{
   font-size:21px;
-  font-family:"Roboto Flex", sans-serif;
+  font-family:"Share Tech Mono", sans-serif;
   text-align:center;
   width:100%;
 }
@@ -2196,8 +2145,8 @@ table.dataTable thead .sorting_desc {
 }
 
 .titleBreak{
-  padding-top:40px;
-  padding-bottom:60px;
+  padding-top:30px;
+  padding-bottom:30px;
 }
 
 /* 1. Base Citation Style */
@@ -2263,20 +2212,130 @@ table.dataTable thead .sorting_desc {
 }
 
 .adv_show input{
-  margin:13px 0px 0px 0px;
+  margin:9px 0px 0px 0px;
 }
 
+.violet{
+  color:darkviolet !important;
+}
+
+.red{
+  color:red !important;
+}
+
+.dataTable td{
+  background-color: lightcyan;
+}
+
+.webtorrent{
+  width:100px;
+  height:25px;
+  font-family:"Share Tech Mono", sans-serif;
+  color:gold;
+  background: linear-gradient(
+        145deg, 
+        #1a1a1a 0%,    /* Dark Apex matching your background center */
+        #b8860b 60%,   /* Dark Goldenrod */
+        #daa520 100%   /* Goldenrod */
+    );
+  box-shadow:2px 3px 2px black;
+}
+
+.webtorrent:hover{
+  border:2px solid gold;
+  box-shadow:2px 3px 2px #CDCDCD;
+}
+
+.webtorrent-disabled{
+  background: linear-gradient(180deg, #4d4d4d 0%, #333333 100%) !important;
+  color: #888888 !important;
+  border: 1px solid #444444 !important;
+  text-shadow: none !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5) !important;
+  cursor: wait !important;
+  opacity: 0.8;
+  filter: grayscale(100%);
+}
+
+.webtorrent-disabled:hover{
+  background: linear-gradient(180deg, #555555 0%, #3d3d3d 100%) !important;
+  color: #aaaaaa !important;
+}
+
+footer{
+  position:fixed;
+  bottom:0px;
+  z-index:9999;
+  height:88px;
+  width:100%;
+  box-shadow: 0 -10px 10px -10px black;
+    /* Ensure consistent border styling */
+  border: 2px solid gold;
+  border-radius: 8px;
+  
+  /* Add depth to separate these layers from the pyramid background */
+}
+
+/* Apply a consistent theme to both the footer and the search container */
+#hero {
+    background: linear-gradient(
+        145deg, 
+        #1a1a1a 0%,    /* Dark Apex matching your background center */
+        #b8860b 60%,   /* Dark Goldenrod */
+        #daa520 100%   /* Goldenrod */
+    );
+    
+
+    
+    /* Text color for contrast */
+    color: #ffffff;
+}
+
+.dots::after {
+  content: '';
+  display: inline-block;
+  width: 1.5em; /* Prevents text jumping as dots appear */
+  text-align: left;
+  animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+.please{
+  display:none;
+  color:gray;
+}
+
+.academic{
+  height:30px;
+  border-radius:5px;
+}
+
+#research_panel{
+  bottom:15px;
+  right:0;
+}
 
 @media only screen and (max-width: 1079px) {
-
   div.TEMPLAR{
     overflow-x:hidden;
+  }
+
+  .academic select, .academic option{
+    width:100%;
+    display:block;
   }
 
   h1, h1 a, h1 a :visited{
     font-size:33px;
     position:relative;
-    top:3px;
+    top:5px;
   }
 
   
@@ -2337,8 +2396,8 @@ table.dataTable thead .sorting_desc {
 
  
  div.TEMPLAR{
-    top:55px;
-    height:calc(100% - 55px);
+    top:60px;
+    height:calc(100% - 128px);
     bottom:0px;
   }
 
@@ -2355,7 +2414,7 @@ table.dataTable thead .sorting_desc {
     color:palevioletred;
     
     color:mediumvioletred;
-    top:7px;
+    top:9px;
     left:5px;
     z-index:9999;
   }
@@ -2368,12 +2427,12 @@ table.dataTable thead .sorting_desc {
     overflow-y:auto;
     overflow-x:hidden;
     width:100%;
-    height:calc(100% - 57px);
+    height:calc(100% - 145px);
     position:fixed;
     top:57px;
     z-index:9998;
-    bottom:0px;
-    background-color:#17627C !important;
+    bottom:88px;
+    background-color:darkcyan !important;
   }
   
 
@@ -2388,7 +2447,7 @@ table.dataTable thead .sorting_desc {
 
   .search{
     position:relative;
-    top:13px;
+    top:11px;
     float:left;
     left:5px;
     width:100%;
@@ -2413,25 +2472,24 @@ table.dataTable thead .sorting_desc {
     float:none;
     vertical-align:center;
     line-height:45px;
-    margin-top:8px;
-  }
-
-  
-  .buoy_select{
-    width:299px;
-    margin-top:13px;
+    margin-top:2px;
   }
 
   .panel, .tabs{
     display:none;
   }
 
+  .dataTable td:not(.torrentsTable td){
+    border:#333333;
+  }
+
   header{
     display:block;
     width:100%;
 
-    height:55px;
-    top:1px;
+    height:60px;
+    
+
     
     /*background-color:goldenrod;
     background: rgb(230,201,7);
@@ -2452,7 +2510,7 @@ table.dataTable thead .sorting_desc {
     
 /*background: radial-gradient(circle, rgba(0,139,139,1) 16%, rgba(32,178,170,1) 39%, rgba(0,255,240,1) 87%);*/
     /*box-shadow:2px 3px 3px palegoldenrod;*/
-
+    border-bottom:2px solid black;
     position:fixed;
     z-index:9999;
 }
@@ -2668,6 +2726,34 @@ table.dataTable thead .sorting_desc {
     font-size:16px;
   }
   
+  .academic{
+    font-size:13px;
+  }
 
 
+}
+
+#anonymous{
+  display:none;
+}
+.adv_search { padding: 16px; border: 2px silver !important; border-radius: 15px; color: #FFD700; /* Slate Gray Gradient */ background: linear-gradient(180deg, #708090 0%, #2F4F4F 100%); border: 2px solid #95a5a6; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+
+.adv_search input { margin: 8px auto; background: #ffffff; border: 1px solid #475569; color: #000000; padding: 2px; border-radius: 4px; }
+
+.adv_search input:focus { border-color: silver; outline: none; box-shadow: 0 0 8px seagreen; }
+
+#adv_heading{
+  color:silver !important;
+}
+
+.adv_search input::placeholder{
+  color:silver;
+}
+
+.adv_search input{
+  padding:5px;
+}
+
+.adv_search select{
+  height:22px;
 }

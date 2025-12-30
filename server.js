@@ -264,13 +264,13 @@ app.post("/node/:label", [
              collect(DISTINCT {publisher: p, edition: e, torrent: t}) AS edition_torrents, 
              collect(DISTINCT classes) AS classList
              
-        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy;
+        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy + ` LIMIT TOINTEGER($limit)`;
 
     try {
         const result = await session.run(cypherQuery, {
             uuid: uuid,
             skip: start || 0,
-            limit: length || 25
+            limit: length || 10
         });
 
         const total = result.records[0]._fields[4]
@@ -349,21 +349,22 @@ app.post("/set/:ward", function(req, res) {
         }
     }
 
-    // 1. Count Query (Remains the same)
-    const countQuery = `MATCH (n:${nodeLabel}) WHERE n.name <> '' RETURN count(n) AS count`;
+    // 1. Updated Count Query: Now counts only nodes with at least one connection
+    const countQuery = 
+        `MATCH (n:${nodeLabel})${relationshipLabel}(${connectedNodeLabel}) ` +
+        `WHERE n.name <> '' ` +
+        `RETURN count(DISTINCT n) AS count`;
 
-    // 2. Data Query 
-    // We calculate 'snatches' in the WITH so we can sort by it if requested.
+    // 2. Updated Data Query: Removes OPTIONAL MATCH to exclude empty nodes
     const dataQuery = 
-        `MATCH (${nodeVar}:${nodeLabel}) WHERE ${nodeVar}.name <> '' ` +
-        `MATCH (${nodeVar})${relationshipLabel}(${connectedNodeLabel}) ` +
+        `MATCH (${nodeVar}:${nodeLabel})${relationshipLabel}(${connectedNodeLabel}) ` +
+        `WHERE ${nodeVar}.name <> '' ` +
         `WITH ${nodeVar}, ` +
-        `     count(DISTINCT ${connectedNodeLabel.charAt(0)}) AS ${countAlias}, ` +
+        `     count(DISTINCT ${connectedNodeLabel.split(':')[0]}) AS ${countAlias}, ` +
         `     coalesce(${nodeVar}.snatches, 0) AS snatches ` +
         `ORDER BY ${orderByClause} ` + 
         `SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) ` +
         `RETURN ${nodeVar}, ${countAlias}, snatches`;
-
     let totalCount = 0;
 
     session.run(countQuery)
@@ -431,12 +432,10 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     else if(!req.body.title && req.body.type !== "all"){
       query += "MATCH (s:Source {type : $type}) "
     }
-    else if(req.body.classes){
-      query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
-    }
     else{
       query += "MATCH (s:Source) "
     }   
+
     query += "WITH s " 
     if(req.body.author){
       query += "CALL db.index.fulltext.queryNodes('authorSearch', $author) YIELD node " +
@@ -626,7 +625,7 @@ query += "MATCH (c:Class)-[:TAGS]->(s) " +
 
   }
   console.log(query);
-  var params = {skip : req.body.start, limit : req.body.length, title : he.encode(remove_stopwords(he.decode(he.decode(req.body.title)))), author : he.encode(he.decode(he.decode(req.body.author))), 
+  var params = {skip : req.body.start, limit : req.body.length, title : remove_stopwords(req.body.title), author : he.encode(he.decode(he.decode(req.body.author))), 
   classes: classes, publisher : he.encode(he.decode(he.decode(req.body.publisher))), type : he.encode(he.decode(he.decode(req.body.type))), media: req.body.media, format : req.body.format}
   console.log(params.classes)
   console.log(req.body.type)
@@ -682,11 +681,8 @@ app.post("/graph_search",
       query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
                "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
     }
-    else if(!req.body.title && req.body.type !== "all" && req.body.type){
+    else if(!req.body.title && req.body.type !== "all"){
       query += "MATCH (s:Source {type : $type}) "
-    }
-    else if(req.body.classes && req.body.class_all !== "true"){
-      query += "MATCH (s:Source)<-[:TAGS]-(c:Class) WHERE c.name IN $classes "
     }
     else{
       query += "MATCH (s:Source) "
@@ -703,16 +699,19 @@ app.post("/graph_search",
     }
 
     // --- 4. CLASS LOGIC (RESTORED BOTH PATHS) ---
-    if(req.body.class_all === "true"){
-      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
-      "WHERE c1.name IN $classes " +
-      "WITH s, a1UUID, pUUID, count(distinct c1) AS actualCount, size($classes) AS expectedCount  "
-      "WHERE actualCount = expectedCount "
+    if(req.body.classes){
+        if(req.body.class_all === "true"){
+          query += "MATCH (c1:Class)-[:TAGS]->(s) " +
+          "WHERE c1.name IN $classes " +
+          "WITH s, a1UUID, pUUID, count(distinct c1) AS actualCount, size($classes) AS expectedCount  "
+          "WHERE actualCount = expectedCount "
+        }
+        else{
+          // This is the block that was missing: handle standard class search
+          query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
+        }
     }
-    else{
-      // This is the block that was missing: handle standard class search
-      query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
-    }
+    
 
     // --- 5. PUBLISHER BLOCK ---
     if(req.body.publisher){
@@ -731,17 +730,17 @@ app.post("/graph_search",
              
              // Segment 2: The Author Books
              "WITH a1UUID, pUUID " + // <--- Missing bridge fixed here
-             "MATCH (author:Author {uuid: a1UUID})-[:AUTHOR]->(s2:Source) RETURN s2 " +
+             "OPTIONAL MATCH (author:Author {uuid: a1UUID})-[:AUTHOR]->(s2:Source) RETURN s2 " +
              "UNION ALL " +
              
              // Segment 3: The Publisher Books
              "WITH pUUID " + // <--- Missing bridge fixed here
-             "MATCH (pub:Publisher {uuid: pUUID})<-[:PUBLISHED_BY]-(:Edition)<-[:PUB_AS]-(s2:Source) RETURN s2 " +
+             "OPTIONAL MATCH (pub:Publisher {uuid: pUUID})<-[:PUBLISHED_BY]-(:Edition)<-[:PUB_AS]-(s2:Source) RETURN s2 " +
              "UNION ALL " +
              
              // Segment 4: The Related Classes
              "WITH s " + // <--- Missing bridge fixed here
-             "MATCH (s)<-[:TAGS]-(c:Class)-[:TAGS]->(s2:Source) " + 
+             "OPTIONAL MATCH (s)<-[:TAGS]-(c:Class)-[:TAGS]->(s2:Source) " + 
              "RETURN s2 ORDER BY rand() LIMIT 16 " +
          "} " +
 
@@ -761,14 +760,17 @@ app.post("/graph_search",
 
     var params = {
       skip : req.body.start, limit : req.body.length, 
-      title : he.encode(he.decode(he.decode(req.body.title))), 
+      title : remove_stopwords(req.body.title), 
       author : he.encode(he.decode(he.decode(req.body.author))), 
       classes: classes, 
       publisher : he.encode(he.decode(he.decode(req.body.publisher))), 
       type : he.encode(he.decode(he.decode(req.body.type))), media: req.body.media, format : req.body.format
     }
 
+    console.log("TYPE: " + params.type)
+
     session.run(query , params).then(data => {
+        console.log(data.records.length)
       session.close();
       return res.json({gData: data.records});
     }).catch(err => {
@@ -982,14 +984,16 @@ function camelize(str) {
   }).replace(/\s+/g, '');
 }
 
-app.post("/snatched/:id", check("id").trim().escape().not().isEmpty().isInt().isLength({min : 3, max : 10}), function(req,res){
+app.post("/rev/:id", check("id").trim().escape().not().isEmpty().isInt(), function(req,res){
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log(errors);
       return res.json({ errors: errors.array() });
     }
     const session = driver.session()
 
-    console.log(req.params.infoHash);
+
+    console.log("LEN: " + req.params.id);
 
     var query = "MATCH (t:Torrent{size:$id}) " + 
                 "SET t.snatches = toFloat(t.snatches + 1) " +

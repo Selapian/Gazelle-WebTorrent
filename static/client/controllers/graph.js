@@ -61,16 +61,16 @@ function graph(data) {
                 if (field.labels[0] === "Source") {
                     nodeUUIDs.push(field.properties.uuid);
                     let isMatch = titles.some(t => field.properties.name.toLowerCase().includes(t));
-                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Source" : "Source", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "#F8F8F8" : "#17627C" });
+                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Source" : "Source", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "darkgoldenrod" : "#17627C" });
                 } else if (field.labels[0] === "Author") {
                     let isMatch = TEMPLAR.paramREC()?.author && TEMPLAR.paramREC().author.toLowerCase().includes(field.properties.searchable.toLowerCase());
-                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Author" : "Author", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "#F8F8F8" : "blue" });
+                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Author" : "Author", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "darkgoldenrod" : "blue" });
                 } else if (field.labels[0] === "Class") {
                     let isMatch = classes2.includes(field.properties.name.toLowerCase().replace(/\s/g, ''));
-                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Class" : "Class", name: decodeEntities(field.properties.name), count: 1, color: isMatch ? "#F8F8F8" : "darkgoldenrod" });
+                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Class" : "Class", name: decodeEntities(field.properties.name), count: 1, color: isMatch ? "darkgoldenrod" : "darkgoldenrod" });
                 } else if (field.labels[0] === "Publisher") {
                     let isMatch = publishers.some(t => field.properties.name.toLowerCase().includes(t));
-                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Publisher" : "Publisher", name: toTitleCase(decodeEntities(decodeEntities(field.properties.name))), count: 1, color: isMatch ? "#F8F8F8" : "mediumvioletred" });
+                    Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Publisher" : "Publisher", name: toTitleCase(decodeEntities(decodeEntities(field.properties.name))), count: 1, color: isMatch ? "darkgoldenrod" : "mediumvioletred" });
                 }
             }
         });
@@ -216,14 +216,14 @@ function graphRender(selector) {
 
         Obelisk.nodes.forEach(d => {
             if (d.group.includes("Find")) {
-                ctx.fillStyle = "#F8F8F8";
+                ctx.fillStyle = "silver";
             } else {
                 switch (d.group) {
-                    case "Source": ctx.fillStyle = "#17627C"; break;
-                    case "Author": ctx.fillStyle = "blue"; break;
+                    case "Source": ctx.fillStyle = "#F8F8F8"; break;
+                    case "Author": ctx.fillStyle = "gold"; break;
                     case "Class": ctx.fillStyle = "darkgoldenrod"; break;
                     case "Publisher": ctx.fillStyle = "mediumvioletred"; break;
-                    default: ctx.fillStyle = "#F8F8F8"; break;
+                    default: ctx.fillStyle = "palegoldenrod"; break;
                 }
             }
             const metrics = ctx.measureText(d.name);

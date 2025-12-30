@@ -66,6 +66,7 @@ var TEMPLAR = {
         // This ensures the signal only travels one way.
         const page = this._link_rec(origin).path;
         this.render(page);
+        $(document).trigger("TEMPLAR");
     },
 
     render: function(page) {
