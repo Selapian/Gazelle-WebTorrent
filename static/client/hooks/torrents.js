@@ -36,7 +36,8 @@ function assertFirstEditionRow(records, record, edition_torrent, editionsAdded, 
           "<span class='sourceType'>" + decodeEntities(decodeEntities(decodeEntities(record._fields[0].properties.type))) + "</span>" +
           "<div class='torrentSource'>" +
           "<div class='tableHeading'><a id='sourceTab' class='TEMPLAR node source' href='#node?label=source&uuid=" + record._fields[0].properties.uuid + "'>" +
-          (record._fields[0].properties.name.length > 45 ? decodeEntities(record._fields[0].properties.name.substring(0, 45)) + "..." : decodeEntities(record._fields[0].properties.name)) +
+          //(record._fields[0].properties.name.length > 45 ? decodeEntities(record._fields[0].properties.name.substring(0, 45)) + "..." : decodeEntities(record._fields[0].properties.name)) +
+          decodeEntities(record._fields[0].properties.name) +
           "</a>" + dateField + authorField + "</div><br><div class='torrentClasses normal'>" + classesField + "</div></div>",
 
           "<span class='apa-trigger'>" + // Removed title='Click to copy citation'
@@ -86,7 +87,7 @@ function assertAPACitation(record, edition_torrent){
   if (edition_torrent.publisher && edition_torrent.publisher.properties.name) {
       var pubName = toTitleCase(decodeEntities(decodeEntities(edition_torrent.publisher.properties.name)));
       publisherHtml = "<a id='edition_span_publisher' class='TEMPLAR node publisher' href='#node?label=publisher&uuid=" +
-          edition_torrent.publisher.properties.uuid + "'>" + pubName + "</a>" +
+          edition_torrent.publisher.properties.uuid + "'>" + toTitleCase(pubName) + "</a>" +
           (pubName.endsWith(".") ? "" : (record._fields[0].properties.type !== "Journal Article" ? ". " : ", "));
   }
 
@@ -351,6 +352,15 @@ function assertWTEnabled(){
 
     TEMPLAR.route("#file?id=" + id + "&media=" + media + "&format=" + format + " &release=" + release + "&apa=" + encodeURIComponent(apa))
   })
+}
+
+function assertButtonState(scope) {
+    const buttons = $(scope).find(".webtorrent");
+    if (torrent && torrent.files && torrent.files[0]) {
+        buttons.removeClass("webtorrent-disabled");
+    } else {
+        buttons.addClass("webtorrent-disabled");
+    }
 }
 
 function assertWT(){

@@ -17,7 +17,8 @@ function Q_FILE() {
         interval: null, // Placeholder for the progress timer
         fileRefs: []      // Placeholder for the WebTorrent file object
     };
-    if(queue.find(Q => Q.id === parseInt(TEMPLAR.paramREC().id))) return fileObj;
+    const Q = queue.find(Q => Q.id === parseInt(TEMPLAR.paramREC().id))
+    if(Q) return Q;
 
     // 2. Push to queue
     queue.push(fileObj);

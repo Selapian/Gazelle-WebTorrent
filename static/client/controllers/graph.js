@@ -18,6 +18,20 @@ function graph(data) {
     nodeUUIDs = [];
     renewObelisk();
 
+    var titles = [];
+    if (TEMPLAR.paramREC() && TEMPLAR.paramREC().title) {
+        // Clean the entire string of stopwords FIRST
+        let cleanedTitleStr = remove_stopwords(decodeEntities(decodeEntities(TEMPLAR.paramREC().title)));
+        
+        // Split the remaining meaningful words
+        titles = cleanedTitleStr.split(" ").filter(t => t.length > 0); 
+
+        titles.forEach(function(t, j) {
+            // Now perform character-level sanitization on meaningful tokens
+            titles[j] = t.trim().toLowerCase().replace(/\s/g, '').replace(/[!,:]/g, "");
+        });
+    }
+
     // --- YOUR EXACT SANITIZATION LOGIC (Moved to top for efficiency) ---
     var classes2 = [];
     if (TEMPLAR.paramREC() && TEMPLAR.paramREC().classes) {
@@ -27,25 +41,16 @@ function graph(data) {
         });
     }
 
-    var titles = [];
-    if (TEMPLAR.paramREC() && TEMPLAR.paramREC().title) {
-        titles = decodeEntities(decodeEntities(TEMPLAR.paramREC().title)).split(" ");
-        titles.forEach(function(t, j) {
-            titles[j] = remove_stopwords(titles[j]);
-            // Precise fix: removed quotes so regex actually works
-            titles[j] = decodeEntities(decodeEntities(titles[j].trim().toLowerCase())).replace(/\s/g, '');
-            titles[j] = titles[j].replace(/[!,:]/g, "");
-        });
-    }
-
     var publishers = [];
     if (TEMPLAR.paramREC() && TEMPLAR.paramREC().publisher) {
-        publishers = decodeEntities(decodeEntities(TEMPLAR.paramREC().publisher)).split(" ");
+        // Clean the entire publisher string FIRST
+        let cleanedPubStr = remove_publisher_stopwords(decodeEntities(decodeEntities(TEMPLAR.paramREC().publisher)));
+        
+        // Filter out empty strings after the split
+        publishers = cleanedPubStr.split(" ").filter(p => p.length > 0);
+
         publishers.forEach(function(t, j) {
-            publishers[j] = remove_publisher_stopwords(publishers[j]);
-            // Precise fix: removed quotes so regex actually works
-            publishers[j] = decodeEntities(decodeEntities(publishers[j].trim().toLowerCase())).replace(/\s/g, '');
-            publishers[j] = publishers[j].replace(/[!,:]/g, "");
+            publishers[j] = t.trim().toLowerCase().replace(/\s/g, '').replace(/[!,:]/g, "");
         });
     }
 
@@ -69,7 +74,7 @@ function graph(data) {
                     let isMatch = classes2.includes(field.properties.name.toLowerCase().replace(/\s/g, ''));
                     Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Class" : "Class", name: decodeEntities(field.properties.name), count: 1, color: isMatch ? "darkgoldenrod" : "darkgoldenrod" });
                 } else if (field.labels[0] === "Publisher") {
-                    let isMatch = publishers.some(t => field.properties.name.toLowerCase().includes(t));
+                    let isMatch = publishers.some(t => field.properties.name.includes(t));
                     Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Publisher" : "Publisher", name: toTitleCase(decodeEntities(decodeEntities(field.properties.name))), count: 1, color: isMatch ? "darkgoldenrod" : "mediumvioletred" });
                 }
             }
@@ -115,7 +120,7 @@ function graphRender(selector) {
     if (!container) return;
 
     const width = container.clientWidth || $(container).width();
-    const height = 333;
+    const height = 324;
 
     container.innerHTML = ''; 
     const canvas = d3.select(container).append("canvas")
@@ -212,16 +217,16 @@ function graphRender(selector) {
         const currentFontSize = baseFontSize / transform.k;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `${currentFontSize}px Red Rose`;
+        ctx.font = `${currentFontSize}px Share Tech Mono`;
 
         Obelisk.nodes.forEach(d => {
             if (d.group.includes("Find")) {
-                ctx.fillStyle = "silver";
+                ctx.fillStyle = "#50C777";
             } else {
                 switch (d.group) {
                     case "Source": ctx.fillStyle = "#F8F8F8"; break;
                     case "Author": ctx.fillStyle = "gold"; break;
-                    case "Class": ctx.fillStyle = "darkgoldenrod"; break;
+                    case "Class": ctx.fillStyle = "goldenrod"; break;
                     case "Publisher": ctx.fillStyle = "mediumvioletred"; break;
                     default: ctx.fillStyle = "palegoldenrod"; break;
                 }

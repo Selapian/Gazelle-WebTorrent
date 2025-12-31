@@ -8,10 +8,12 @@ function initializeTorrents(table) {
 
     // 2. PRECISE DESTROY: Kill existing instance and clear HTML
     if ($.fn.DataTable.isDataTable("#" + table)) {
-        $("#" + table).DataTable().destroy();
-        $("#" + table).empty(); // Clear the thead/tbody completely
+        var dt = $("#" + table).DataTable();
+        dt.clear(); // Removes all data rows
+        dt.destroy(); // Unbinds DataTables logic
+        $("#" + table + " tbody").empty(); // Clear ONLY the body, not the thead
     }
-
+    
     assertTitleLoading();
     assertGraphSearch();
     assertAdvSearchUI();
@@ -40,7 +42,7 @@ function initializeTorrents(table) {
     });
 
     torrentsTable = $("#" + table).DataTable({
-        bDestroy: true,
+        destroy: true,
         responsive: {
             details: {
                 display: $.fn.dataTable.Responsive.display.childRowImmediate,
@@ -101,13 +103,13 @@ function initializeTorrents(table) {
                     var authorField = "";
                     record._fields[1].forEach(function(field, i) {
                         if (i > 0) authorField += ", ";
-                        authorField += "<a class='TEMPLAR node author' href='#node?label=author&uuid=" +
+                        authorField += " <span id='bye'>by</span> <a class='TEMPLAR node author' href='#node?label=author&uuid=" +
                             field.properties.uuid + "'>" + decodeEntities(field.properties.name) + "</a>";
                     });
 
                     var dateField = "";
                     if (record._fields[0] && record._fields[0].properties.date) {
-                        dateField += " <b>[" + decodeEntities(record._fields[0].properties.date) + "]</b> <span id='bye'>by</span> ";
+                        dateField += " <b>[" + decodeEntities(record._fields[0].properties.date) + "]</b>";
                     }
 
                     var classesField = " ";

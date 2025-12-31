@@ -56,7 +56,7 @@ function updateTitleUI(name, label) {
     const colors = {
         source: "#F8F8F8",
         author: "gold",
-        class: "darkgoldenrod",
+        class: "goldenrod",
         publisher: "mediumvioletred"
     };
 

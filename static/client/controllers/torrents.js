@@ -41,14 +41,15 @@ function initializeTorrents(table) {
         }
     });
 
-    torrentsTable = $("#" + table).DataTable({
+    dataTable = $("#" + table).DataTable({
         destroy: true,
-        responsive: {
+        /*responsive: {
             details: {
                 display: $.fn.dataTable.Responsive.display.childRowImmediate,
                 type: ''
             }
-        },
+        },*/
+        responsive : true,
         serverSide: true,
         stateSave : TEMPLAR.pageREC() === "titles" && !TEMPLAR.paramREC() ? true : false,
         bSort: true,
@@ -148,10 +149,13 @@ function initializeTorrents(table) {
             },
         },
         drawCallback: function(settings) {
-            assertWT();
-            if(torrent.files[0]){
-              assertWTEnabled();
-            }
+            this.api().rows().every(function() {
+                syncTorrentButtonState(this.node()); // Check main row
+                if (this.child.isShown()) {
+                    syncTorrentButtonState(this.child()); // Check expanded child row
+                }
+            });
+            
             assertTitleLoaded();
             if (TEMPLAR.pageREC() === "node") {
                 assertButtonTab();
@@ -174,4 +178,37 @@ function initializeTorrents(table) {
         },
     })
     if (TEMPLAR.pageREC() === "top10") $('th').unbind('click.DT')
+
+    dataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+        if (showHide) { // If the row was just expanded
+            syncTorrentButtonState($(row.node()).next()); // Target the child row specifically
+        }
+    });
+
+    $(document).off("click", ".webtorrent").on("click", ".webtorrent", function(e) {
+        e.preventDefault();
+        
+        // If the button has the disabled class, show the "please wait" message
+        if ($(this).hasClass("webtorrent-disabled")) {
+            $(".please").show().fadeOut(2000);
+            return;
+        }
+
+        // Otherwise, proceed with the route
+        const d = this.dataset;
+        TEMPLAR.route("#file?id=" + d.id + "&media=" + d.media + "&format=" + d.format + "&release=" + d.release + "&apa=" + encodeURIComponent(d.apa));
+    });
+}
+
+function syncTorrentButtonState(container) {
+    // If no container is provided, default to the whole table
+    var target = container || "#torrents";
+    var buttons = $(target).find(".webtorrent");
+
+    // Check the actual state of the WebTorrent client
+    if (window.torrent && window.torrent.files && window.torrent.files[0]) {
+        buttons.removeClass("webtorrent-disabled");
+    } else {
+        buttons.addClass("webtorrent-disabled");
+    }
 }

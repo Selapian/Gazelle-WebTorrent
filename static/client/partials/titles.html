@@ -42,7 +42,7 @@
 	        }
 	    }
 	});
-	$(document).off('click', '.apa-trigger').on('click', '.apa-trigger', function(e) {
+	/*$(document).off('click', '.apa-trigger').on('click', '.apa-trigger', function(e) {
 	    // 1. If the user clicked the publisher link, let the link handle it and STOP
 	    if ($(e.target).hasClass('publisher')) {
 	        e.stopPropagation(); 
@@ -65,7 +65,7 @@
 	            setTimeout(() => $status.empty(), 200);
 	        }, 1200);
 	    });
-	});
+	});*/
 
 	// Update tooltips dynamically to avoid showing "Click to copy" over the publisher
 	$(document).on('mouseenter', '.apa-former', function() {

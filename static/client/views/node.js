@@ -54,10 +54,10 @@ function assertNodeNameFromData() {
 
 function updateTitleUI(name, label) {
     const colors = {
-        source: "#17627C",
-        author: "blue",
+        source: "#F8F8F8",
+        author: "gold",
         class: "darkgoldenrod",
-        publisher: "mediumvioletred"
+        publisher: "darkviolet"
     };
 
     switch(label){
@@ -70,11 +70,12 @@ function updateTitleUI(name, label) {
             break;
         case "publisher":
             name = toTitleCase(name)
+            break;
     }
 
         $("#nodeTitle span").text(name)
                    .removeClass("loading")
-                   .css("color", colors[label] || "white")                       
+                   .css("color", colors[label] || "white").removeClass("violet").removeClass("red")                       
 }
 
 function assertButtonTab(){

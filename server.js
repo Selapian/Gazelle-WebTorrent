@@ -13,10 +13,6 @@ const __dirname = path.dirname(__filename);
 
 import http from 'https';
 
-import { 
-  v1 as uuidv1
-} from 'uuid';
-
 import neo4j from 'neo4j-driver'
 
 import he from "he";
@@ -417,7 +413,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     req.body.title = req.body.title.replace(":", ' ')
     req.body.author = req.body.author.replace(":", ' ')
-    req.body.publisher = req.body.publisher.replace(':', ' ');
+    req.body.publisher = remove_publisher_stopwords(req.body.publisher.replace(':', ' '));
     if(req.body.publisher.toLowerCase() === "propagate" || req.body.publisher.toLowerCase() === "propagateinfo"){
       req.body.publisher = "propagate.info"
     }
@@ -720,6 +716,23 @@ app.post("/graph_search",
                  "WITH s, a1UUID, searchedP.uuid as pUUID ";
     }
 
+    if(req.body.media !== "all" && req.body.format !== "all"){
+        query += "OPTIONAL MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+
+      }
+      else if(req.body.media !== "all"){
+        query += "OPTIONAL MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+
+      }
+      else if(req.body.format !== "all"){
+        query += "MATCH (t:Torrent {format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+
+      }
+      else{
+        query += "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+
+      }
+
     // --- 6. RECOMMENDATION & RETRIEVAL ---
     query += "WITH s, s.uuid as sUUID, a1UUID, pUUID " +
          "CALL { " +
@@ -741,7 +754,7 @@ app.post("/graph_search",
              // Segment 4: The Related Classes
              "WITH s " + // <--- Missing bridge fixed here
              "OPTIONAL MATCH (s)<-[:TAGS]-(c:Class)-[:TAGS]->(s2:Source) " + 
-             "RETURN s2 ORDER BY rand() LIMIT 16 " +
+             "RETURN s2 ORDER BY rand() LIMIT 7 " +
          "} " +
 
              "OPTIONAL MATCH (s2)<-[:AUTHOR]-(a:Author) " +

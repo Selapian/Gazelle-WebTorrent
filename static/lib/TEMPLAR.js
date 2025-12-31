@@ -68,35 +68,38 @@ var TEMPLAR = {
         this.render(page);
         $(document).trigger("TEMPLAR");
     },
-
     render: function(page) {
         var that = this;
         if (!page) page = this._default;
-
         var fileTarget = page + ".html";
 
-        // SMEE: Clear the decks! 
         this._pages.forEach(p => $("div." + p).hide());
 
         $.get(this._dir + "/" + fileTarget, function(data) {
+            // 1. Write to the DOM
             $("div." + page).html(data);
-            that._visible_page(page);
-            that.helm(page);
-        }).fail(function() {
+            
+            // 2. Defer the heavy "helm" logic to the next paint frame
+            requestAnimationFrame(() => {
+                that._visible_page(page);
+                that.helm(page);
+            });
         });
     }
     ,
     helm: function(targetPage) {
-        // PRECISE SYNCHRONIZATION: Ensure the internal state reflects the target
         this.currentPage = targetPage; 
 
-        this._helm.forEach(function(item) {
+        this._helm.forEach((item) => {
             if (item.page === targetPage) {
-                item.fn(targetPage);
+                // Use setTimeout to "de-materialize" the execution into separate ticks
+                setTimeout(() => {
+                    item.fn(targetPage);
+                }, 0);
             }
         });
-    }, 
-    //PON-PON TUSHE ME
+    }
+    ,
     DOM: function() {
         var that = this;
         

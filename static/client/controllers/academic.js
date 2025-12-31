@@ -6,7 +6,7 @@ function assertReference(currentFile){
     }
 	const option = document.createElement("option");
 	$(option).val(currentFile.id)
-	$(option).text(currentFile.apa.substr(0, 40) + ( currentFile.apa.length > 40 ? "... " : " " ) + "(" + currentFile.format + ")");
+	$(option).text(currentFile.apa + " (" + currentFile.format + ")");
 	
 	$(".academic").append(option);
 	$(".academic").off("change")

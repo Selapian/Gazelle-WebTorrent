@@ -123,31 +123,7 @@ object{
   width:100%;
   border-radius:14px;
   background-color:black;
-  border:2px solid lightgoldenrodyellow;
-  box-shadow:2px 3px #CDCDCD;
-
-}
-
-
-
-.propagate_torrents{
-  left:5px;
-  position:relative;
-  font-family:"Atkinson Hyperlegible Mono", serif
-}
-
-.propagate_torrents a{
-  color:mediumvioletred;
-}
-
-#propagate_publisher{
-  font-size:21px;
-  padding:42px;
-  padding-left:5px;
-  padding-top:0px;
-  color:black;
-  text-shadow:1px 1px lightgoldenrodyellow;
-  font-family: "Pirata One", sans-serif;
+  border:5px solid #CDCDCD;
 
 }
 
@@ -205,14 +181,13 @@ body.is-seed .show-leech {
 }
 
 .academic, .academic option{
-  font-family:"Space Mono", sans-serif;
+  font-family:"Red Rose", serif;
 }
 
 #hero{
   height:86px;
   width:100%;
   border-radius:8px;
-  border:2px solid gold;
 }
 
 #hero {
@@ -424,7 +399,7 @@ h2 span{
   letter-spacing:7px;
   font-variant:small-caps;
   padding:13px;
-  font-family:"Space Mono", "serif";
+  font-family:"Red Rose", "serif";
   font-variant:small-caps;
   text-shadow:1px 2px black;
   
@@ -460,11 +435,6 @@ h3 span, h3{
 
 
 
-
-.add_source{
-  margin-top: 13px;
-}
-
 header{
   height: 88px;
   width: 100%;
@@ -488,9 +458,9 @@ background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%
     z-index: 999;
  
 background: #01D3CC;
-border-bottom:2px solid blue !important; 
+border-bottom:3px solid black !important; 
 
-  box-shadow:3px 5px 6px black !important; /* PYRAMID */ /* Can't get enough of that Golden Crisp! */
+  box-shadow:3px 4px 5px goldenrod !important; /* PYRAMID */ /* Can't get enough of that Golden Crisp! */
 background: linear-gradient(0deg, darkviolet, gold, cyan);
 -webkit-background: linear-gradient(0deg, darkviolet, gold, cyan);
 -moz-background: linear-gradient(0deg, darkviolet, gold, cyan);
@@ -549,7 +519,7 @@ background: linear-gradient(0deg, darkviolet, gold, cyan);
 }
 
 .tabs, .mobile_tabs, h2{
-  font-family:"Space Mono", serif;
+  font-family:"Red Rose", serif;
   font-size:21px;
 }
 
@@ -586,12 +556,6 @@ h1{
 }
 
 
-.login div, .register div{
-  padding-left:5px;
-}
-.row{
-
-}
 
 
 /*.a-enter-ar-button{
@@ -625,7 +589,6 @@ button{
     font-variant:small-caps;
 
 box-shadow:1px 3px 1px #58C777;
-border:2px solid darkviolet;
 margin:0 auto;
 text-align:center;
    
@@ -707,24 +670,6 @@ span{
 }
 
 
-
-#stupa{
-  padding:0px 0px 0px 0px;
-  width:166px;
-  left:-2px;
-  top:-23px;
-  position:absolute;
-  height:auto;
-  margin:0 auto;
-
-}
-
-
-
-.normal{
-  font-weight: normal;
-}
-
 /* TABLES */
 
 .page-link{
@@ -738,15 +683,6 @@ span{
 .col-md-6{
   max-width:100%;
   flex: 0 0 100%;
-}
-
-#slogan{
-  margin:7px;
-  position:relative;
-  top:11px;
-  left:70px;
-  font-family:"Noticia Text", sans-serif;
-  color:lightgoldenrodyellow;
 }
 
 .queryInfoHash{
@@ -811,22 +747,27 @@ span{
   text-align:center;
 }
 
+.dataTable{
+  border-bottom:5px solid black;
+}
+
 
 .sorting{
-  padding:9px 0px 9px 0px;
+  padding:8px 0px 8px 0px;
   /*background-color:#cc70d1;*/
   color:lightgoldenrodyellow;
   /*box-shadow:1px 2px 3px palevioletred;*/
   background-color:goldenrod;
   font-variant:small-caps;
-  font-size:18px;
-  font-family:"Space Mono", serif;
-  box-shadow:4px 5px 4px darkcyan;
-  text-shadow:2px 2px black;
+  font-size:16px;
+  font-family:"Red Rose", serif;
+  box-shadow:1px 3px 6px #50C777 !important;
+  text-shadow:2px 2px black; 
   border-bottom:2px solid cyan;
   background-color:cyan !important;
   position:relative;
-  z-index:13;
+  z-index:16;
+  letter-spacing:2px;
   
 
 }
@@ -836,14 +777,12 @@ span{
         180deg, 
         lightseagreen 0%,    /* Start: Neon Cyan */
         #1a1a1a 45%,
-        #1a1a1a 85%,   /* Middle: Deep Gray (larger area for text legibility) */
-        darkslategray 100%   /* End: Gold border-like finish */
+        #1a1a1a 85%   /* Middle: Deep Gray (larger area for text legibility) */
     ) !important;
-    border-top:4px solid goldenrod;
 
     
     /* Bottom border to define the end of the cell */
-    
+    border-top:2px solid black;
     background-color: transparent !important;
 }
 
@@ -859,7 +798,7 @@ span{
 /* Target the DataTables "Processing" (Loading) bar */
 .dataTables_wrapper .dataTables_processing {
     /* Set this higher than your th z-index (which was 10) */
-    z-index: 15 !important;
+    z-index: 23 !important;
     
     /* Ensure it is positioned to respect the z-index */
     position: absolute;
@@ -905,7 +844,7 @@ thead tr{
 
 
 .odd td, .even td{
-  padding:15px 5px 15px 5px;
+  padding:27px 5px 27px 5px;
 }
 
 
@@ -914,9 +853,10 @@ thead tr{
 }
 
 .torrentsTable{
-  position:relative;
   top:-17px;
-  left:0px;
+  position:relative;
+  left:5px;
+
 }
 
 
@@ -927,20 +867,6 @@ table.dataTable>tbody>tr.child {
 #torrents_length{
   padding-top: 10px;
   width: 100%;
-}
-
-table{
-  background-color:#f7f7e7;
-  background-color:#fcfce8;
-  /*background: rgb(245,244,237);
-  background: linear-gradient(265deg, rgba(245,244,237,1) 0%, rgba(247,243,249,1) 31%, rgba(252,246,248,1) 48%, rgba(252,246,251,0.8155637254901961) 90%);*/
-  
-  background-color:#E9E9E9;
-  background-color:#EAEABE;
-  background-color:#fae1ec;
-  background-color:#FCEEF3;
-  background-color:#F8F8F8;
-  background-color:lightcyan;
 }
 
 .dtr-control{
@@ -970,9 +896,9 @@ table{
 table.dataTable tr.dtrg-group th{
   background-color:#555555;
   background: linear-gradient(90deg, darkslategray 0%, darkcyan 50%, #007bff 100%) !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8) !important;
-  border-bottom: 2px solid cyan !important;
-  border-top:4px solid black !important;
+  box-shadow: 0 4px 8px #CDCDCD !important;
+  border-bottom: 3px solid #50C777 !important;
+  border-top:3px solid black !important;
   height:147px;
   position:relative;
   z-index:10;
@@ -1025,10 +951,13 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 
 .dataTables_wrapper, .dataTables_length{
   background:transparent;
-  color:lightgoldenrodyellow;
+  color:lightcyan;
   font-family:"Share Tech Mono", sans-serif;
-  border:2px solid goldenrod;
+  border-top:3px solid palegoldenrod;
+
+  border-bottom:3px solid #CDCDCD;
   background-color:#CDCDCD;
+  text-align:center;
 
 }
 
@@ -1039,12 +968,15 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 
 .dataTables_length{
   border:none;
+  
+  border-radius:13px 13px 0 0;
+  position:relative;
 }
 
 
 .dataTables_wrapper{
   margin: 120px 0px 60px 0px; /*CYBERPUNK ATLANTEAN PYRAMID*/
-  border-radius:21px;
+  border-radius:13px;
 
 }
 
@@ -1080,13 +1012,14 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   width: 100%;
   letter-spacing:3px;
   line-height:23px !important;
+  text-align:justify;
 }
 
-.dataTable{
-  font-family:"Atkinson Hyperlegible Next", serif;
-  color:palevioletred;
-  font-size:19px;
+.torrentClasses{
+  text-align:justify;
 }
+
+
 
 .dataTable a{
   font-family:"serif";
@@ -1099,7 +1032,7 @@ td{
 
 
 .dataTable td, .dataTable td a:not("#edition_span_publisher"){
-  font-family:"Space Mono", serif;
+  font-family:"Red Rose", serif;
   font-size:16px;
 }
 
@@ -1115,14 +1048,14 @@ a:visited:not(".adv_toggle"){
 
 .dataTable td, #edition_span_publisher{
   color:black;
-  font-size:16px;
+  font-size:13px;
 }
 
 
 
 #edition_span_publisher{
   text-decoration:underline;
-  font-family:"Space Mono", serif;
+  font-family:"Red Rose", serif;
  
   
 }
@@ -1155,7 +1088,7 @@ a.class, a.class:visited,{
   color:goldenrod;
   color:seagreen;
   color:#50C777;
-  color:darkgoldenrod;
+  color:goldenrod;
 }
 
 
@@ -1219,6 +1152,7 @@ a.class, a.class:visited,{
   background-color:#FBFBF6;
   width:180px;
   color:black;
+  height:17px !important;
 }
 
 input{
@@ -1226,7 +1160,7 @@ input{
 }
 
 .search input::placeholder, .adv_show input::placeholder{
-  color:goldenrod;
+  color:#50C777;
   font-family:"Share Tech Mono", sans-serif;
 }
 
@@ -1237,29 +1171,6 @@ input{
 }
 
 
-
-.ui-front{
-  z-index: 999;
-  width: 235px;
-}
-
-.autosuggestBox{
-  display: none;
-  width: 243px;
-  height: 300px;
-  position: absolute;
-  z-index: 2;
-  overflow: auto;
-}
-
-.autosuggestBox li{
-  display: block;
-  clear: left;
-  float: left;
-  padding: 3px;
-  font-size: 14px;
-}
-
 body .ui-menu-item {
   /* font-family to all */
  /* box-shadow:4px 4px 5px #83DAC0;*/
@@ -1267,11 +1178,12 @@ body .ui-menu-item {
   background-color:black;
   text-align:justify;
   font-size:15px;
+  padding:7px 0px 7px 0px;
 }
 .ui-autocomplete{
   max-height:310px;
   width:270px;
-  color:lightcyan !important;
+  color:gold !important;
   font-family: "Share Tech Mono", system-ui;
   position:relative;
   z-index:9999;
@@ -1302,27 +1214,6 @@ body .ui-autocomplete {
   padding: 0px 13px 0px 13px;
 }
 
-#desktop_health{
-  position:fixed;
-  top:24px;
-  right:13px;
-}
-
-.autosuggestBox a{
-  color: coral;
-}
-
-.autosuggestBox a:visited{
-  color: coral;
-}
-
-/* CLASS */
-
-#source_uuid{
-  margin: 0 0 7px 0px;
-  height:44px;
-}
-
 /* TOP 10 */
 
 h3{
@@ -1332,24 +1223,9 @@ h3{
 /* SOURCE */
 
 
-.italics{
-  font-style:italic;
-}
-
-
 /* GRAPH */
 
 
-
-
-.recommend{
-  margin:0 auto;
-  z-index:1;
-  display:block;
-  position:relative;
-  bottom:29px;
-  margin-bottom:5px !important;
-}
 
 
 .torrentsTable{
@@ -1383,9 +1259,6 @@ h3{
   color:#196B7D;
   color:#060606;
  
-  font-family:"Atkinson Hyperlegible Mono", sans-serif;
-  font-family: "Bitcount Prop Single", system-ui;
-
 
   font-size:16px;
 }
@@ -1424,18 +1297,8 @@ h3{
   font-size:14px;
 }
 
-.even td:not(.even:first-child td), .odd td:not(.even:first-child td){
-  /*border-top:1px dotted lightgoldenrodyellow;*/
-}
-
-
-
-#class_info{
-  color:darkolivegreen;
-}
-
 .torrentsTable{
-  font-size:14px;
+  font-size:13px;
 }
 
 a.link a.visited{
@@ -1461,10 +1324,6 @@ td{
   width:200px;
 }
 
-/* ST_GEORGE */
-
-
-
 .mobile_title, .mobile_menu, #mobile_menu{
   display:none;
 }
@@ -1484,45 +1343,6 @@ div.home{
   width:100%;
 }
 
-.atlantis{
-  background-color:#ABA2B4;
-}
-
-.stat{
-  color:#50C777;
-}
-
-
-.adv_heading{
-}
-
-
-.adv_toggle{
-  color:palevioletred;
-}
-
-.adv_toggle{
-  font-family: "Secular One", sans-serif;
-  font-variant:small-caps;
-  font-size:36px;
-  position:relative;
-  width:40px;
-  float:left;
-  
-}
-
-.adv_plus{
-
-}
-
-.adv_minus{
-
-}
-
-.adv_toggle{
-
-}
-
 a.adv_toggle{
   color:white !important;
 }
@@ -1534,8 +1354,8 @@ a.class{
 /* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:#121212 !important;
-  color:lightgoldenrodyellow !important;
+  background-color:darkgoldenrod !important;
+  color:black !important;
 }
 
 
@@ -1556,7 +1376,7 @@ a.class{
   box-shadow:4px 3px 5px black;*/
   border-radius:17px !important;
   background-color:#CDCDCD;
-  border:3px solid gold !important;
+  border:2px solid #CDCDCD;
 
   
 }
@@ -1582,28 +1402,6 @@ a.class{
 }
 
 
-/*
-#recommend_source{
-  font-family:"Bitcount Prop Single";
-  font-size:16px;
-  height:77px;
-  width:78px;
-  padding:0px;
-  box-shadow:2px 3px 1px lightgoldenrodyellow;
-  border-radius:5px;
-  border:3px solid goldenrod;
-  color:white;
-  background-color:black;
-  margin-top:13px !important;
-  margin-bottom:18px !important;
-}
-
-#recommend_source:hover{
-  background-color:white;
-  color:black;
-  border:5px solid lightgoldenrodyellow;
-}
-*/
 .adv_class, .graph_class{
   width:33px;
   color:black;
@@ -1627,14 +1425,11 @@ a.class{
   margin-bottom:15px;
 }
 
-#download_graph_page{
-  margin-top:5px;
-}
 
 #adv_heading{
-  font-family: "Space Mono", serif;
+  font-family: "Red Rose", serif;
   font-variant:small-caps;
-  font-size:21px;
+  font-size:20px;
   text-align:center;
   float:left;
   display:block;
@@ -1643,10 +1438,10 @@ a.class{
   letter-spacing:3px;
   width:100%;
   text-align:center;
-  padding-top:10px;
+  padding-top:0px;
   padding-bottom:10px;
   text-decoration:underline;
-  color:goldenrod !important;
+  color:#F8F8F8 !important;
 
 }
 
@@ -1748,19 +1543,6 @@ a.class{
   font-size:13px;
 }
 
- .adv_show{
-    display:block;
-  }
-  
-  .adv_plus{
-    display:block;
-  }
-  
-  .adv_minus{
-    display:none;
-  }
-
-
 
   body, div.TEMPLAR{
     background-color:lightgoldenrodyellow;
@@ -1769,35 +1551,16 @@ a.class{
 
         circle at center, 
 
-        darkslategray 0%,       /* DarkCyan center */
+        #CDCDCD 0%,       /* DarkCyan center */
 
-        #007bff 50%,      /* DarkSlateGray transition */
+        #007bff 50%,      /* #CDCDCD transition */
 
         #007007 100%      /* Near-black corners for depth */
 
     ) fixed; 
-    background:#565656;
+    background:slategray;
   }
 
-
-#logos_span{
-  color:mediumvioletred;
-  font-family: "Bitcount Prop Single", system-ui;
-  font-weight:400;
-  font-size:16px;
-  padding-left:13px;
-  text-shadow:3px 1px cyan; /* PYRAMID */
-
-}
-
-.loading{
-  color:darkgoldenrod;
-  font-family: "Bitcount Prop Single", system-ui;
-}
-
-.partial_graph{
-  display:none;
-}
 
 #sourceTab{
   color:#F8F8F8 !important;
@@ -1905,31 +1668,19 @@ label.adv_class, input.adv_class{
 
 /* GOT */
  a.class{
-  padding:7px 8px 7px 0px;
-  line-height:14px;
+  padding:16px;
+  padding-left:0px;
+  line-height:16px;
  }
 
 
-#adv_submit, #graph_search{
-  background-color:darkcyan;
-  box-shadow:2px 3px 2px gold;
-  color:gold;
-  border:3px solid lightseagreen;
-}
-
-#adv_submit:hover, #graph_search:hover{
-  box-shadow:3px 3px 3px goldenrod;
-  color:black;
-  font-weight: bold;
-  border:3px solid seagreen;
-}
 
 #adv_submit, #graph_search {
   background: linear-gradient(to bottom, darkcyan, #005f5f);
   /* Negating the Y-offset and Spread to create the 'Top Shadow' look from the header */
-  box-shadow: 2px 2px 3px 2px goldenrod; 
-  color: gold;
-  border: 2px solid black;
+  box-shadow: 2px 2px 1px cyan; 
+  color: goldenrod;
+  border: 3px solid white;
   transition: all 0.2s ease-in-out;
   font-variant:small-caps;
   font-family:"Share Tech Mono", sans-serif;
@@ -1939,16 +1690,16 @@ label.adv_class, input.adv_class{
 #adv_submit:hover, #graph_search:hover {
   background-color: gold;
   /* Intense top glow on hover */
-  box-shadow: 3px 3px 6px 3px gold;
-  color: goldenrod;
+  box-shadow: 2px 2px 2px 2px #50C777;
+  color: #F8F8F8;
   font-weight: bold;
-  border: 4px solid seagreen;
+  border: 3px solid gold;
   cursor: pointer;
 }
 
 #warp{
   border:3px solid #F8F8F8;
-  box-shadow:2px 3px 2px gold;
+  box-shadow:2px 3px 2px black;
   color:#F8F8F8;
 }
 
@@ -1957,8 +1708,8 @@ label.adv_class, input.adv_class{
   background-color:#F8F8F8;
   color:black;
   font-weight:bold;
-  border:4px solid darkviolet;
-  box-shadow:3px 4px 4px gold;
+  border:3px solid black;
+  box-shadow:3px 4px 4px darkviolet;
 }
 
 .torrentClasses a{
@@ -1980,15 +1731,9 @@ span.publisher{
 
 
 .tableHeading, .tableHeading a{
-  font-family: "Pirata One" , serif !important;
-  font-size:17px !important;
+  font-family: "Red Rose" , serif !important;
+  font-size:14px !important;
 }
-
-.tableHeading .source{
-  text-decoration:underline;
-}
-
-
 
 button{
   font-size:15px;
@@ -2015,16 +1760,16 @@ button{
 }
 
 .torrentsTable th{
-  font-family:"Space Mono", "Times New Roman";
+  font-family:"Share Tech Mono", "Times New Roman";
   color:#BCBCBC;
 }
 
 .dataTable{
-  font-family:"Space Mono", serif;
+  font-family:"Red Rose", serif;
 }
 
 .torrentsTable td{
-  font-size:14px;
+  font-size:13px;
 }
 
 .torrentsTable a{
@@ -2043,7 +1788,7 @@ button{
 }
 
 .loading{
-  font-family:"Space Mono", sans-serif;
+  font-family:"Share Tech Mono", sans-serif;
 }
 
 
@@ -2053,8 +1798,7 @@ button{
 }
 
 #adv_heading{
-  font-size:19px !important;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Red Rose", sans-serif;
 }
 
 .mobile_panel{
@@ -2065,9 +1809,6 @@ button{
 h2 span{
   
   font-size:24px;
-}
-
-h2 span:not(.loading){
 }
 
 
@@ -2081,37 +1822,30 @@ h2 span:not(.loading){
 
 .sourceType{
   color:black !important;
-  text-shadow:1px 1px gold;
-  font-size:13px !important;
-  font-family:"Space Mono", sans-serif;
+  text-shadow:1px 2px gold;
+  font-size:17px !important;
+  font-family:"Pirata One", serif;
   text-align:center !important;
   font-variant:small-caps;
   width:98px;
   position:relative;
   left:-98px;
   top:121px;
+  letter-spacing:1px;
   text-align:center;
   display:block;
   float:left;
 }
 
 .ui-menu .ui-menu-item-wrapper.ui-state-active {
-    background: darkcyan !important;
+    background: goldenrod !important;
     font-weight:bold !important;
-    color: gold !important; /* Adjust text color for readability */
+    color: black !important; /* Adjust text color for readability */
 }
 
-
-.search input{
-  background-color:#fae1ec !important;
+input{
+  font-family:"Share Tech Mono", sans-serif;
 }
-
-h4{
-  font-size:20px !important;
-  font-family:"Space Mono", serif;
-}
-
-
 
 h3{
   font-size:21px;
@@ -2149,68 +1883,6 @@ table.dataTable thead .sorting_desc {
   padding-bottom:30px;
 }
 
-/* 1. Base Citation Style */
-.apa-trigger {
-    position: relative;
-    display: inline;
-}
-
-/* 2. Highlight the Former part itself when hovered */
-.apa-former {
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* Updated APA Hover colors to match minimalist gold/silver theme */
-.apa-former:hover {
-    color: #C0C0C0 !important; /* Silver */
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); /* Gold Zen glow */
-}
-
-.apa-former:hover ~ .apa-publisher-wrap .publisher {
-    color: #DAA520 !important; /* Goldenrod */
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-}
-
-/* 4. Publisher Link Specifics */
-.apa-publisher-wrap {
-    cursor: default;
-    display: inline;
-}
-
-.publisher {
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-/* 5. Reset highlight if the mouse moves directly onto the publisher */
-/* This ensures publisher hover doesn't highlight the rest of the text */
-.apa-publisher-wrap:hover .publisher {
-    color: #007bff; /* Or your standard link color */
-    text-shadow: none;
-}
-
-
-/* Reset publisher highlight if mouse moves directly onto it */
-.apa-publisher-wrap:hover .publisher {
-    color: inherit;
-    text-shadow: none;
-}
-
-/* The Checkmark */
-.copy-status {
-    color: #28a745;
-    margin-left: 5px;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.copy-status.show {
-    opacity: 1;
-}
-
 .adv_show input{
   margin:9px 0px 0px 0px;
 }
@@ -2225,6 +1897,10 @@ table.dataTable thead .sorting_desc {
 
 .dataTable td{
   background-color: lightcyan;
+}
+
+#hero select{
+  background:lightgoldenrodyellow;
 }
 
 .webtorrent{
@@ -2268,9 +1944,8 @@ footer{
   z-index:9999;
   height:88px;
   width:100%;
-  box-shadow: 0 -10px 10px -10px black;
     /* Ensure consistent border styling */
-  border: 2px solid gold;
+  border:3px solid goldenrod;
   border-radius: 8px;
   
   /* Add depth to separate these layers from the pyramid background */
@@ -2314,23 +1989,53 @@ footer{
 
 .academic{
   height:30px;
-  border-radius:5px;
+  border-radius:10px;
 }
 
 #research_panel{
-  bottom:15px;
+  width:calc(100% - 4px);
+  position:fixed;
+  left:2px;
+  bottom:13px;
   right:0;
 }
+
+
+.academic {
+  width: 100%;
+  box-sizing: border-box; /* Crucial for preventing overflow */
+  display: block;        /* Ensures it behaves as a block-level element */
+}
+
+.academic option{
+  background:lightgoldenrodyellow;
+}
+
+.adv_show select{
+  height:25px;
+}
+
+.adv_search input::placeholder{
+  color:gold !important;
+}
+
+.search input{
+  height: 22px !important;
+  position:relative;
+  top:3px;
+  opacity:.777;
+}
+
+.search input::placeholder{
+  color:gold;
+}
+
 
 @media only screen and (max-width: 1079px) {
   div.TEMPLAR{
     overflow-x:hidden;
   }
 
-  .academic select, .academic option{
-    width:100%;
-    display:block;
-  }
 
   h1, h1 a, h1 a :visited{
     font-size:33px;
@@ -2411,9 +2116,7 @@ footer{
     font-size:40px;
     width:49px;
     height:49px;
-    color:palevioletred;
-    
-    color:mediumvioletred;
+    color:goldenrod;
     top:9px;
     left:5px;
     z-index:9999;
@@ -2472,7 +2175,7 @@ footer{
     float:none;
     vertical-align:center;
     line-height:45px;
-    margin-top:2px;
+  
   }
 
   .panel, .tabs{
@@ -2489,23 +2192,7 @@ footer{
 
     height:60px;
     
-
-    
-    /*background-color:goldenrod;
-    background: rgb(230,201,7);
-    background: linear-gradient(265deg, rgba(230,201,7,1) 0%, rgba(81,186,187,1) 11%, rgba(170,141,26,1) 81%, rgba(11,230,157,0.8155637254901961) 100%);
-    background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-    box-shadow: 7px 7px 7px #fae1ec;
-    box-shadow: 8px 8px 8px palevioletred;*/
-    /*border-bottom:7px solid transparent;
-    border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
-    border-image-slice: 1;*/
-      
-  /*border-image: conic-gradient(from var(--angle), red, yellow, lime, aqua, blue, magenta, red) 1;
-    border-radius:0 0 13px 13px;
-    box-sizing:border-box;
-  animation: 10s rotate linear infinite;*/
+ 
     box-sizing:border-box;
     
 /*background: radial-gradient(circle, rgba(0,139,139,1) 16%, rgba(32,178,170,1) 39%, rgba(0,255,240,1) 87%);*/
@@ -2515,7 +2202,7 @@ footer{
     z-index:9999;
 }
 
-
+  
 
 
   .mobile_tabs{
@@ -2582,11 +2269,6 @@ footer{
   #search_ul{
     margin-bottom:0px;
   }
-
-  
-#logos_span{
-  font-size:12px;
-}
 
   input{
     font-size: 16px;
@@ -2709,7 +2391,7 @@ footer{
   }
 
   .search{
-    top:17px !important;
+    top:21px !important;
   }
 
   /* WHY DID I AUTOCOMPLETE */
@@ -2730,30 +2412,45 @@ footer{
     font-size:13px;
   }
 
+  .search input{
+    height:33px !important;
+  }
 
 }
 
 #anonymous{
   display:none;
 }
-.adv_search { padding: 16px; border: 2px silver !important; border-radius: 15px; color: #FFD700; /* Slate Gray Gradient */ background: linear-gradient(180deg, #708090 0%, #2F4F4F 100%); border: 2px solid #95a5a6; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+.adv_search {
+  padding-top:16px;
+  box-sizing: border-box; /* Prevents overflow as discussed previously */
+  border-radius: 14px;
+  
+  /* Teal Blue Base Gradient */
+  background: linear-gradient(135deg, #17627C 0%, #0d3d4d 100%);
+  
 
-.adv_search input { margin: 8px auto; background: #ffffff; border: 1px solid #475569; color: #000000; padding: 2px; border-radius: 4px; }
+  box-shadow: 7px 7px 7px black;
+  /* Assign the animation to the background */
+ 
 
-.adv_search input:focus { border-color: silver; outline: none; box-shadow: 0 0 8px seagreen; }
-
-#adv_heading{
-  color:silver !important;
-}
-
-.adv_search input::placeholder{
-  color:silver;
+  position: relative;
+  overflow: hidden;
 }
 
 .adv_search input{
-  padding:5px;
+  margin-top:14px;
+  line-height:18px;
+
 }
 
-.adv_search select{
-  height:22px;
+.adv_search label{
+  color:goldenrod;
+}
+
+
+.adv_search input:focus { border-color: silver; outline: none; box-shadow: 0 0 8px #50C777; }
+
+.adv_search input::placeholder{
+  color:silver;
 }

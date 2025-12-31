@@ -1,4 +1,5 @@
 var tableData;
+var torrentsTable;
 var records = []; //for DataTable records[]
 
 function setRecords(){
