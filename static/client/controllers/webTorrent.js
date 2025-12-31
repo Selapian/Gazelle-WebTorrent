@@ -132,7 +132,7 @@ function onFileDone(file, QFILE) {
     
     file.getBlobURL((err, url) => {
         if (err) return;
-        //if ($output && QFILE.media === "Ebook") $output.innerHTML = ''; 
+        if ($output && QFILE.media === "Ebook" && parseInt($(".academic").val() === file.length)) $output.innerHTML = ''; 
         
         const btn = document.createElement('a');
         btn.href = url;
