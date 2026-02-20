@@ -1,50 +1,11 @@
 var upload;
 var initialized;
 
-function torrentDelete(torrent, li){
-	$(li).append("<span>"+torrent.properties.infoHash +"</span>")
-	var dl = document.createElement("a");
+function initializeUpload(){
 
-	$(li).append(dl)
-	$(dl).text(" [delete]")
-	$(dl).attr("href", "#")
-	$(dl).click(function(e){
-		e.preventDefault();
-		if(confirm("Are you sure you want to delete " + torrent.properties.infoHash + "?")){
-			$.post("/delete_torrent/"+torrent.properties.infoHash, function(){
-				$(li).empty();
-				torrentRestore(torrent, li);
-			});	
-		}
-		
-	})
-}
-
-function torrentRestore(torrent, li){
-	var rs = document.createElement("a");
-	$(li).append("<span>" + torrent.properties.infoHash.slice(0,4) + "*" + "</span>")
-	$(li).append(rs);
-	$(rs).text(" [restore]");
-	$(rs).attr("href", "#")
-	$(rs).click(function(e){
-		e.preventDefault();
-		if(confirm("Are you sure you want to restore this torrent, and this torrent has resolved all its DMCA complaints?")){
-			$.post("/restore_torrent/" + torrent.properties.infoHash, function(){
-				$(li).empty();
-				torrentDelete(torrent, li);
-			})
-		}
-	})
-}
-var caller;
-var calls = 0;
-function initializeUpload(cb){
-
-	calls++;
-	resetUpload();
+	htmlUpload();
 	$("#errorsDiv").empty();
 	var uuid;
-	$(".paid").hide();
 	var params = TEMPLAR.paramREC();
 
 	$("#uuid").hide();
@@ -68,39 +29,20 @@ function initializeUpload(cb){
 			
 			caller = setTimeout(function(){
 				$.get("/upload/" + uploadModel.uuid, function(data){
-					$("#submit").prop("disabled", false)
-					uploadModel.atlsd = data.atlsd;
-					$("#link_address").val(data.atlsd ? data.atlsd : "")
-					uploadModel.torrent.LINK_address = uploadModel.atlsd;
+					$("#up_submit").prop("disabled", false)
 					if(!data.record){
 						resetUpload();
-						cb();
+	
 						return;
 					}
 					
-
-					//dmca complaint area
-					/*data.record._fields[5].forEach(function(torrent){
-						var li = document.createElement("li")
-						$("#DMCA").append(li)
-						if(torrent.properties.deleted){
-							$(li).empty();
-							torrentRestore(torrent, li);
-						}
-						else{
-							$(li).empty();
-							torrentDelete(torrent, li);
-						}
-						
-					})*/
-
 					$("#newUploadHeader a").text(" " + toTitleCase(decodeEntities(decodeEntities(data.record._fields[0]))))
-          $("#newUploadHeader a").attr("href", "#source?uuid=" + uploadModel.uuid);
-          $("#newUploadHeader a").addClass("ANCHOR")
+          $("#newUploadHeader a").attr("href", "#node?label=source&uuid=" + uploadModel.uuid);
+          $("#newUploadHeader a").addClass("TEMPLAR")
           $("#newUploadHeader a").addClass("source")
 					$("#newUploadHeader a").click(function(e){
 						e.preventDefault();
-						ANCHOR.route("#source?uuid=" + uploadModel.uuid)
+						TEMPLAR.route("#source?uuid=" + uploadModel.uuid)
 					})
 					$("#title").val(decodeEntities(decodeEntities(data.record._fields[0]))).trigger("change")
 					$("#date").val(decodeEntities(decodeEntities(data.record._fields[3]))).trigger("change");
@@ -131,11 +73,11 @@ function initializeUpload(cb){
 						var publisherHtml = "";
 						var editionField = "";
 			      	data.record._fields[1].forEach(function(field, i){
-				      	editionField += field.author ? decodeEntities(decodeEntities(field.author)) : ""
+				      	editionField += field.name ? decodeEntities(decodeEntities(field.name)) : ""
 				      	if(data.record._fields[1][i+1]){
 				      		editionField += ", "
 				      	}
-								else if(field.author && !field.author.endsWith(".")){
+								else if(field.name && !field.name.endsWith(".")){
 									editionField += ". "
 								}
 								else{
@@ -241,7 +183,7 @@ function initializeUpload(cb){
 					})
 
 
-					data.record._fields[7].properties.types.forEach(function(val){
+					types.forEach(function(val){
 						var option = document.createElement("option");
 						$(option).val(val);
 						$(option).text(decodeEntities(decodeEntities(decodeEntities(val))));
@@ -250,7 +192,7 @@ function initializeUpload(cb){
 						uploadModel.type = $("#type").val();
 					})
 
-					data.record._fields[7].properties.media.forEach(function(val){
+					media.forEach(function(val){
 							var option = document.createElement("option");
 							$(option).val(val);
 							$(option).text(decodeEntities(decodeEntities(val)));
@@ -258,26 +200,22 @@ function initializeUpload(cb){
 							uploadModel.torrent.media = $("#media").val();
 						})
 
-					data.record._fields[7].properties.formats.forEach(function(val){
+					formats.forEach(function(val){
 							var option = document.createElement("option");
 							$(option).val(val);
 							$(option).text(decodeEntities(decodeEntities(val)));
 							$("#format").append(option);
 							uploadModel.torrent.format = $("#format").val();
 					})
-					cb();
+			
 				})
 			},100)			
 			
 		}
 	}
 	if($.isEmptyObject(params)){
-		caller = setTimeout(function(){$.get("/upload_structure", function(data){
-			$("#submit").prop("disabled", false)
-			uploadModel.atlsd = data.atlsd;
-			$("#link_address").val(data.atlsd ? data.atlsd : "")
-      uploadModel.torrent.LINK_address = data.atlsd;
-			data.buoy.types.forEach(function(val){
+			console.log(types);
+			types.forEach(function(val){
 				var option = document.createElement("option");
 				$(option).val(val);
 				$(option).text(decodeEntities(decodeEntities(val)));
@@ -285,7 +223,7 @@ function initializeUpload(cb){
 				uploadModel.type = $("#type").val();
 			})
 
-			data.buoy.media.forEach(function(val){
+			media.forEach(function(val){
 				var option = document.createElement("option");
 				$(option).val(val);
 				$(option).text(decodeEntities(decodeEntities(val)));
@@ -294,7 +232,7 @@ function initializeUpload(cb){
 
 			})
 
-			data.buoy.formats.forEach(function(val){
+			formats.forEach(function(val){
 				var option = document.createElement("option");
 				$(option).val(val);
 				$(option).text(decodeEntities(decodeEntities(val)));
@@ -302,9 +240,7 @@ function initializeUpload(cb){
 				uploadModel.torrent.format = $("#format").val();
 
 			})
-			cb();
-		})
-		},100)	
+
 	}
 
 	$("#format").change(function(){
@@ -319,24 +255,15 @@ function initializeUpload(cb){
 }
 
 function addAuthor(data){
-	if(!data || !data.author){
+	if(!data || !data.name){
 		return false;
 	}
 	uploadModel.authors.push({
 		uuid : data.uuid,
-		author : data.author
+		name : data.name
 	});
 
-	addAuthorArea(uploadModel.authors[uploadModel.authors.length - 1].uuid, uploadModel.authors[uploadModel.authors.length - 1].author, function(err, div, select, input, remove, id){
-
-		uploadModel.authors[uploadModel.authors.length - 1].importance = "Author"
-		uploadModel.authors[uploadModel.authors.length - 1].role = "";
-		$(select).change(function(){
-			uploadModel.authors[uploadModel.authors.length - 1].importance = "Author"
-		})
-		$(input).change(function(){
-			uploadModel.authors[uploadModel.authors.length - 1].role = "";
-		})
+	addAuthorArea(uploadModel.authors[uploadModel.authors.length - 1].uuid, uploadModel.authors[uploadModel.authors.length - 1].name, function(err, div, select, remove, id){
 
 		$(remove).click(function(){
 			removeAuthorArea(div, id);
@@ -352,7 +279,7 @@ function addAuthor(data){
 
 function htmlUpload(){
 	resetUpload();
-	ANCHOR.buffer();
+	TEMPLAR.DOM();
 	 //updateUpload();
 
 	$("#newEdition").hide();
@@ -371,22 +298,13 @@ function htmlUpload(){
 	})
 
 
-	$("#link_price").change(function(){
-		uploadModel.torrent.LINK_price = parseFloat($("#link_price").val());
-	})
-
-
-	$("#link_address").change(function(){
-		uploadModel.torrent.LINK_address = $("#link_address").val();
-	})
-
 	$("#author_importance").hide();
 	$("#author_role").hide();
   var apa;
 	$("#APA").click(function(e){
 		e.preventDefault();
     apa = APA();
-		copyToClipboard(apa + " [propagate.info]")
+		copyToClipboard(apa);
 		function copyToClipboard(name) {
 		    var $temp = $("<input>");
 		    $("body").append($temp);
@@ -401,11 +319,11 @@ function htmlUpload(){
 		  	var publisherHtml = "";
 		  	var editionField = "";
 		   uploadModel.authors.forEach(function(field, i){
-		      	editionField += decodeEntities(decodeEntities(field.author))
+		      	editionField += decodeEntities(decodeEntities(field.name))
 		      	if(uploadModel.authors[i+1]){
 		      		editionField += ", "
 		      	}
-					else if(field.author && !field.author.endsWith(".")){
+					else if(field.name && !field.name.endsWith(".")){
 						editionField += ". "
 					}
 					else{
@@ -470,7 +388,7 @@ function htmlUpload(){
 
 	})
 
-	$("input:file").change(function(){
+	/*$("input:file").change(function(){
 		function renameFile(originalFile, newName) {
 		    return new File([originalFile], newName, {
 		        type: originalFile.type,
@@ -495,13 +413,29 @@ function htmlUpload(){
 				$(".torrentArea").append('<a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Torrent]</a>')
             $(".torrentArea").append('&nbsp;<a href="magnet:?xt=urn:btih:' + torrent.infoHash + "&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337");     		
 		
-	})
+	})*/
 
-	$("#infoHash").change(function(){
-		uploadModel.torrent.infoHash = $(this).val();
-		uploadModel.torrent.media = $("#media").val();
-		uploadModel.torrent.format = $("#format").val();
-	})
+    $('input:file').change(function() {
+    // Reference the underlying HTMLInputElement
+	    var fileList = this.files;
+	    var totalSize = 0;
+
+	    for (var i = 0; i < fileList.length; i++) {
+	        totalSize += fileList[i].size;
+	    }
+	    const files = this.files;
+
+  		uploadModel.torrent.size = totalSize;
+
+  		WT.seed(files, function(torrent){
+  			console.log(torrent);
+			$("#MG").empty();
+			uploadModel.torrent.infoHash = torrent.infoHash;
+			$("#MG").append('<br><a href="' + torrent.torrentFileBlobURL + '" target="_blank" download="' + torrent.name + '.torrent">[Torrent]</a>')
+
+            $("#MG").append("&nbsp;<a href='magnet:?xt=urn:btih:" + torrent.infoHash + "&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337'>[magnetURI]</a>");     		
+		});
+  	})
 
 	$("#title").change(function(){
 		uploadModel.title = $("#title").val();
@@ -515,6 +449,14 @@ function htmlUpload(){
 
 	$("#type").change(function(){
 		uploadModel.type = $("#type").val();
+	})
+
+	$("#media").change(function(){
+		uploadModel.torrent.media = $("#media").val();
+	})
+
+	$("#format").change(function(){
+		uploadModel.torrent.format = $("#format").val();
 	})
 
 	$("#edition_publisher").change(function(){
@@ -547,71 +489,13 @@ function htmlUpload(){
 		e.preventDefault();
 
       $("body").css("cursor", "progress");
-		$.post("/add_author", {author : $("#author_input").val()}, function(data){
+		$.post("/add_author", {name : $("#author_input").val()}, function(data){
         $("body").css("cursor", "default");
 			addAuthor(data);
 		})
 	})
 
-	$("#copyrighted").change(function(){
-		if($(this).prop("checked")){
-			var cnfrm = confirm('By checking this box, you are certifying that you own the rights to this torrent. You may set the price yourself, and propagate.info will not take any royalty, as this is a free and open source project. Be sure to include a $LINK address!');
-			if(cnfrm !== true)
-			{
-			 $(this).prop("checked", false)
-			 $('.paid').fadeOut();
-			}
-			else{
-				$(".copyrighted").fadeIn(777);
-				$(".copy:not(.paid)").fadeIn(777);
-				$(this).prop('checked', true)
-				$(".paid").fadeIn();
-			}
-		}
-		else{
-			$(".copyrighted").fadeOut(777);
-			$(".copy").fadeOut(777)
-			$(".paid").fadeOut();
-		}
-	})
 
-	$("#public_domain").change(function(){
-		if($(this).prop("checked")){
-			var cnfrm = confirm('By checking this box, you are certifying that this torrent is in the public domain!');
-      if(cnfrm !== true){
-        $(".paid").fadeOut();
-        $("#link_price").val("")
-        $(this).prop('checked', false)
-      }
-      else{
-        $(".paid").fadeOut();
-			  $("#link_price").val("") 
-      }
-			/*var cnfrm = confirm("By checking this box, you are certifying that the torrent you are uploading is in the public domain.")
-			if(cnfrm != true){
-				$(this).prop("checked", false)
-			}
-			else{
-				$("#payment").prop('checked', false)
-				$(".copy").fadeOut(666)		
-			}*/
-		}
-
-	})
-
-
-
-	$("#payment").change(function(){
-		if($(this).prop("checked")){
-			$(".paid").fadeIn(777);
-			$("#public_domain").prop('checked', false)
-		}
-		else{
-			$(".paid").fadeOut();
-		} 
-	})
-
-	
 	$("#create_author").click(function(e){
 		e.preventDefault();
        $("body").css("cursor", "progress");
@@ -619,7 +503,7 @@ function htmlUpload(){
            if( retVal === false ) {
               return false;
           }
-		$.post("/create_author", {author : $("#author_input").val()}, function(data){
+		$.post("/create_author", {name : $("#author_input").val()}, function(data){
          $("body").css("cursor", "default");
 			addAuthor(data);
 		})
@@ -629,31 +513,16 @@ function htmlUpload(){
 		uploadModel.classes = $("#classes_input").val().split(",");		
 	})
 
-	$("#submit").click(function(e){
+	$("#up_submit").click(function(e){
 		e.preventDefault();
     /*if($("#link_address").val() === ""){
       alert("You must enter a valid LINK address, even if your torrent is in the Public Domain.")
       return;
     }*/
-    if($("#copyrighted").prop('checked') === true && $("#link_address").val()=== ""){
-      alert("You must enter a valid $ATLANTIS-compatible ETH address in order to self-publish a Copyrighted Torrent!")
-      return;
-    
-    }
-		if($("#copyrighted").prop("checked") === false && $("#public_domain").prop("checked") === false){
-			addError("You must certify either that your torrent is in the public domain or you have the necessary copyrights to upload!")
-      alert("You must certify either that your torrent is in the public domain or you have the necessary copyrights to upload!")
-			return;
-		}
-		$("#submit").prop("disabled", true)
+		$("#up_submit").prop("disabled", true)
 		$("body").css("cursor", "progress");
-		$.post("/upload/" + uploadModel.uuid, {APA : apa, public_domain: $("#public_domain").val(), payWhatYouWant : $("#payWhatYouWant").prop("checked"), 
-			payment : $("#payment").prop("checked"), copyrighted : $("#copyrighted").prop("checked"), type: uploadModel.type, edition_img : uploadModel.edition.edition_img, 
-			edition_pages : uploadModel.edition.edition_pages, edition_publisher : uploadModel.edition.edition_publisher,
-		 date: uploadModel.date, title : uploadModel.title, authors : JSON.stringify(uploadModel.authors), ETH_address: uploadModel.torrent.LINK_address, 
-		 USD_price
-: uploadModel.torrent.LINK_price, 
-		 torrent : JSON.stringify(uploadModel.torrent), 
+		$.post("/upload/" + uploadModel.uuid, {size: uploadModel.torrent.size, APA : apa, type: uploadModel.type, edition_pages : uploadModel.edition.edition_pages, edition_publisher : uploadModel.edition.edition_publisher,
+		 date: uploadModel.date, title : uploadModel.title, authors : JSON.stringify(uploadModel.authors), torrent : JSON.stringify(uploadModel.torrent), 
 			edition_date : $("#edition_date").val(), edition_uuid : uploadModel.edition.edition_uuid, 
 			edition_title : uploadModel.edition.edition_title, edition_no : uploadModel.edition.edition_no, classes : JSON.stringify(uploadModel.classes)},
 			 function(data){
@@ -661,7 +530,7 @@ function htmlUpload(){
 			if(data.errors && data.errors.length > 0){
 				addError(data.errors[0].msg);
         alert(data.errors[0].msg)
-				$("#submit").prop("disabled", false)
+				$("#up_submit").prop("disabled", false)
         return;
 			}
 			else{				
@@ -669,7 +538,7 @@ function htmlUpload(){
 			}
 			if(data.uuid)
 				//postHealth();
-				ANCHOR.route("#source?uuid=" + data.uuid);
+				TEMPLAR.route("#node?label=source&uuid=" + data.uuid);
 			return false; 
 		})
 	})
@@ -681,20 +550,12 @@ function htmlUpload(){
 
 function resetUpload(){
 		
-		if(uploadModel.atsd){
-			$("#links_address").val(uploadModel.atlsd)
-		}
 
     
 		$(".newUpload").show();
 		$("#newUploadHeader a").text("")
-		$("#public_domain").prop("checked", true);
 		authorCount = 0;
-		calls = 0;
 
-		clearTimeout(caller);
-		$("#link_price").val("");
-		$("#link_address").val("");
 		$("#edition_select").empty();
 		$("#edition_select").off("change");
 		$(".torrentArea").empty();
@@ -709,25 +570,18 @@ function resetUpload(){
 		edition_pages : "",
 		edition_uuid : "null"
 		};
-		uploadModel.torrent.LINK_address = "";
-		uploadModel.torrent.LINK_price = "";
+
 		uploadModel.editions = [];
 		uploadModel.date = "";
 		uploadModel.authors = [];
 		uploadModel.classes = []
 		uploadModel.title = "";
 	
-		$(".DMCA").hide();
 		$(".merge_source").hide();
 		$("#merge_source_input").val("");
 		$("#uploadHeading a").text("Upload")
 
-		$(".paid").hide();
-		$(".copyrighted").hide();
-		$("#copyrighted").prop("checked", false);
-		$('input[name="payment"]').prop('checked', false);
 		$(".torrent_a").remove();
-		$("#infoHash").val("");
 
 		$("#title").val("");
 		$("#date").val("");
@@ -769,9 +623,8 @@ function resetUpload(){
 		$("#type").empty();
 		$("#media").empty();
 		$("#format").empty();
-		$("#submit").prop("disabled", true)
+		$("#up_submit").prop("disabled", false)
 
-		$("#DMCA").empty();
 		//$("#errorsDiv").empty();
 }
 	

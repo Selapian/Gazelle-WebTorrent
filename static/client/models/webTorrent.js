@@ -2,6 +2,7 @@ var client;
 var torrent = null;
 var magnetURI = "magnet:?xt=urn:btih:2f5847f71c1f2baf143830dea0c7316d72dbe8c6&tr=wss%3A%2F%2Ftracker.openwebtorrent.com%2Fannounce&tr=wss%3A%2F%2Ftracker.btorrent.xyz%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tag=ebooks&tag=audibooks"
 var interval = null;
+var wired = false;
 
 var queue = [];
 

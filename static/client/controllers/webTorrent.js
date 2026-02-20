@@ -1,7 +1,6 @@
 /**
  * THE TEMPLAR ENGINE: Multi-file Queue and State Management
  */
-
 // --- GLOBAL SINGLETON INTERVAL MANAGEMENT ---
 function startGlobalProgressHeartbeat() {
     if (window.globalProgressInterval) return;
@@ -50,6 +49,7 @@ function updateUnifiedProgress() {
     const $numPeers = document.querySelector("#numPeers");
     const $leechSpans = document.querySelectorAll(".show-leech");
     const $seedSpans = document.querySelectorAll(".show-seed");
+    $("#anonymous").fadeIn(1337);
 
     if ($bar) $bar.style.width = percent + '%';
     if ($down) $down.innerHTML = prettyBytes(globalReceived);
@@ -87,35 +87,38 @@ function initializeMagnets() {
     client = new WebTorrent();
     $(".show-seed, .show-leech, #numPeers").hide();
     $("#anonymous").hide();    
-    $(".show-connecting").show();
+    $(".show-connecting").fadeIn(1337);
 
     torrent = client.add(magnetURI, function(t){
         t.deselect(0, t.pieces.length - 1, false);
     });
 
+     torrent.on('wire', (wire) => {
+      if(!wired){
+        wired = !wired;
+        $(".show-connecting").hide();
+        $("#wire").show();
+      }
+      
+    })
+
     torrent.on('ready', function() {
         $(".show-connecting").hide();
-        $(".show-seed, #numPeers").fadeIn(1337);
+        $(".show-seed, #numPeers").show();
+        $("#wire").hide();
         assertWTEnabled();
         
         // Handling the #file route refresh specifically
         if(TEMPLAR.pageREC() === "file") {
             const currentId = parseInt(TEMPLAR.paramREC().id);
             // Locate the item in the queue that matches the URL param
-            let QFILE = queue.find(Q => Q.id === currentId);
-            
             // Fallback if queue is empty (fresh refresh)
-            if(!QFILE) {
-                QFILE = Q_FILE(); // Ensure Q_FILE() is capable of reading params
-            }
+       
+            selectFile(Q_FILE());
             
-            if(QFILE) {
-                $("#anonymous").fadeIn(1337);
-                selectFile(QFILE); // This will handle the appendTo("#output")
-            }
         } else {
             // Background processing for other pages
-            queue.forEach(QFILE => selectFile(QFILE));
+            queue.forEach(QFILE => selectFile(Q_FILE()));
         }
 
         if (document.querySelector("#numPeers")) {
@@ -156,50 +159,25 @@ function selectFile(QFILE) {
     if (!QFILE) return;
     if (!QFILE.fileRefs) QFILE.fileRefs = [];
 
-    const $output = $("#output");
-    
-    // 1. DETERMINE "DONE" STATE Synchronously
-    let isDone = false;
-    if (QFILE.media === "Ebook") {
-        const file = torrent.files.find(f => f.length === QFILE.id);
-        isDone = file ? file.done : false;
-    } else if (QFILE.media === "Audiobook") {
-        const audioFiles = torrent.files.filter(f => f.name.toLowerCase().endsWith(".mp3"));
-        const prefixMap = {};
-        audioFiles.forEach(f => {
-            const prefix = f.name.split(/[_-]/)[0];
-            if (!prefixMap[prefix]) prefixMap[prefix] = { total: 0, files: [] };
-            prefixMap[prefix].total += f.length;
-            prefixMap[prefix].files.push(f);
-        });
-        const fileSet = Object.values(prefixMap).find(a => a.total === QFILE.id);
-        isDone = fileSet ? fileSet.files.every(f => f.done) : false;
-    }
-
-    // 2. REWRITE HERO TEXT (Avoids the "Double Downloading" string issue)
+     // 2. REWRITE HERO TEXT (Avoids the "Double Downloading" string issue)
     $(".show-seed").hide();
     $(".show-leech").show().css("display", "inline"); // Ensure it's visible
     // Directly set the text to avoid appending to existing text
-    const $leech = document.querySelector(".show-leech");
-    $leech.innerHTML = isDone ? "Appending" : "Downloading";
+
     // 3. SELECTION & APPEND LOGIC
     if (QFILE.media === "Ebook") {
         const file = torrent.files.find(f => f.length === QFILE.id);
         if (file) {
             file.select();
             if (!QFILE.fileRefs.some(ref => ref.length === file.length)) QFILE.fileRefs.push(file);
-            
-            if ($output.length) {
-                $output.empty(); 
-                file.appendTo("#output");
-                
-                // CRITICAL: If already done, the 'done' event won't fire. Call it manually.
-                if (file.done) {
-                    onFileDone(file, QFILE);
-                } else {
-                    file.on('done', () => onFileDone(file, QFILE));
-                }
+             
+            // CRITICAL: If already done, the 'done' event won't fire. Call it manually.
+            if (file.done) {
+                onFileDone(file, QFILE);
+            } else {
+                file.on('done', () => onFileDone(file, QFILE));
             }
+            
         }
     } else if (QFILE.media === "Audiobook") {
         const id = QFILE.id;
@@ -220,7 +198,7 @@ function selectFile(QFILE) {
             const toSelect = fileSet.files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
             
             if (container) {
-                container.innerHTML = `<h3 style="margin-bottom:15px; color: #fff;">Audiobook: ${toTitleCase(fileSet.prefix)}</h3>`;
+                container.innerHTML = `<br><br><h3 style="margin-bottom:15px; color: #fff;">Audiobook: ${toTitleCase(fileSet.prefix)}</h3>`;
                 toSelect.forEach((file, index) => {
                     const slot = document.createElement('div');
                     slot.className = 'audio-part';

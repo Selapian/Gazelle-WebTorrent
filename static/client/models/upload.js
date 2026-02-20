@@ -2,7 +2,8 @@ var uploadModel = {
 	authors : [],
 	classes : [],
 	torrent : {
-		infoHash : "",
+		size : "",
+		release : "",
 		media : "",
 		format : ""
 	},

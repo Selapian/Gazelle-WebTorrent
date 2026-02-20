@@ -2,26 +2,31 @@
  * THE TEMPLAR INDEX: A fusion of maritime discipline and existential clarity.
  * We resolve to make the code sail by ensuring its properties are 'Ready-to-hand'.
  */
-function start_index() {
-    $("#stupa").hide().fadeIn(7789); /* just added a load, find it later */
+function mount() {
     $(".autosuggestBox").hide();
 
     TEMPLAR.initialize({
         defaultPage: "titles",
         dir: "client/partials",
         fade: true,
-        pages: ["file", "top10", "titles", "node", "set"],
+        pages: ["file", "top10", "titles", "node", "set", "upload"],
         helm: [
             {
                 page: "titles",
                 fn: function() {
+                    // Priority 1: Get the list visible                    
                     initializeTorrents("torrents");
-                    if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-                        initializeGraph();
-                        $(".graph_search").fadeIn(5555)      
-
-                    }
-                    htmlSearch();
+                    
+                    // Priority 2: Defer the heavy graph and search logic
+                    setTimeout(() => {
+                        if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
+                            initializeGraph(); // Likely the source of the 710ms reflow
+                            $(".graph_search").fadeIn(333);
+                        }                        
+                    }, 50); // Small delay to allow Torrent list to render first
+                    
+                    advAutocomplete();
+                    
                 }
             },
             {
@@ -31,13 +36,13 @@ function start_index() {
                     initializeTorrents("week");
                     initializeTorrents("month");
                     initializeTorrents("year");
-                    initializeTorrents("alltime");
+                    //initializeTorrents("alltime");
                 }
             },
             {
                 page: "node",
                 fn: function() {
-                    initializeNode();
+                    initializeTorrents("node");
                     assertButtonTab();
                     $("button").hide();
                     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().label === "source"){
@@ -54,39 +59,37 @@ function start_index() {
             {
                 page: "file",
                 fn : function(){
-                    var QFILE = queue.find(Q => Q.id === parseInt(TEMPLAR.paramREC().id))
-                    if(!QFILE){
-                        QFILE = Q_FILE();
-                    }
-                    //if metadata is downloaded, and #file routes, and file has not yet been downloaded
-                    //throttle the file
-                    
-                    //if file already downloaded, append to file.html #output
-                    if(QFILE && QFILE.fileRefs.length > 0){
-                        assertReference(QFILE);                        
-                        QFILE.fileRefs.forEach(function(file){
-                            file.appendTo("#output")
-                        })
+                    /*const QFILE = Q_FILE();
+                    if(QFILE){
+                        assertReference(QFILE);             
                     }
                     if(torrent && torrent.files && torrent.files.length > 0){
-                        selectFile(QFILE);
-                        $("#anonymous").fadeIn(1337);
-                    }
+                        selectFile(QFILE);                                               
+                    }*/
+                    assertHero(TEMPLAR.paramREC().infoHash, TEMPLAR.paramREC().APA, TEMPLAR.paramREC().format);    
+                    DL(TEMPLAR.paramREC().infoHash);
 
                     
+                }
+            },
+            {
+                page: "upload",
+                fn : function(){
+                    initializeUpload();
+                    uploadAutocomplete();
                 }
             }
         ]
     }, function(){
-        htmlSearch();
-        $.get("../client/partials/academic_footer.html", function(data){
+        $.get("../client/partials/hero.html", function(data){
             $("footer").html(data);
             if(TEMPLAR.pageREC() === "file"){
-                var QFILE = Q_FILE();
-                assertReference(QFILE);     
+                assertReference(Q_FILE());     
             }
+            headerAutocomplete();
             
-            initializeMagnets(); 
+            // Use a timeout to stagger the initialization of magnets
+            //setTimeout(initializeMagnets, 0);
 
         })
 
@@ -97,10 +100,9 @@ function start_index() {
             }            
         })
 
-        
     });
 }
 
 $(document).ready(function(){
-    start_index();
+    mount();
 })

@@ -230,7 +230,7 @@ app.post("/node/:label", [
         case 'publisher': matchClause = "MATCH (p:Publisher {uuid: $uuid})<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s1:Source)"; break;
     }
 
-    let orderBy = "s.updated DESC"; // Default
+    let orderBy = "s1.updated DESC"; // Default
     if (order && order.length > 0) {
         const dir = order[0].dir === 'asc' ? 'ASC' : 'DESC';
         switch(order[0].column) {
@@ -260,7 +260,7 @@ app.post("/node/:label", [
              collect(DISTINCT {publisher: p, edition: e, torrent: t}) AS edition_torrents, 
              collect(DISTINCT classes) AS classList
              
-        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy + ` LIMIT TOINTEGER($limit)`;
+        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy + ` SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)`;
 
     try {
         const result = await session.run(cypherQuery, {
@@ -418,11 +418,11 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
       req.body.publisher = "propagate.info"
     }
     if(req.body.title && req.body.type === "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
       "MATCH (s:Source) WHERE s.uuid = node.uuid "
     }
     else if(req.body.title && req.body.type !== "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
       "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
     }
     else if(!req.body.title && req.body.type !== "all"){
@@ -454,11 +454,11 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
 
   query += "WITH s,a,e "
   if(req.body.media !== "all" && req.body.format !== "all"){
-    query += "OPTIONAL MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
   }
   else if(req.body.media !== "all"){
-    query += "OPTIONAL MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
   }
   else if(req.body.format !== "all"){
@@ -466,7 +466,7 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
 
   }
   else{
-    query += "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
   }
   query+= "WITH s " 
@@ -475,10 +475,11 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
   if(req.body.classes){
     
     if(req.body.class_all === "true"){
-      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
-      "WHERE c1.name IN $classes " +
-      "WITH s, count(distinct c1) AS actualCount, size($classes) AS expectedCount "
-      "WHERE actualCount = expectedCount "
+      query += "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
+      "WITH s, collect(c1) as classes " +
+      "WITH s, head(classes) as head, tail(classes) as classes " +
+      "MATCH (head)-[:TAGS]->(s) " +
+      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
     }
     else{
       query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
@@ -492,11 +493,11 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
 
   }
   if(req.body.title && req.body.type === "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
       "MATCH (s:Source) WHERE s.uuid = node.uuid "
     }
     else if(req.body.title && req.body.type !== "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
       "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
     }
     else if(!req.body.title && req.body.type !== "all"){
@@ -525,21 +526,21 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
   query += "WITH s,a,p,e, count "
   if(req.body.media !== "all" && req.body.format !== "all"){
-    query += "MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t1:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e1:Edition)-[]-(s) WHERE t1.deleted = false " 
 
   }
   else if(req.body.media !== "all"){
-    query += "MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t1:Torrent {media: $media})<-[:DIST_AS]-(e1:Edition)<-[:PUB_AS]-(s) WHERE t1.deleted = false " 
 
   }
   else if(req.body.format !== "all"){
-    query += "MATCH (t:Torrent {format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+    query += "MATCH (t1:Torrent {format:$format})<-[:DIST_AS]-(e1:Edition)<-[:PUB_AS]-(s) WHERE t1.deleted = false " 
 
   }
-  else{
-    query += "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+ 
+  query += "MATCH (t:Torrent)<-[:DIST_AS]-(e:Edition)<-[:PUB_AS]-(s) WHERE t.deleted = false " 
 
-  }
+  
   query+= "WITH s,a,p,e,t,count " 
   if(req.body.classes){
     var classes = JSON.parse(he.decode(req.body.classes)).split(",");
@@ -553,10 +554,11 @@ app.post("/torrents/adv_search", check("class_all").not().isEmpty().trim().escap
     }
     console.log(req.body.class_all)
     if(req.body.class_all === "true"){
-      query += "MATCH (c1:Class)-[:TAGS]->(s) " +
-      "WHERE c1.name IN $classes " +
-      "WITH s, a, p, e, t, count, count(distinct c1) AS actualCount, size($classes) AS expectedCount "
-      "WHERE actualCount = expectedCount "
+      query += "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
+      "WITH s, a, p, e, t, count, collect(c1) as classes " +
+      "WITH s, a, p, e, t, count, head(classes) as head, tail(classes) as classes " +
+      "MATCH (head)-[:TAGS]->(s) " +
+      "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
     }
     else{
       query += "MATCH (c1:Class)-[:TAGS]->(s) WHERE c1.name IN $classes "
@@ -670,11 +672,11 @@ app.post("/graph_search",
 
     // --- 1. FILTERING BLOCK (Defining 's') ---
     if(req.body.title && req.body.type === "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
                "MATCH (s:Source) WHERE s.uuid = node.uuid "
     }
     else if(req.body.title && req.body.type !== "all"){
-      query += "CALL db.index.fulltext.queryNodes('titles', $title) YIELD node " +
+      query += "CALL db.index.fulltext.queryNodes('source_name', $title) YIELD node " +
                "MATCH (s:Source {type : $type}) WHERE s.uuid = node.uuid "
     }
     else if(!req.body.title && req.body.type !== "all"){
@@ -697,10 +699,11 @@ app.post("/graph_search",
     // --- 4. CLASS LOGIC (RESTORED BOTH PATHS) ---
     if(req.body.classes){
         if(req.body.class_all === "true"){
-          query += "MATCH (c1:Class)-[:TAGS]->(s) " +
-          "WHERE c1.name IN $classes " +
-          "WITH s, a1UUID, pUUID, count(distinct c1) AS actualCount, size($classes) AS expectedCount  "
-          "WHERE actualCount = expectedCount "
+          query += "MATCH (c1:Class) WHERE c1.name IN $classes "+ 
+          "WITH s, a1UUID, pUUID, collect(c1) as classes " +
+          "WITH s, a1UUID, pUUID, head(classes) as head, tail(classes) as classes " +
+          "MATCH (head)-[:TAGS]->(s) " +
+          "WHERE ALL(c1 in classes WHERE (c1)-[:TAGS]->(s)) "
         }
         else{
           // This is the block that was missing: handle standard class search
@@ -717,11 +720,11 @@ app.post("/graph_search",
     }
 
     if(req.body.media !== "all" && req.body.format !== "all"){
-        query += "OPTIONAL MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+        query += "MATCH (t:Torrent {media: $media, format:$format})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
       }
       else if(req.body.media !== "all"){
-        query += "OPTIONAL MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+        query += "MATCH (t:Torrent {media: $media})<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
       }
       else if(req.body.format !== "all"){
@@ -729,7 +732,7 @@ app.post("/graph_search",
 
       }
       else{
-        query += "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
+        query += "MATCH (t:Torrent)<-[:DIST_AS]-(e)-[]-(s) WHERE t.deleted = false " 
 
       }
 
@@ -817,13 +820,13 @@ app.get("/search", check("term").trim().escape(), check("field").not().isEmpty()
   if(req.query.term){
     switch(req.query.field){
       case "search_sources":
-        query += "CALL db.index.fulltext.queryNodes('titles', $sourceName) YIELD node " +
+        query += "CALL db.index.fulltext.queryNodes('source_name', $sourceName) YIELD node " +
         "MATCH (s:Source) WHERE s.uuid = node.uuid " +
         "RETURN s " 
         break;
       case "search_authors":
         query += "CALL db.index.fulltext.queryNodes('authorSearch', $authorName) YIELD node " +
-        "MATCH (a:Author)-[:AUTHOR]->(s:Source) WHERE a.uuid = node.uuid " +
+        "MATCH (a:Author)-[:AUTHOR]->(:Source) WHERE a.uuid = node.uuid " +
         "RETURN a "
         break;
       case "search_classes":
@@ -853,11 +856,11 @@ app.get("/search", check("term").trim().escape(), check("field").not().isEmpty()
           }
           switch(req.query.field){
             case "search_sources":
-              recordData.push({label : data._fields[0].properties.title, value : data._fields[0].properties.uuid});
+              recordData.push({label : data._fields[0].properties.name, value : data._fields[0].properties.uuid});
               console.log(recordData[0])
               break;
             case "search_authors":
-              recordData.push({label : data._fields[0].properties.author, value : data._fields[0].properties.uuid});
+              recordData.push({label : data._fields[0].properties.name, value : data._fields[0].properties.uuid});
               break;
             case "search_classes":
               recordData.push({label : data._fields[0].properties.name, value : data._fields[0].properties.uuid});
@@ -997,18 +1000,16 @@ function camelize(str) {
   }).replace(/\s+/g, '');
 }
 
-app.post("/rev/:id", check("id").trim().escape().not().isEmpty().isInt(), function(req,res){
+app.post("/rev/:infoHash", check("infoHash").trim().escape().not().isEmpty(), function(req,res){
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors);
       return res.json({ errors: errors.array() });
     }
     const session = driver.session()
+    console.log(req.params.infoHash)
 
-
-    console.log("LEN: " + req.params.id);
-
-    var query = "MATCH (t:Torrent{size:$id}) " + 
+    var query = "MATCH (t:Torrent{infoHash:$infoHash}) " + 
                 "SET t.snatches = toFloat(t.snatches + 1) " +
                 "WITH t " + 
                 "MATCH (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)-[:DIST_AS]->(t) " +
@@ -1026,7 +1027,7 @@ app.post("/rev/:id", check("id").trim().escape().not().isEmpty().isInt(), functi
                 "WITH t, s " +
                 "SET s.count = s.count + 1" 
 
-    var params = {id: parseInt(req.params.id), user : req.user ? req.user.uuid : "null"}
+    var params = {infoHash: req.params.infoHash}
 
     session.run(query,params).then(async data => {
       session.close();
@@ -1067,10 +1068,10 @@ app.post("/top10/:time", check("time").trim().escape(), async function(req,res){
       case "year":
         params.time = "P365D";
         break;
-      case "alltime":
+      /*case "alltime":
         params.time = "P99Y";
         break;
-
+      */
     }
 
     var query = "WITH DATETIME() - duration($time) AS threshold " +
@@ -1098,6 +1099,350 @@ app.post("/top10/:time", check("time").trim().escape(), async function(req,res){
       return res.json({recordsTotal : total, recordsFiltered : total, records: data.records});
     })
 
+})
+
+
+app.post("/create_author", check("name").trim().escape().not().isEmpty().isLength({max : 256}).withMessage("Author must be <= 256 characters"), function(req,res){
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({ errors: errors.array() });
+    }
+    const session = driver.session()
+    var searchableDecoded = he.decode(req.body.name);
+    var searchable = he.encode(searchableDecoded.split(",")[0]);
+    console.log("Create Author: " + req.body.name);
+    session.run('MERGE (a:Author {name : $authorName, searchable : $searchable, snatches : toFloat(0)}) ' +
+    'ON CREATE SET a.uuid = randomUUID() ' +
+    'RETURN a.uuid AS uuid, a.name AS name' ,{authorName : he.encode(req.body.name), searchable : searchable}).then(data => {
+        session.close()
+        return res.json({uuid : data.records[0].get('uuid'), name : data.records[0].get('name')});
+    })    
+})
+
+app.post("/add_author", check("name").trim().escape().not().isEmpty().isLength({max : 256}).withMessage("Author must be <= 256 characters"), function(req,res){
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        consloe.log(errors.array())
+      return res.json({ errors: errors.array() });
+    }
+    const session = driver.session()
+    console.log("Add Author: " + req.body.name);
+    session.run('MATCH (a:Author {name : $authorName}) ' +
+      'RETURN a.uuid AS uuid, a.name AS name', {authorName : he.decode(req.body.name)}).then(data => {
+        session.close()
+        if(data.records[0]){
+            console.log(data.records[0].get('name'))
+          return res.json({uuid : data.records[0].get('uuid'), name : data.records[0].get('name')});
+        }
+        else{
+          return res.json({});
+        }
+      })  
+})
+
+
+app.get("/upload/:uuid", check("uuid").trim().escape().isLength({max:256}), function(req,res){
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(util.inspect(errors.array()));
+    return res.json({ errors: errors.array() });
+  }
+  const session = driver.session()
+
+  var query = '';
+  var params = {};
+
+  query += "MATCH (s:Source {uuid : $uniqueID}) " +
+  "WITH s " +
+  "OPTIONAL MATCH (a:Author)-[]->(s) " +
+  "WITH s, a " +
+  "OPTIONAL MATCH (c:Class)-[]->(s) " +
+  "WITH s, a, c " +
+  "MATCH (e:Edition)<-[:PUB_AS]-(s) " +
+  "WITH s,a,e,c, {title : e.title, date: e.date, pages : e.pages, img: e.img, uuid: e.uuid, publisher: e.publisher} AS edition " +
+  "OPTIONAL MATCH (t:Torrent)<-[:DIST_AS]-(e) " +
+  "RETURN s.name AS title, COLLECT(DISTINCT {uuid: a.uuid, author : a.name}) AS author, COLLECT(DISTINCT c.name) AS classes, s.date AS date, " +
+  "collect(DISTINCT edition) AS editions, COLLECT(DISTINCT t) AS torrents, s.type AS type"
+
+  params["uniqueID"] = req.params.uuid;
+
+  session.run(query , params).then(data => {
+    session.close();
+
+    return res.json({record : data.records[0], captcha: res.recaptcha, atlsd: req.user ? req.user.atlsd : ""});
+  })
+})
+
+
+app.post("/upload/:uuid", check("release").trim().escape(), check("APA").trim().escape(), check("public_domain").trim().escape(), check("type").trim().escape(), 
+  check("edition_no").trim().escape().isLength({max: 256}), check("edition_pages").trim().escape().isLength({max :256}), check("edition_publisher").trim().escape().isLength({max:256}), check("uuid").trim().escape().isLength({max:256}), check("edition_date").trim().escape().isLength({max:256}), 
+  check("date").trim().escape().isLength({max:256}), check("classes").trim().escape().toLowerCase().isLength({max:9000}), check("torrent").trim().escape().isLength({max:9000}),
+   check("edition_title").trim().escape().isLength({max:256}), check("authors").trim().escape().isLength({max : 9000}), check("edition_uuid").trim().escape(),
+   check("title").trim().escape().not().isEmpty().isLength({max : 256}).withMessage("Primary Source Title must be <= 256 characters"), async function(req,res){
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(util.inspect(errors.array()));
+      return res.json({ errors: errors.array() });
+    }
+
+/*    if(req.body.copyrighted === "true" && !req.body.ETH_address){
+      return res.json({errors : [{msg: "You must enter an ETH address if your work is copyrighted."}]});
+    }
+    if(!req.body.public_domain && !req.body.payment){
+      return res.json({errors: [{msg: "You must legally certify that you have the copyrights to this work, or that it is in the public domain!"}]})
+    }
+
+    if(req.body.copyrighted === "false" && req.body.public_domain === "false"){
+      req.body.public_domain = true;
+    }
+
+*/
+    if(req.body.authors){
+      var authors = JSON.parse(he.decode(req.body.authors));
+    }
+
+    console.log(req.params.uuid);
+
+    var torrent = JSON.parse(he.decode(req.body.torrent));
+
+    if(req.params.uuid === "undefined" && torrent && !torrent.infoHash){
+      return res.json({errors : [{msg : "You must upload a torrent file."}]})
+    }
+
+    const session = driver.session()
+
+    var query = '';
+    var params = {};
+
+    var edition;
+    if(req.body.edition_title.length === 0){
+      edition = ""
+    }
+    else{
+      edition = req.body.edition_title;
+    }
+
+    var classes = JSON.parse(he.decode(req.body.classes));
+    if(classes[0] === ['']){
+      classes = []
+    }
+    else{
+      for (var i = 0; i < classes.length; i++) {
+       classes[i] = he.encode(classes[i].trim())
+      }  
+    }
+
+    var date = req.body.date;
+    var adjDate = 0;
+
+    if(date){
+       if(date.indexOf("B.C.") > -1 || date.indexOf("BC") > -1 || date.indexOf("BCE") > -1 || date.indexOf("B.C.E.") > -1 ){
+        if(date.indexOf("Century") === -1 && date.indexOf("century") === -1){
+          if(date.indexOf("-") > -1){
+            adjDate = date.substring(0, date.indexOf("-"))
+          }
+          adjDate = date.replace(/\D/g, "");
+          adjDate = (parseFloat(adjDate) * -1) * 100;
+        }
+        else{
+          if(date.indexOf("-") > -1){
+            adjDate = date.substring(0, date.indexOf("-"))
+          }
+          adjDate = date.replace(/\D/g, "");
+          adjDate = parseFloat(adjDate) * -1;
+        }
+      }
+      else if(date.indexOf("Century") === -1 || date.indexOf("century") === -1){
+        if(date.indexOf("-") > -1){
+            adjDate = date.substring(0, date.indexOf("-"))
+        }
+        adjDate = date.replace(/\D/g, "");
+        adjDate = parseFloat(adjDate);
+      }
+      else{
+        if(date.indexOf("-") > -1){
+            adjDate = date.substring(0, date.indexOf("-"))
+        }
+        adjDate = date.replace(/\D/g, "");
+        adjDate = parseFloat(adjDate) * 100;
+
+      }
+    }
+
+    if(req.params.uuid === "undefined"){
+
+      async function newUpload(){
+
+          query += 'MERGE (s:Source {name : $sourceTitle, snatches: toFloat(0), top10: DATETIME(), count : 0, ' +
+          'type: $sourceType, date: $sourceDate, adjDate : $adjDate, uuid : randomUUID(), updated : toFloat(TIMESTAMP()), ' +
+          'created_at: toFloat(TIMESTAMP())}) ' +
+
+            'FOREACH( ' + 
+              'class IN $classes | MERGE (c:Class {name : class}) ' +
+              'ON CREATE SET c.uuid = randomUUID(), c.snatches = toFloat(0) ' +
+              'MERGE (s)<-[:TAGS]-(c) ' + 
+            ') ' +
+
+            'MERGE (e:Edition {title : $editionTitle, snatches: toFloat(0), publisher: $editionPublisher, uuid : randomUUID()})<-[:PUB_AS]-(s) ' +
+            'SET e.pages = $editionPages, e.no = $editionNo, e.date = $editionDate, e.img = $editionIMG, e.created_at = toFloat(TIMESTAMP()) ' +     
+            'MERGE (p:Publisher {name : $editionPublisher}) ' +
+            'ON CREATE SET p.uuid = randomUUID(), p.snatches = TOFLOAT(0) ' +
+            'MERGE (p)<-[:PUBLISHED_BY]-(e)' +
+            'CREATE (t:Torrent {size : $size, infoHash: $infoHash, media : $media, format: $format})<-[:DIST_AS]-(e) ' +
+            'SET t.snatches = toFloat(0), t.uuid = randomUUID(), t.created_at = toFloat(TIMESTAMP()), t.deleted = false, t.created_at = toFloat(TIMESTAMP()) '
+
+          params["sourceTitle"] = he.encode(req.body.title);
+          params["sourceDate"] = he.encode(req.body.date);
+          params["adjDate"] = adjDate;
+          params["editionTitle"] = he.encode(edition);
+          params["editionIMG"] = req.body.edition_img ? he.encode(req.body.edition_img) : null;
+          params["editionPublisher"] = he.encode(req.body.edition_publisher).toLowerCase();
+          params["editionPages"] = he.encode(req.body.edition_pages);
+          params["editionDate"] = he.encode(req.body.edition_date);
+          params["editionNo"] = he.encode(req.body.edition_no);
+          params["classes"] = classes;
+          params["sourceType"] = he.encode(req.body.type);
+          params["size"] = torrent.size;
+          params["infoHash"] = torrent.infoHash;
+          params["media"] = torrent.media;
+          params["format"] = torrent.format;
+
+          if(authors && authors.length > 0){
+            authors.forEach(function(author, i){  
+               query += 'WITH s ' + 
+              'OPTIONAL MATCH (a:Author {uuid : $authorUUID' + i + '}) ' +
+              'WITH s, a ' + 
+              'MERGE (s)<-[au:AUTHOR]-(a) '
+              params["authorUUID" + i] = author.uuid;
+            })
+          }
+          query += 'RETURN s.uuid AS uuid '
+
+          session.run(query , params).then(async data => {
+                session.close()
+                var classTags = ""
+                classes.forEach(function(c, i){
+                  classTags += "#" + he.decode(camelize(c))
+                  if(i !== classes.length - 1){
+                    classTags += ", "
+                  }
+                })
+                /*setTimeout(function(){
+                  postTweet(he.decode(req.body.APA.substring(0, 180)) + " " + params.format +
+                       " Torrent at propagate.info/#source?uuid=" + data.records[0]._fields[0] + " " +
+                      classTags)
+                },1000)*/
+                
+                console.log(classes, classTags)
+                if(req.user){
+
+                  promote(data.records[0]._fields[1].properties)
+
+                }
+                console.log(data.records[0]._fields[0]);
+               
+                return res.json({"uuid" : data.records[0]._fields[0]});
+            })  
+          .catch(function(err){
+            console.log(err);
+            if(err.code === "Neo.ClientError.Schema.ConstraintValidationFailed"){
+              err = "Torrent infoHash already exists on the site."
+            }
+            console.log("NEO4J ERROR: " + err);
+            return res.json({errors: [{msg : err}]})
+          })
+      }
+
+      newUpload();
+
+    }
+
+    else{
+
+      var edition_uuid;
+      console.log("EDITION UUID: " + req.body.edition_uuid);
+      console.log("SOURCE UUID " + params.uniqueID)
+      if(req.body.edition_uuid === "null"){
+        edition_uuid = "null";
+      }
+      else{
+        edition_uuid = req.body.edition_uuid;
+      }
+
+       if(torrent.infoHash){
+            query += 'MATCH (s:Source {uuid : $uniqueID}) ' +
+            "SET s.updated = toFloat(TIMESTAMP()), s.top10 = DATETIME() " +
+            'WITH s '
+            // 1. Find or create the node based on the UUID provided
+           query += "MERGE (e:Edition {uuid: coalesce($edition_uuid, 'temporary_null_key')})"
+
+            query += 'ON MATCH SET ' +
+                     'e.date = $editionDate, e.no = $editionNo, e.title = $editionTitle, ' +
+                     'e.publisher = $editionPublisher, e.pages = $editionPages ';
+
+            query += 'ON CREATE SET ' +
+                     'e.uuid = randomUUID(), e.snatches = 0.0, e.no = $editionNo, ' +
+                     'e.date = $editionDate, e.created_at = timestamp(), ' +
+                     'e.pages = $editionPages, e.title = $editionTitle, e.publisher = $editionPublisher ';
+
+            query += 'WITH s, e ';
+            query += 'MERGE (s)-[pu:PUB_AS]->(e) ';
+            query += 'MERGE (p:Publisher {name : $editionPublisher}) ' +
+            'ON CREATE SET p.uuid = randomUUID(), p.snatches = TOFLOAT(0) ' +
+            'MERGE (p)<-[:PUBLISHED_BY]-(e)'
+            query += "WITH s, e MERGE (t:Torrent {snatches: toFloat(0), created_at: toFloat(TIMESTAMP()), "+
+            "deleted : false, uuid: randomUUID(), media : $torrentMedia, format: $torrentFormat, "+
+            "size: $torrentSize, infoHash: $torrentInfoHash" +
+            "})<-[di:DIST_AS]-(e) " 
+        }
+       
+
+      params["uniqueID"] = req.params.uuid;
+      params["classes"] = classes;
+      params["sourceTitle"] = he.encode(req.body.title)
+      params["sourceDate"] = he.encode(req.body.date)
+      params["editionPublisher"] = he.encode(req.body.edition_publisher).toLowerCase();
+      params["editionPages"] = he.encode(req.body.edition_pages);
+      params["editionDate"] = he.encode(req.body.edition_date);
+      params["editionTitle"] = he.encode(req.body.edition_title);
+      params["editionNo"] = he.encode(req.body.edition_no);
+      params["torrentInfoHash"] = torrent.infoHash;
+      params["torrentMedia"] = torrent.media;
+      params['torrentFormat'] = torrent.format;
+      params["torrentSize"] = torrent.size;
+      params["sourceType"] = he.encode(req.body.type)
+      params["edition_uuid"] = edition_uuid;
+
+      var authors = JSON.parse(he.decode(req.body.authors));
+
+      var authorImportance; 
+
+      query += 'RETURN s.uuid AS uuid, t.infoHash AS infoHash '
+      console.log(query);
+      session.run(query , params).then(async data => {
+            session.close()
+            var classTags = ""
+            classes.forEach(function(c, i){
+              classTags += "#" + he.decode(camelize(c))
+              if(i !== classes.length - 1){
+                classTags += ", "
+              }
+            })
+            /*postTweet(he.decode(req.body.APA.substring(0, 180)) + " " + params.torrentFormat + 
+                 " Torrent at propagate.info/#source?uuid=" + data.records[0]._fields[0] + " " +
+                classTags)*/
+
+            
+            return res.json({"uuid" : data.records[0].get("uuid")});
+        })  
+      .catch(function(err){
+        if(err.code === "Neo.ClientError.Schema.ConstraintValidationFailed"){
+          err = "Torrent infoHash already exists on the site."
+        }
+        console.log("ERROR: " + err);
+        return res.json({errors: [{msg : err}]})
+      })
+    }
 })
 
 app.get('*', function(req, res, next) {

@@ -1,13 +1,13 @@
-function htmlSearch(){
+function headerAutocomplete(){
     $(document).keyup(function(e) {
         if (e.key === "Escape") { // escape key maps to keycode `27`
             $(".autosuggestBox").hide();
         }
     });
+
     $(document).mouseup(function(e) 
     {
         var container = $(".autosuggestBox");
-        clearTimeout(timeoutId);
         // if the target of the click isn't the container nor a descendant of the container
         if (!container.is(e.target) && container.has(e.target).length === 0) 
         {
@@ -15,68 +15,20 @@ function htmlSearch(){
         }
     })
 
+    $(".search_sources_input, .search_authors_input, .search_classes_input, .search_publishers_input").on("focus", function() {
+        var val = $(this).val();
+        if (val.length > 0) {
+            $(this).autocomplete("search", val.split(",").pop().trim());
+        }
+    });
 
-    $(".searchField").on('click', function(e){
+    /*$(".searchField").on('click', function(e){
         if(search && records && records[$(this).parent().attr("class")]){
             $(this).next().show();
         }
-    })
+    })*/
 
-    var search;
-    var records;
-    var timeoutId;
-    var classes;
-
-    $(".search_publishers_input").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term
-                },
-                url: '/search?field=search_publishers',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : toTitleCase(decodeEntities(decodeEntities((item.label)))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            $(".search_publishers_input").val("")
-            $(".mobile_menu").hide();
-            TEMPLAR.route("#node?label=publisher&uuid=" + encodeURIComponent(ui.item.value))  
-            return false;
-        }
-    })
-  
-      $("#edition_publisher").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term
-                },
-                url: '/search?field=search_publishers',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : toTitleCase(decodeEntities(decodeEntities((item.label)))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            $(".mobile_menu").hide();
-            $("#edition_publisher").val(ui.item.label);
-            return false;
-        }
-    })
-
-     $(".search_sources_input").autocomplete({
+    $(".search_sources_input").autocomplete({
         scroll : true,
         source: function( request, response ) {
             $.ajax({
@@ -101,28 +53,6 @@ function htmlSearch(){
         }
     })
 
-     $(".search_upload_sources_input").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term
-                },
-                url: '/search?field=search_sources',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            $(".mobile_menu").hide()
-            TEMPLAR.route("#upload?uuid=" + ui.item.value)               
-        }
-    })
 
      $(".search_authors_input").autocomplete({
         scroll : true,
@@ -149,32 +79,7 @@ function htmlSearch(){
     })
 
 
-     $(".search_upload_authors_input").autocomplete({
-        scroll : true,
-        source: function( request, response ) {
-            $.ajax({
-                /* Snip */
-                data : { 
-                    term : request.term.split(",")[0]
-                },
-                url: '/search?field=search_authors',
-                type: "get", //send it through get method
-                success: function(data) {
-                    response($.map(data, function(item) {
-                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
-                    }))
-                 }
-            });
-        },
-        select : function(event, ui){
-            $(".mobile_menu").hide()
-            $(".search_upload_authors_input").val("")
-            addAuthor({uuid : ui.item.value, author : ui.item.label}) 
-            return false;             
-        }
-    })
-
-     $(".search_classes_input").autocomplete({
+    $(".search_classes_input").autocomplete({
         scroll : true,
         source: function( request, response ) {
             $.ajax({
@@ -198,10 +103,56 @@ function htmlSearch(){
             return false;
         }
     })
-  
-  
-  
-  
+
+    $(".search_publishers_input").autocomplete({
+        scroll : true,
+        source: function( request, response ) {
+            $.ajax({
+                /* Snip */
+                data : { 
+                    term : request.term
+                },
+                url: '/search?field=search_publishers',
+                type: "get", //send it through get method
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {label : toTitleCase(decodeEntities(decodeEntities((item.label)))), value : item.value};
+                    }))
+                 }
+            });
+        },
+        select : function(event, ui){
+            $(".search_publishers_input").val("")
+            $(".mobile_menu").hide();
+            TEMPLAR.route("#node?label=publisher&uuid=" + encodeURIComponent(ui.item.value))  
+            return false;
+        }
+    })
+}
+
+function advAutocomplete(){
+    $(document).keyup(function(e) {
+        if (e.key === "Escape") { // escape key maps to keycode `27`
+            $(".autosuggestBox").hide();
+        }
+    });
+
+    $(document).mouseup(function(e) 
+    {
+        var container = $(".autosuggestBox");
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0) 
+        {
+            container.hide();
+        }
+    })
+
+    $("#adv_title, #adv_author, #adv_classes, #adv_publisher").on("focus", function() {
+        var val = $(this).val();
+        if (val.length > 0) {
+            $(this).autocomplete("search", val.split(",").pop().trim());
+        }
+    });
 
     $("#adv_title").autocomplete({
         scroll:true,
@@ -273,7 +224,6 @@ function htmlSearch(){
         select: function(event,ui){
              $(".mobile_menu").hide()
             var arr = $("#adv_classes").val().split(",");
-            console.log(j)
             arr[j] = j > 0 ? " " + ui.item.label : ui.item.label;
             var value = arr.toString()
             $("#adv_classes").val(value)     
@@ -307,11 +257,108 @@ function htmlSearch(){
         }
     })
 
+}
+
+function uploadAutocomplete(){
+    
+
+
+
+
+    var search;
+    var records;
+    var timeoutId;
+    var classes;
+
+    
+  
+      $("#edition_publisher").autocomplete({
+        scroll : true,
+        source: function( request, response ) {
+            $.ajax({
+                
+                data : { 
+                    term : request.term
+                },
+                url: '/search?field=search_publishers',
+                type: "get", //send it through get method
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {label : toTitleCase(decodeEntities(decodeEntities((item.label)))), value : item.value};
+                    }))
+                 }
+            });
+        },
+        select : function(event, ui){
+            $(".mobile_menu").hide();
+            $("#edition_publisher").val(ui.item.label);
+            return false;
+        }
+    })
+
+     
+
+     $(".search_upload_sources_input").autocomplete({
+        scroll : true,
+        source: function( request, response ) {
+            $.ajax({
+                
+                data : { 
+                    term : request.term
+                },
+                url: '/search?field=search_sources',
+                type: "get", //send it through get method
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
+                    }))
+                 }
+            });
+        },
+        select : function(event, ui){
+            $(".mobile_menu").hide()
+            TEMPLAR.route("#upload?uuid=" + ui.item.value)               
+        }
+    })
+
+
+
+     $(".search_upload_authors_input").autocomplete({
+        scroll : true,
+        source: function( request, response ) {
+            $.ajax({
+                
+                data : { 
+                    term : request.term.split(",")[0]
+                },
+                url: '/search?field=search_authors',
+                type: "get", //send it through get method
+                success: function(data) {
+                    response($.map(data, function(item) {
+                        return {label : decodeEntities(decodeEntities((item.label))), value : item.value};
+                    }))
+                 }
+            });
+        },
+        select : function(event, ui){
+            $(".mobile_menu").hide()
+            $(".search_upload_authors_input").val("")
+            addAuthor({uuid : ui.item.value, name : ui.item.label}) 
+            return false;             
+        }
+    })
+
+  
+  
+  
+  
+
+    
     $(".search_upload_classes_input").autocomplete({
         scroll : true,
         source: function( request, response ) {
             $.ajax({
-                /* Snip */
+               
                 data : { 
                     term : getCommaSplice(".search_upload_classes_input", request.term)//request.term.split(",")[request.term.split(",").length - 1]
                 },

@@ -145,7 +145,7 @@ function graphRender(selector) {
     
     const simulation = d3.forceSimulation(Obelisk.nodes)
     // 1. Increase link distance to push connected nodes further apart
-    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(5555)) 
+    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(1337)) 
     
     // 2. Stronger negative charge (repulsion). -1000 to -1500 is better for high-density text
     .force("charge", d3.forceManyBody().strength(-1775))
@@ -217,16 +217,16 @@ function graphRender(selector) {
         const currentFontSize = baseFontSize / transform.k;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `${currentFontSize}px Share Tech Mono`;
+        ctx.font = `${currentFontSize}px Space Mono`;
 
         Obelisk.nodes.forEach(d => {
             if (d.group.includes("Find")) {
-                ctx.fillStyle = "#50C777";
+                ctx.fillStyle = "cyan";
             } else {
                 switch (d.group) {
                     case "Source": ctx.fillStyle = "#F8F8F8"; break;
                     case "Author": ctx.fillStyle = "gold"; break;
-                    case "Class": ctx.fillStyle = "goldenrod"; break;
+                    case "Class": ctx.fillStyle = "#50C777"; break;
                     case "Publisher": ctx.fillStyle = "mediumvioletred"; break;
                     default: ctx.fillStyle = "palegoldenrod"; break;
                 }

@@ -65,7 +65,7 @@ var TEMPLAR = {
         // Instead of triggering an event that might loop, we call the Lookout directly.
         // This ensures the signal only travels one way.
         const page = this._link_rec(origin).path;
-        this.render(page);
+        //this.render(page);
         $(document).trigger("TEMPLAR");
     },
     render: function(page) {
@@ -79,11 +79,17 @@ var TEMPLAR = {
             // 1. Write to the DOM
             $("div." + page).html(data);
             
-            // 2. Defer the heavy "helm" logic to the next paint frame
+            // 2. The Asynchronous Breath:
+            // requestAnimationFrame ensures the browser has rendered the HTML
+            // before we start the 'helm' rituals which may trigger heavy reflows.
             requestAnimationFrame(() => {
                 that._visible_page(page);
-                that.helm(page);
+                // Use a slight delay if DataTables is still complaining
+                setTimeout(() => {
+                    that.helm(page);
+                }, 0);
             });
+           
         });
     }
     ,
@@ -92,10 +98,7 @@ var TEMPLAR = {
 
         this._helm.forEach((item) => {
             if (item.page === targetPage) {
-                // Use setTimeout to "de-materialize" the execution into separate ticks
-                setTimeout(() => {
-                    item.fn(targetPage);
-                }, 0);
+                item.fn(targetPage);                
             }
         });
     }
@@ -106,7 +109,7 @@ var TEMPLAR = {
         // GUARD: Only bind the lookout once!
         if (this._isBound) return; 
 
-        $(document).on("click", "a.TEMPLAR", function(e) {
+        $(document).off("click", "a.TEMPLAR").on("click", "a.TEMPLAR", function(e) {
             const $target = $(this);
             const href = $target.attr("href");
 
@@ -171,44 +174,29 @@ var TEMPLAR = {
         // HEIDEGGER: The URL has been 'Cleared'. The Nothing now stands 
         // where the Parameter once resided.
     },
-    /* --- sParams: THE RITUAL OF INSCRIPTION ---
-       We take a key and a value, and we carve them into the 
-       hash-horizon! We ensure the 'They' (the browser) knows 
-       this new Truth without forcing a total Dasein-Reset! */
-    paramSet: function(param, value) {
-        // 1. We disclose the current state of the Clearing
-        this.paramRem(param);
+    /* --- sParams: THE BUNDLED INSCRIPTION --- 
+   To prevent the History-Stack from splintering into redundant moments,
+   we update multiple Truths before the final Inscription. */
+    paramSET: function(kvPairs, createNewEntry = false) {
         const parts = window.location.hash.split("?");
-        const pathPart = parts[0];       // e.g., "#torrents"
-        const searchPart = parts[1] || ""; // e.g., "id=123"
-
-        // 2. We grasp the 'Equipment' to manipulate the parameters
+        const pathPart = parts[0] || "#";
+        const searchPart = parts[1] || "";
         const params = new URLSearchParams(searchPart);
-        
-        // SMEE: If it's already there, we overwrite it! 
-        // If it's new booty, we add a new shelf in the hold!
-        params.set(param, value);
 
-        // 3. We reconstruct the 'Manifest'
-        const newQuery = params.toString();
-        const newHash = pathPart + (newQuery ? "?" + newQuery : "");
-
-        // 4. THE INSCRIPTION: We use pushState to create a new 
-        // moment in Time/Space, allowing the user to sail 'Back' 
-        // to the previous state if they lose their nerve!
-        if (window.history.pushState) {
-            const newUrl = window.location.protocol + "//" + 
-                           window.location.host + 
-                           window.location.pathname + 
-                           newHash;
-            
-            window.history.pushState({ path: newUrl }, '', newUrl);
+        // Batch update the Equipment
+        for (const [key, value] of Object.entries(kvPairs)) {
+            params.set(key, value);
         }
-        
-        // HEIDEGGER: The URL is now 'Saturated' with new meaning. 
-        // The parameter has moved from 'Hiddenness' to 'Un-concealment'!
-    }
-    ,
+
+        const newHash = pathPart + "?" + params.toString();
+        const newUrl = window.location.origin + window.location.pathname + newHash;
+
+        if (createNewEntry) {
+            window.history.pushState({ path: newUrl }, '', newUrl);
+        } else {
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+        }
+    },
     /* paramREC, paramRemove, sParams maintained in their original 'Thrown-ness' */
     paramREC: function() {
         var search = window.location.hash.split("?")[1];
@@ -235,7 +223,7 @@ var TEMPLAR = {
         if (!path) path = this._default;
         var target = $("div." + path);
         // HEIDEGGER: The Fade is but a gradual un-concealment of Truth.
-        this._fade ? target.fadeIn(777) : target.show();
+        this._fade ? target.fadeIn() : target.show();
     },
 
     _invisible_page: function(page) {

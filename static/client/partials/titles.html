@@ -1,5 +1,5 @@
 <div class="titleBreak">
-  <h2 id="torrentsTitle"><a class="ANCHOR torrents" href="#torrents"><span>Titles</span></a></h2>
+  <h2 id="torrentsTitle"><span>Titles</span></h2>
 </div>
 
 <div class="adv_search">
@@ -42,30 +42,6 @@
 	        }
 	    }
 	});
-	/*$(document).off('click', '.apa-trigger').on('click', '.apa-trigger', function(e) {
-	    // 1. If the user clicked the publisher link, let the link handle it and STOP
-	    if ($(e.target).hasClass('publisher')) {
-	        e.stopPropagation(); 
-	        return; 
-	    }
-
-	    // 2. Otherwise, handle the copy logic for the full text
-	    const $container = $(this);
-	    const $textElement = $container.find('.apa-text');
-	    const $status = $container.find('.copy-status');
-	    
-	    // Grabs the clean text of the entire citation (including publisher name)
-	    const textToCopy = $textElement.text().replace(/\s+/g, ' ').trim();
-
-	    navigator.clipboard.writeText(textToCopy).then(() => {
-	        $status.html(' &#10003;').addClass('show');
-	        
-	        setTimeout(() => {
-	            $status.removeClass('show');
-	            setTimeout(() => $status.empty(), 200);
-	        }, 1200);
-	    });
-	});*/
 
 	// Update tooltips dynamically to avoid showing "Click to copy" over the publisher
 	$(document).on('mouseenter', '.apa-former', function() {
@@ -81,8 +57,7 @@
 	<thead>
 		<tr>
 			<th>Source / Date / Author</th> <!--hidden column header !-->
-			<th class="table_edition">APA Citation</th> <!--edition !-->
-			
+			<th class="table_edition">APA Citation</th> <!--edition !-->			
 			<th>Revs</th>
       		<th class="table_date">Date</th>
 			<th>Time</th>

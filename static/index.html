@@ -15,9 +15,13 @@
 		<script src="//momentjs.com/downloads/moment.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
  		<!--<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/r-2.3.0/rg-1.2.0/sc-2.0.7/datatables.min.js"></script>!-->
- 		<link href="https://cdn.datatables.net/v/bs5/dt-1.13.4/r-2.4.1/rg-1.3.1/datatables.min.css" rel="stylesheet"/>
-		<script src="https://cdn.datatables.net/v/bs5/dt-1.13.4/r-2.4.1/rg-1.3.1/datatables.min.js"></script>
- 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+ 		<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+		<link href="https://cdn.datatables.net/v/bs5/dt-2.3.6/r-3.0.7/rg-1.6.0/datatables.min.css" rel="stylesheet" integrity="sha384-i/e6BsAbTmZKP2IcmciTyXaRiUI8dsCcCup+rx9YTpue2vAs88x0EMdVpJwsy1w6" crossorigin="anonymous">
+		 
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+		<script src="https://cdn.datatables.net/v/bs5/dt-2.3.6/r-3.0.7/rg-1.6.0/datatables.min.js" integrity="sha384-hEKF7lI4CXMfgws5RQaFG/2ujXcySjhBW4iiRyp2i631II/GRq2CfWMum47bxoXY" crossorigin="anonymous"></script>
+
 		<script
 			  src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
 			  integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
@@ -31,34 +35,44 @@
 		<script src="client/controllers/worldSpirit.js"></script>!-->
 		<script src="https://d3js.org/d3.v7.min.js"></script>
 
-		<script src="client/models/webTorrent.js"></script>
+		<script src="client/models/upload.js"></script>
+		<script src="client/models/set.js"></script>
+		<script src="client/models/WT.js"></script>
 		<script src="client/models/graph.js"></script>
 		<script src="client/models/torrents.js"></script>
 		<script src="client/models/mermaid.js"></script>
 		
-		<script src="client/hooks/mermaid.js"></script>
-		<script src="client/hooks/mobile.js"></script>
-		<script src="client/hooks/torrents.js"></script>
-		<script src="client/hooks/mermaid.js"></script>
-		<script src="client/hooks/set.js"></script>
-		<script src="client/hooks/node.js"></script>
+		<script src="client/binds/mermaid.js"></script>
+		<script src="client/binds/mobile.js"></script>
+		<script src="client/binds/torrents.js"></script>
+		<script src="client/binds/mermaid.js"></script>
+		<script src="client/binds/set.js"></script>
+		<script src="client/binds/node.js"></script>
 
-		<!--<script src="client/MODEL/researchModel.js"></script> !-->
-
+		<script src="client/controllers/upload.js"></script>
 		<script src="client/controllers/torrents.js"></script>
-		<script src="client/controllers/node.js"></script>
-		<script src="client/controllers/webTorrent.js"></script>
+		<script src="client/controllers/WT.js"></script>
 		<script src="client/controllers/mermaid.js"></script>
 		<script src="client/controllers/graph.js"></script>
 		<script src="client/controllers/autocomplete.js"></script>
 		<script src="client/controllers/academic.js"></script>
-		<script src="client/controllers/TEMPLAR.js"></script>
+		<script src="client/controllers/index.js"></script>
+		<script src="client/controllers/set.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="styles/style.css"/>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Red+Rose&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Oswald&family=Pirata+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 	  </head>
+	  <!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q8CSGDT9CY"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-Q8CSGDT9CY');
+		</script>
 	<body>
 		
 		<header>
@@ -67,9 +81,10 @@
 
 		</header>
 
-		<!--<div id="overlay">
-		</div>!-->
+	
 		<div class="TEMPLAR">
+			<div class="upload">
+			</div>
 			<div class="file">
 			</div>
 			<div class="top10">

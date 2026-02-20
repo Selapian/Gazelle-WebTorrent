@@ -1,17 +1,17 @@
 function initializeTorrents(table) {
-
-    if (TEMPLAR.paramREC() && TEMPLAR.paramREC().search) {
-        $(".search_graph").fadeIn(3000);
-    } else {
-        $(".search_graph").hide();
-    }
-
-    // 2. PRECISE DESTROY: Kill existing instance and clear HTML
+    // 1. Check the Global DataTable registry
+    // This is more robust than checking the local variable 'dataTable'
+    // 1. HARD RESET: Kill the old instance and its DOM leftovers
     if ($.fn.DataTable.isDataTable("#" + table)) {
-        var dt = $("#" + table).DataTable();
-        dt.clear(); // Removes all data rows
-        dt.destroy(); // Unbinds DataTables logic
-        $("#" + table + " tbody").empty(); // Clear ONLY the body, not the thead
+        var oldTable = $("#" + table).DataTable();
+        oldTable.clear().destroy(); 
+        
+        // Manual DOM cleanup to prevent 'style' calculation errors
+        $("#" + table).empty(); 
+        $("#" + table).removeAttr('style').removeClass('dtr-inline collapsed');
+        
+        // Re-inject the skeleton because .empty() removes the <thead> your partial provided
+        $("#" + table).append('<thead><tr><th>Group</th><th>APA Citation</th><th>Revs</th><th>Date</th><th>Time</th><th class="none"></th></tr></thead><tbody></tbody>');
     }
     
     assertTitleLoading();
@@ -34,13 +34,6 @@ function initializeTorrents(table) {
         url = "/" + table + "/" + TEMPLAR.paramREC().label + "?uuid=" + TEMPLAR.paramREC().uuid
     }
 
-    $(document).mouseup(function(e) {
-        var container = $(".seeAllField");
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-            container.hide();
-        }
-    });
-
     dataTable = $("#" + table).DataTable({
         destroy: true,
         /*responsive: {
@@ -51,25 +44,26 @@ function initializeTorrents(table) {
         },*/
         responsive : true,
         serverSide: true,
-        stateSave : TEMPLAR.pageREC() === "titles" && !TEMPLAR.paramREC() ? true : false,
         bSort: true,
         pageLength: 10,
-        "aoColumns": [
-            { "sWidth": "0%" },
-            { "sWidth": "50%" },
-            { "sWidth": "12.5%" },
-            { "sWidth": "12.5%" },
-            { "sWidth": "12.5%" },
-            { "sWidth": "12.5%" }
+        columns: [
+            { visible: false, searchable: false }, // Index 0: Grouping (Date/Title)
+            { width: "50%" },                      // Index 1: APA Citation
+            { width: "17%" },// Index 2: Revs (Right-align to keep icon tidy)
+            { width: "17%" },                      // Index 3: Date
+            { width: "17%" },                      // Index 4: Time
+            { width: "100%", responsivePriority: 1 }// Index 5: Download
+        ],
+        columnDefs: [
+            { targets: [0], visible: false }, // Grouping column
+            { targets: [1], className: "text-left" }, // APA Citation
+            { targets: [2, 3, 4], className: "dt-left" }, // Revs, Date, Time (aligned left)
+            { targets: 5, responsivePriority: 1 } // Download
         ],
         processing: true,
         searching: false,
         paging: true,
         info: true,
-        columnDefs: [
-            { target: 0, visible: false, searchable: false },
-            { target: 4, responsivePriority: 1 }
-        ],
         rowGroup: {
             dataSrc: 0,
             ordering: true,
@@ -89,7 +83,7 @@ function initializeTorrents(table) {
                 format: TEMPLAR.paramREC() ? TEMPLAR.paramREC().format : "",
             },
             dataSrc: function(data) {
-                setRecords();
+                refreshDTRecs();
 
                 if (!data || !data.records || data.records.length === 0) {
                     console.log("No results found.");
@@ -98,14 +92,27 @@ function initializeTorrents(table) {
                 else {
                     insertTableData(data)
                 }
-                var editionsAdded = [];
 
+                var editionsAdded = [];
                 tableData.records.forEach(function(record) {
                     var authorField = "";
                     record._fields[1].forEach(function(field, i) {
-                        if (i > 0) authorField += ", ";
-                        authorField += "<a class='TEMPLAR node author' href='#node?label=author&uuid=" +
-                            field.properties.uuid + "'>" + decodeEntities(field.properties.name) + "</a>";
+                        if(i===0)
+                            authorField += " by "
+                        if (record._fields[1].length === 1){                            
+                            authorField += "<a class='TEMPLAR node author' href='#node?label=author&uuid=" +
+                            field.properties.uuid + "'>" + decodeEntities(field.properties.name);
+                        }
+                        else{
+                            authorField += "<a class='TEMPLAR node author' href='#node?label=author&uuid=" +
+                            field.properties.uuid + "'>" + decodeEntities(field.properties.name);
+                            if(i < record._fields[1].length - 1){
+                                authorField += "<span>, </span>"
+                            }                            
+                        }
+                        authorField += "</a>"
+                        
+                        
                     });
 
                     var dateField = "";
@@ -117,7 +124,13 @@ function initializeTorrents(table) {
                     record._fields[3].forEach(function(field, i) {
                         if (field.properties.uuid) {
                             classesField += "<a class='TEMPLAR node class' href='#node?label=class&uuid=" +
-                                field.properties.uuid + "'>" + decodeEntities(field.properties.name) + "</a>";
+                                field.properties.uuid + "'>" + decodeEntities(field.properties.name);
+                        }
+                        if(record._fields[3].length > 1 && i < record._fields[3].length - 1){
+                            classesField += "<span class='classComma'>,</span></a>"
+                        }
+                        else{
+                            classesField += "</a>"
                         }
                     });
 
@@ -126,8 +139,7 @@ function initializeTorrents(table) {
                     var numPeers = 0;
                     record._fields[2].forEach(function(edition_torrent) {
                         /* This is where the torrent table (with WebTorrent Download) <th> header is set. */
-                        var torrentsTable = "<table class='torrentsTable'><thead><th>Format</th>" +
-                            "<th>Download</th><th>Size</th><th>Revs</th></thead><tbody>";
+                        /*
 
                         if (edition_torrent.torrent) {
                             // Image selection logic based on type
@@ -137,25 +149,54 @@ function initializeTorrents(table) {
                                 torrentsTable += assertTr(record, edition_torrent, currentApa);
 
                                 if (editionsAdded.indexOf(edition_torrent.edition.properties.uuid) === -1) {
-                                    assertFirstEditionRow(records, record, edition_torrent, editionsAdded, assertAPACitation(record, edition_torrent), sourceIMG, dateField, authorField, classesField, torrentsTable);
+                                    assertFirstEditionRow(record, edition_torrent, editionsAdded, assertAPACitation(record, edition_torrent), sourceIMG, dateField, authorField, classesField, torrentsTable);
                                 } else {
-                                    assertExistingEditionRow(records, record, edition_torrent, editionsAdded, torrentsTable)
+                                    assertExistingEditionRow(record, edition_torrent, editionsAdded, torrentsTable)
                                 }
                             }
+                        }*/
+                        // Inside record._fields[2].forEach:
+                        var torrentsTableRows = ""; // Store only <tr> elements here
+                        var currentApa = assertAPACitation(record, edition_torrent);
+                        torrentsTableRows += assertTr(record, edition_torrent, currentApa);
+
+                        if (editionsAdded.indexOf(edition_torrent.edition.properties.uuid) === -1) {
+                            // NEW EDITION: Create the full table wrapper
+                            var fullTable = "<table class='torrentsTable'><thead><tr><th>Format</th><th>Download</th><th>Revs</th><th>Size</th></tr></thead><tbody>" + 
+                                            torrentsTableRows + "</tbody></table>";
+                            
+                            assertFirstEditionRow(record, edition_torrent, editionsAdded, currentApa, sourceIMG, dateField, authorField, classesField, fullTable);
+                        } else {
+                            // EXISTING EDITION: Only append the <tr> to the existing <tbody>
+                            assertExistingEditionRow(edition_torrent, editionsAdded, torrentsTableRows);
                         }
                     });
                 });
-                return records;
+                return dtRecs;
             },
         },
         drawCallback: function(settings) {
+            /*if (!this.api().table().node()) return;
+
             this.api().rows().every(function() {
                 syncTorrentButtonState(this.node()); // Check main row
                 if (this.child.isShown()) {
                     syncTorrentButtonState(this.child()); // Check expanded child row
                 }
             });
-            
+            */
+
+            $(".webtorrent").click(function(){
+                const infoHash = $(this).data("infohash");
+                const APA = $(this).data("apa");                            
+                TEMPLAR.route("file?infoHash=" + infoHash + "&APA=" + encodeURIComponent(APA));                
+            })
+
+            $("table tbody").on("click", ".magnetURI", function(){
+                const infoHash = $(this).data("infohash");
+                $.post("/rev/" + infoHash)
+            })
+
             assertTitleLoaded();
             if (TEMPLAR.pageREC() === "node") {
                 assertButtonTab();
@@ -184,15 +225,21 @@ function initializeTorrents(table) {
             syncTorrentButtonState($(row.node()).next()); // Target the child row specifically
         }
     });
-
+    
     $(document).off("click", ".webtorrent").on("click", ".webtorrent", function(e) {
         e.preventDefault();
         
         // If the button has the disabled class, show the "please wait" message
         if ($(this).hasClass("webtorrent-disabled")) {
-            $(".please").show().fadeOut(2000);
+            $(".b").show().fadeOut(2000);
             return;
         }
+
+        $(".webtorrent").prop("disabled", true);
+
+        setTimeout(function(){
+            $(".webtorrent").prop("disabled", false);
+        }, 333)
 
         // Otherwise, proceed with the route
         const d = this.dataset;
