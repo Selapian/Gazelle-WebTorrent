@@ -24,7 +24,7 @@ This BitTorrent Indexer uses the very innovative and profound Gazelle Methodolog
 
 I have also added Graph Visualization based on Gazelle's "Similar Artists" web, using the powerful Neo4j Java database.
 
-I am currently waiting for qBitTorrent and libTorrent to add WebTorrent support, so that I can seed 4,000 files Browsers, since BiglyBT and WebTorrent Desktop become unstable after 1,000 torrents. After libTorrent pushes WebTorrent to stable, and qBitTorrent adds support, I will update the code with WebTorrent enabled.
+I am currently waiting for qBitTorrent and libTorrent to add WebTorrent support, so that I can seed 4,000 files to Browsers, since BiglyBT and WebTorrent Desktop become unstable after ~1,000 torrents. After libTorrent pushes WebTorrent to stable, and qBitTorrent adds WebTorrent support, I will update the code with WebTorrent enabled.
 
 **AMAZON-APACHE-TEMPLAR**
 I use **Apache** as a reverse proxy and **TEMPLAR** as a client-side router. The Apache reverse-proxy and express app are hosted on an **Amazon** EC2 micro-instance.
