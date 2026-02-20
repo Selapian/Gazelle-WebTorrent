@@ -16,18 +16,6 @@ To get started, you will need to:
 
 *Edit the Torrents model under static/client/models* Insert Source types (such as Documentary, or Renaissance Art), edition_torrent media (such as Ebook or Concert), and edition_torrent format (such as PDF or mp3). We do not currently support codecs or bitrates, so I would recommend editing your formats to be more specific, like mp3 (192kbps), mp3 (V0), x264 (1080p HD), etc. For perspective, an Ebook would be [media] and a PDF vs djvu would be [format]. The way Gazelle works is, PDFs and djvus of the same Edition are listed under the same DataTable heading.
 
-*I am not currently providing the code to produce uploads*. I may create a Neo4j uploader based on file names in the future. If you want to write the code yourself, you need to save the file.length in TOFLOAT(bytes) to t:Torrent.size, and set :Torrent.release = "random_sounding_release_name". All the files for one magnetURI should have the same Release Name. Now if you want to have multiple releases, you must have various magnetURIs with different release names, and TODO: cycle thru the magnets in initializeMagnets() [webtorrent.js controller], then pull the release from the downloaded File and match it to the torrent downloaded from the MagnetURI of that release.
-
-*You must add Author nodes and Class nodes connected to every Source.* (a:Author)-[:AUTHOR]->(s:Source)<-[:TAGS]-(c:Class). The :Publisher logic is (p:Publisher)<-[:PUBLISHED_BY]-(e:Edition)<-[:PUB_AS]-(s:Source). Torrent Logic is (:Edition)-[:DIST_AS]->(:Torrent). Existing Sources, Authors, Classes and Publishers must be Matched by name before running MERGE. Source.name, Author.searchable, Class.name, and Publisher.name all need Lucene Neo4j Indexes, the names of which you may find in the /search REST API route. 
-
-*Editions must be matched based on edition.title*, so multiple edition_torrent.torrent rows show up under their corresponding :Edition. *Set :Torrent.deleted = false on new files.* Note that, as my workaround, a Torrent is more of a File, as there is only one Torrent on the whole site, with all the Files. Editions show up in the DataTable as edition_torrents, which have an edition, torrent, and publisher attached to them. You'll need to find some way to MERGE sources with the same .name and distinguish, two books with the same Title as different sources.
-
-*Create a WebTorrent with all the files you uploaded with your code.*
-
-*Edit the magnetURI in static/client/controllers/webTorrent.js*
-
-*Edit the magnetURI in static/client/partials/header.html*; **there are two, one for mobile, and one for desktop.** If you have multiple releases, this should actually be a .zip.
-
 *Host server.js, config.js, static/, and js/ on a node.js platform*
 
 **ABOUT THE ARCHITECTURE**
