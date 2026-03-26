@@ -24,7 +24,7 @@ To get started, you will need to:
 
 *Edit the Torrents model under static/client/models* Insert Source types (such as Documentary, or Renaissance Art), edition_torrent media (such as Ebook or Concert), and edition_torrent format (such as PDF or mp3), and resolution (such as v0, 720p or 1080x720) For perspective, an Ebook vs Audiobook would be [media] and a PDF vs djvu would be [format]. If you want x264, I recommend setting mkv (x264) as a [format], and then using the Resolutions array to add SD, 720p, 4k, etc. 
 
-*Host server.js, config.js, static/, and js/ on a node.js platform*
+*Host server.js, config.js, static/, and js/ on a node.js platform; you might have to work out the express port on certain platforms*
 
 **ABOUT THE ARCHITECTURE**
 
@@ -35,5 +35,6 @@ I have also added Graph Visualization based on Gazelle's "Similar Artists" web, 
 I am currently waiting for qBitTorrent and libTorrent to add WebTorrent support, so that I can seed 4,000 files to Browsers, since BiglyBT and WebTorrent Desktop become unstable after ~1,000 torrents. After libTorrent pushes WebTorrent to stable, and qBitTorrent adds WebTorrent support, I will update the code with WebTorrent enabled.
 
 **AMAZON-APACHE-TEMPLAR**
+
 I use **Apache** as a reverse proxy and **TEMPLAR** as a client-side router. The Apache reverse-proxy and express app are hosted on an **Amazon** EC2 micro-instance.
 
