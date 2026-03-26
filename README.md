@@ -22,7 +22,7 @@ To get started, you will need to:
 
 *Edit config.js and enter your Neo4j credentials.*
 
-*Edit the Torrents model under static/client/models* Insert Source types (such as Documentary, or Renaissance Art), edition_torrent media (such as Ebook or Concert), and edition_torrent format (such as PDF or mp3), and resolution (such as v0, 720p or 1080x720) For perspective, an Ebook would be [media] and a PDF vs djvu would be [format]. If you want x264, I recommend setting mkv (x264) as a [format], and then using the Resolutions array to add SD, 720p, 4k, etc. 
+*Edit the Torrents model under static/client/models* Insert Source types (such as Documentary, or Renaissance Art), edition_torrent media (such as Ebook or Concert), and edition_torrent format (such as PDF or mp3), and resolution (such as v0, 720p or 1080x720) For perspective, an Ebook vs Audiobook would be [media] and a PDF vs djvu would be [format]. If you want x264, I recommend setting mkv (x264) as a [format], and then using the Resolutions array to add SD, 720p, 4k, etc. 
 
 *Host server.js, config.js, static/, and js/ on a node.js platform*
 
