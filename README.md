@@ -6,7 +6,7 @@ Please note that the organizer of this code has no association with any members 
 
 Classes (tags), Authors, and Publishers all have their own page, what is a corresponding DataTable of Source->Edition->Torrent. 
 
-My site is propagate.info, meant for public domain PDFs and audiobooks. Starting with an original educational use-case, I have decided to Open-Source this Software, because the way that Gazelle structures Libraries could be very innovative for research, ethics, and scholarship. My work on this began in December 2013. 
+My site is propagate.info, meant for public domain, educational Ebooks, Audiobooks, Classical Music, Documentaries, and Renaissance Art. Starting with an educational use-case, I have decided to Open-Source this Software, because the way that Gazelle structures Libraries could be very innovative for research, ethics, and scholarship. My work on this began in December 2013. 
 
 Fully built in and plug-in play is a Quantum Random Neo4J Recommendation Engine, which also works on mobile, making this the first quantum mobile app. There is also graph visualization using D3.js, which coheres with an Advanced Search feature, so that users can search by title, author, class, publisher, source type, media, format, and resolution. If you search, say, Russell, Hume in the authors input, you will see them connected in a graph by "All is Quiet on the Western Front," almost like magic.  
 
