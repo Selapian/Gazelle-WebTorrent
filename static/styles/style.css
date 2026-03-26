@@ -118,12 +118,14 @@ object{
 }
 
 .graph_search{
-  margin-top:77px;
+  margin-top:175px;
   height:333px;
-  width:100%;
+  margin-left:5px;
+  margin-right:5px;
+  width:calc(100% - 10px);
   border-radius:14px;
   background-color:#000;
-  border:3px solid #007BFF;
+  border:3px solid goldenrod;
 }
 
 
@@ -144,7 +146,7 @@ object{
 
 #hero{
   color:lightgoldenrodyellow !important;
-  font-family:"Share Tech Mono", system-ui !important;
+  font-family:"Lato", system-ui !important;
 }
 
 body.is-seed .show-seed {
@@ -181,7 +183,7 @@ body.is-seed .show-leech {
 }
 
 #anonymous{
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 .academic, .academic option{
@@ -190,9 +192,8 @@ body.is-seed .show-leech {
 
 
 #hero{
-  height:86px;
+  height:88px;
   width:100%;
-  border:2px solid darkviolet !important;
   background: linear-gradient(
         180deg, 
         #007BFF 0%,    /* Start: Neon Cyan (Glow at the very top) */
@@ -350,11 +351,11 @@ div.TEMPLAR{
     color:black;
     overflow-x: hidden;
     width: 100%;
-    height: calc(100% - 180px);
+    height: calc(100% - 122px);
     position: absolute;
     box-sizing: border-box;
     top: 92px;
-    bottom: 88px;
+    bottom: 30px;
     overflow-x:hidden;
     background-color:#fcfce8;
     background-color:#ABABAB;
@@ -405,9 +406,9 @@ h2 span{
   letter-spacing:7px;
   font-variant:small-caps;
   padding:0;
-  font-family:"Pirata One", "serif" !important;
   font-variant:small-caps;
   text-shadow:1px 2px black;
+  font-family:"Pirata One", serif;
   
 }
   
@@ -521,11 +522,11 @@ background: #01D3CC;
   color:lightgoldenrodyellow;
   text-decoration:underline;
   font-size:21px;  
+  font-family:"Crimson Text", sans-serif;
   
 }
 
 .tabs, .mobile_tabs, h2{
-  font-family:"Oswald", serif;
   font-size:21px;
 }
 
@@ -946,8 +947,8 @@ table.dataTable>tbody>tr.child {
 table.dataTable tr.dtrg-group th{
   background-color:#555555;
   background: linear-gradient(90deg, #50C777 0%, #CDCDCD 100%) !important;
-  box-shadow: 0 4px 8px #CDCDCD !important;
-  border-bottom: 2px solid darkcyan !important;
+  box-shadow: 0 4px 8px black !important;
+  border-bottom: 2px solid goldenrod !important;
   height:147px;
   position:relative;
   z-index:10;
@@ -1008,7 +1009,7 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 .dataTables_wrapper, .dataTables_length{
   background:transparent;
   color:lightcyan;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
   border-top:3px solid palegoldenrod;
 
   border-bottom:3px solid #CDCDCD;
@@ -1017,7 +1018,7 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 }
 
 .dataTables_length input{
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 
@@ -1096,7 +1097,7 @@ td{
 
 
 .dataTable td, .dataTable td a{
-  font-family:"Share Tech Mono", serif;
+  font-family:"Share Tech Mono", sans-serif;
   font-size:14px;
 }
 
@@ -1125,6 +1126,7 @@ a:visited:not(".adv_toggle"){
 
 a.class, a.class:visited,{
   font-style:italic !important;
+  font-family:"Share Tech Mono", sans-serif !important;
 }
 
 
@@ -1191,7 +1193,7 @@ input{
 
 .search input::placeholder, .adv_show input::placeholder{
   color:#50C777;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 .tabs .searchField{
@@ -1204,7 +1206,7 @@ input{
 body .ui-menu-item {
   /* font-family to all */
  /* box-shadow:4px 4px 5px #83DAC0;*/
-  background-color:darkviolet;
+  background-color:#007BFF;
   text-align:justify;
   font-size:16px;
   padding:7px 0px 7px 0px;
@@ -1328,7 +1330,7 @@ a.link a.visited{
 .torrentsTable{
 
 
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 
@@ -1394,7 +1396,7 @@ a.adv_toggle{
   border-radius:14px !important;
  
   background: linear-gradient(120deg, #007BFF, silver, darkviolet);
-  border:5px solid goldenrod;
+  border:3px solid goldenrod;
 
   
 }
@@ -1402,7 +1404,7 @@ a.adv_toggle{
 .adv_search input:not(.adv_class){
   font-size:16px;
   height:27px;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
   margin-top:22px !important;
 
 }
@@ -1413,7 +1415,7 @@ a.adv_toggle{
 
 
 .adv_show select, .adv_show option{
-  font-family:"Oswald", sans-serif;
+  font-family:"Crimson Text", sans-serif;
   font-size:16px;
   height:18px;
 }
@@ -1532,6 +1534,10 @@ a.adv_toggle{
 #newUploadHeader a{
   color:palevioletred;
 }
+
+#newUploadHeader span{
+  color:black;
+}
 /* MOBILE */
 
 .partial_graph{
@@ -1555,7 +1561,7 @@ a.adv_toggle{
 }
 
 .torrentClasses a, .torrentClasses a:visited{
-  font-family:sans-serif;
+  font-family:"Share Tech Mono", sans-serif;
   font-size:13px;
   text-decoration:none;
 }
@@ -1673,7 +1679,7 @@ label.adv_class, input.adv_class{
 }
 
 #top10Title span{
-  color: black;
+  color: white;
 }
 
 /* 9:16; */
@@ -1704,13 +1710,12 @@ label.adv_class, input.adv_class{
   border: 3px solid silver;
   transition: all 0.2s ease-in-out;
   font-variant:small-caps;
-  font-family:"Share Tech Mono", sans-serif;
 }
 
 #adv_submit:hover, #graph_search:hover, .upload button:hover {
   /* Intense top glow on hover */
   box-shadow: 2px 3px 2px goldenrod;
-  border: 4px solid gold;
+  border: 4px solid black;
   cursor: pointer;
 }
 
@@ -1740,7 +1745,7 @@ label.adv_class, input.adv_class{
 }
 
 .tableHeading, .tableHeading a{
-  font-family: "Oswald" , serif !important;
+  font-family: "Crimson Text" , serif !important;
   font-size:16px !important;
 }
 
@@ -1767,7 +1772,7 @@ a.source, a.author{
 }
 
 .dataTable{
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 
@@ -1786,7 +1791,7 @@ a.source, a.author{
 }
 
 .panel li a, .mobile_panel li a{
-  font-family:"Share Tech Mono", system-ui;
+  font-family:"Lato", system-ui;
 }
 
 .torrentsTable td{
@@ -1795,7 +1800,7 @@ a.source, a.author{
 }
 
 .loading{
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Crimson Text", sans-serif;
 }
 
 
@@ -1804,9 +1809,6 @@ button{
   font-family:"Share Tech Mono", system-ui !important;
 }
 
-#adv_heading{
-  font-family:"Oswald", sans-serif;
-}
 
 .mobile_panel{
   position:relative;
@@ -1820,8 +1822,7 @@ h2 span{
 
 
 #torrentsTitle span:not(.loading), #top10Title span:not(.loading){
-  color:black !important;
-  text-shadow:2px 2px #F8F8F8 !important;
+  color:white !important;
 }
 
 .dtr-control{
@@ -1829,8 +1830,8 @@ h2 span{
 }
 
 .sourceType{
-  color:darkviolet !important;
-  text-shadow:2px 3px #50C777 !important;
+  color:black !important;
+  text-shadow:1px 2px gold;
   font-size:21px !important;
   font-family:"Pirata One", sans-serif !important;
   text-align:center !important;
@@ -1841,7 +1842,6 @@ h2 span{
   top:114px;
   text-align:center;
   display:block;
-
   float:left;
 }
 
@@ -1851,18 +1851,18 @@ h2 span{
 }
 
 .ui-menu .ui-menu-item-wrapper.ui-state-active {
-    background: silver !important;
+    background: gold !important;
     font-weight:bold !important;
-    color:goldenrod !important; /* Adjust text color for readability */
+    color:#50C777 !important; /* Adjust text color for readability */
 }
 
 input{
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
 }
 
 h3{
   font-size:21px;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
   text-align:center;
   width:100%;
 }
@@ -1883,8 +1883,8 @@ h3{
 }
 
 .titleBreak{
-  padding-top:40px;
-  padding-bottom:40px;
+  padding-top:77px;
+  padding-bottom:77px;
 }
 
 .gold{
@@ -1896,7 +1896,7 @@ h3{
 }
 
 .dataTable td{
-  background-color: lightcyan;
+  background-color: coral;
 }
 
 .academic{
@@ -1907,7 +1907,7 @@ h3{
 .webtorrent{
   width:90px;
   height:33px;
-  font-family:"Share Tech Mono", sans-serif;
+  font-family:"Lato", sans-serif;
   color:#007BFF;
   background:goldenrod;
   box-shadow:2px 3px 2px black;
@@ -1940,7 +1940,6 @@ footer{
   position:fixed;
   bottom:0px;
   z-index:9999;
-  height:88px;
   width:100%;
     /* Ensure consistent border styling */
   
@@ -1999,7 +1998,7 @@ footer{
 .search input{
   height: 22px !important;
   position:relative;
-  top:3px;
+  top:-1px;
 }
 
 .search input::placeholder{
@@ -2091,11 +2090,11 @@ footer{
 }
 
 .page-link{
-  font-family:"Oswald", serif !important;
+  font-family:"Crimson Text", serif !important;
 }
 
 .adv_search input{
-  font-family:"Oswald" , serif !important;
+  font-family:"Crimson Text" , serif !important;
 }
 
 .adv_search select{
@@ -2103,7 +2102,7 @@ footer{
 }
 
 .dt-container:not(div.top10 .dt-container){
-  margin-top:120px;
+  margin-top:175px;
 }
 
 div.top10 .dt-container{
@@ -2132,7 +2131,7 @@ div.top10 .dt-container{
 }
 
 .search input{
-  font-family:"Share Tech Mono", serif;
+  font-family:"Lato", serif;
 }
 
 .set a.publisher, .set a.class, .set a.author{
@@ -2164,103 +2163,112 @@ header, #hero{
   background: #50C777 !important;
 }
 
-#hero{
-  border:3px solid gold !important;
-}
-
 #status{color: white !important;}
 
 header{
-  box-shadow:3px 3px 3px #007BFF !important;
-  background:#50C777 !important;
-  border-bottom:none !important;
-}
-
-table.dataTable tr.dtrg-group th{
-  background:#007BFF !important;
-  border-top:1px solid goldenrod;
-  border-bottom:none !important;
-  
+  box-shadow:3px 4px 7px gold !important;
+  background:linear-gradient(180deg, #007BFF, #50C777, lightcyan) !important;
+  border-bottom:4px solid mediumvioletred !important;
 }
 
 .dataTable thead th{
-  border-bottom:3px solid darkviolet;
-  box-shadow:2px 3px 2px darkgoldenrod !important;
+  box-shadow:none !important;
+  border-bottom:2px solid darkviolet;
   /* 1. Define your gradient */
-  background:goldenrod !important;
+  background:linear-gradient(180deg, darkcyan, #50C777) !important;
   border-top:2px solid black !important;
+  font-size:21px !important;
+  font-family:"Pirata One", serif !important;
+}
+
+table.dataTable tr.dtrg-group th{
+  background:linear-gradient(90deg, #007BFF) !important;
+  border-top:2px solid darkviolet !important;
+  border-bottom:2px solid goldenrod !important;
 }
 
 .loading{
-  color:darkviolet !important;
+  color:#50C777 !important;
+  font-family:"Crimson Text", serif;
 }
 
 div.TEMPLAR{
-  background:white !important;
+  background:black !important;
 }
 
 .torrentsTable thead th{
-  background:white !important;
+  background:darkgoldenrod !important;
   border-bottom:none !important;
   box-shadow:none !important;
 }
 
+.torrentsTable td{
+  background-color: white !important;
+  padding:18px 0 18px 0 !important;
+}
 
 .adv_search{
-  background:palevioletred !important;
-  border: 2px solid goldenrod !important;
-  font-family:"Oswald", sans-serif !important;
+  background:lightcyan !important;
+  border: 3px solid gold !important;
+  font-family:"Lato", sans-serif !important;
   color:darkviolet !important;
 }
 
 .adv_search label{
-  color:goldenrod !important;
+  color:mediumvioletred !important;
 }
 
 #adv_heading{
-  color:darkgoldenrod !important;
-  text-shadow:1px 1px black !important;
-  font-family:"Oswald", serif !important;
-  font-size:18px !important;
+  color:darkcyan !important;
+  font-size:24px !important;
 }
 
 .dt-container{
-  border:2px solid darkviolet;
+  border:3px solid gold;
   background:lightgoldenrodyellow !important;
 }
 
 .torrentsTable a{
-  color:darkviolet !important;
-}
-
-.sourceType{
-  color:darkgoldenrod !important;
-  text-shadow:3px 3px black !important;
+  color:#007BFF !important;
 }
 
 #graph_search, #adv_submit, .upload button{
-  border:3px solid #50C777 !important;
-  background:darkviolet !important;
-  color:lightgoldenrodyellow !important;
+  border:2px solid #50C777 !important;
+  background:goldenrod !important;
+  color:darkcyan !important;
+  font-family:"Pirata One", system-ui !important;
+  font-size:24px;
 }
 
 #graph_search:hover, #adv_submit:hover, .upload button:hover{
-  box-shadow:3px 4px 3px black !important;
-  color:black !important;
+  box-shadow:3px 4px 3px #007BFF !important;
   font-weight:bold !important;
+  border:4px solid gold !important;
+}
+
+#warp{
+  font-family:"Pirata One", system-ui !important;
+  font-size:24px;
 }
 
 #warp:hover{
-  border:2px solid black;
+  border:2px solid gold;
 }
 
 h2 span{
   font-size:33px;
+  font-family:"Crimson Text", serif;
+  padding-left:5px;
+  text-shadow:1px 2px cyan;
 }
 
 #hero{
-  border:3px solid #007BFF !important;
+  border-top:3px solid lightgoldenrodyellow !important;
   background:mediumvioletred !important;
+}
+
+#status{
+  font-family:"Share Tech Mono", serif !important;
 }
 
 .tabs li a, .mobile_tabs li a{
@@ -2268,12 +2276,43 @@ h2 span{
 }
 
 .panel li a, .mobile_panel li a{
-  color:darkviolet !important;
+  color:palevioletred !important;
+  font-family:"Share Tech Mono", sans-serif !important;
+}
+
+input[type="text"], input::placeholder{
+  font-family:"Share Tech Mono", serif !important;
+}
+
+.dataTable td{
+  background-color:lightcyan;
+}
+
+.graph_search{
+  border:3px solid cyan;
+}
+
+div.upload{
+  background-color:#CDCDCD;
+}
+
+.pi{
+  height:95px;
+  position:fixed;
+  left:5px;
+  top:0px;
+  z-index:9998;
 }
 
 @media only screen and (max-width: 1079px) {
   .row>*{
     padding:0px;
+  }
+
+  .pi{
+    height:60px;
+    right:5px;
+    left:auto;
   }
 
   body, div.TEMPLAR{
@@ -2360,8 +2399,8 @@ h2 span{
  
  div.TEMPLAR{
     top:60px;
-    height:calc(100% - 148px);
-    bottom:88px;
+    height:calc(100% - 90px);
+    bottom:30px;
  }
 
   .desktop_1{
@@ -2393,7 +2432,7 @@ h2 span{
     top:57px;
     z-index:9998;
     bottom:88px;
-    background-color:mediumvioletred !important;
+    background-color:#007BFF !important;
   }
   
 
@@ -2412,6 +2451,7 @@ h2 span{
     left:5px;
     width:100%;
     opacity:1;
+
 
   }
 
@@ -2499,7 +2539,7 @@ h2 span{
       font-size:24px;
       padding:13px 0px 13px 0px;
       border-top:1px solid #fae1ec;
-    font-family:Oswald, serif;
+    font-family:Crimson Text, serif;
     /*color:lightseagreen;*/
     font-variant:small-caps;
     display:block;
@@ -2540,8 +2580,9 @@ h2 span{
     border-top:1px solid #CDCDCD;
   }
 
-  #upload_inst{
+  .upload_inst{
     width:290px;
+    color:goldenrod !important;
   }
 
 
@@ -2615,6 +2656,19 @@ h2 span{
   
  
   
+  #mobile_quick{
+    color:palegoldenrod;
+    font-variant:small-caps;
+    font-size:18px;
+    font-family:"Crimson Text", serif;
+    padding-bottom:13px;
+    text-decoration:underline;
+    letter-spacing:2px;
+  }
+
+  #search_ul{
+    margin-top:13px;
+  }
 
  
  
@@ -2624,7 +2678,7 @@ h2 span{
   }
 
   .search{
-    top:2px !important;
+    top:13px !important;
     position:relative;
   }
 
@@ -2634,7 +2688,7 @@ h2 span{
   }
 
   h2 span{
-    font-size:24px;
+    font-size:29px;
     line-height:30px;
   }
 

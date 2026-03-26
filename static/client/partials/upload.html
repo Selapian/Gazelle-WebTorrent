@@ -2,7 +2,7 @@
   <h2><span id="uploadHeading">Upload</span></h2>
 </div>
 <p class="upload_inst">
-	Thank you very much for your interest in uploading educational media to propagate.info. To act as a "Good Librarian," Please take your Time when you fill out this form! Only public domain Ebooks, Audiobooks, and Classical Music are allowed. If the Source already exists on the site, and you are doing, e.g., a new Translation for an existing Source, please Autofill the Source on this page (in the Title input), and then add your new torrent from that Source's Upload Page. If your Translation already exists, and you are uploading, e.g., an Audiobook for an existing PDF Edition, please select the correct Edition from the Drop-Down in the Edition Info section before adding your Audiobook. This way, Gazelle organizes the files neatly! After you upload your File(s), Do Not Forget to download the .torrent or MagnetURI, and finally seed the File(s) so that others can rev it. (Note that the file isn't literally stored on the servers, we merely store the WebTorrent infoHash, so you must pick up the .torrent file or magnetURI and for some time seed the file with your preferred Torrent Client!)
+	Thank you very much for your interest in uploading educational media to propagate.info. To act as a "Good Librarian," Please take your Time when you fill out this form! Only *LEGALLY, FREELY AVAILABLE* Ebooks, Audiobooks, and Classical Music are allowed. If the Source already exists on the site, and you are doing, e.g., a new Translation for an existing Source, please Autofill the Source on this page (in the Title input), and then add your new torrent from that Source's Upload Page. If your Translation already exists, and you are uploading, e.g., an Audiobook for an existing PDF Edition, please select the correct Edition from the Drop-Down in the Edition Info section before adding your Audiobook. This way, Gazelle organizes the files neatly! After you upload your File(s), Do Not Forget to download the .torrent or MagnetURI, and finally seed the File(s) so that others can rev it.
 </p>
 <h3 id="newUploadHeader"><span>Uploading</span><a href="#"></a></h3>
 <form>
@@ -171,15 +171,32 @@
 	
   <br><br><br><br><br><br>
 	<div class="grid_0">
-		<label for="media">Torrent media: </label>
+		<label for="media">Media: </label>
 	</div>
 	<div class="grid_1">
 		<select id="media">
 		</select>
+	</div>
+	<div class="grid_0">
+		<label for="format">Format:</label>
+	</div>
+	<div class="grid_1">
 		<select id="format">
 		</select>
 	</div>
-  <br><br><br><br><br><br>
+	<div class="grid_0">
+		<label for="resolutions">Resolution:</label>
+	</div>
+	<div class="grid_1">
+		<select name="resolutions" class="resolutions" id="pdf_resolutions">
+		</select>
+		<select name="resolutions" class="resolutions" id="music_resolutions">
+		</select>
+		<select  name="resolutions" class="resolutions" id="video_resolutions">
+		</select>
+		<input  name="resolutions" class="resolutions" id="image_resolutions" placeholder="Format: 1080x720">
+	</div>
+  <br><br><br><br><br><br><br><br>
   <div class="APA">
 		<div class="grid_0">
 			<label for="rename_file">Rename File to APA Format</label>
@@ -222,7 +239,7 @@
 		function addError(msg){
 			console.log(msg);
 			$("#errorsDiv").empty();
-			$("#errorsDiv").append(msg + "<br>");
+			$("#errorsDiv").append("<br>" + msg + "<br>");
 			$("#errorsDiv").css({color : "red"});
 		}
 	</script>

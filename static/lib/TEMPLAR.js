@@ -223,7 +223,7 @@ var TEMPLAR = {
         if (!path) path = this._default;
         var target = $("div." + path);
         // HEIDEGGER: The Fade is but a gradual un-concealment of Truth.
-        this._fade ? target.fadeIn() : target.show();
+        this._fade ? target.fadeIn(1886) : target.show();
     },
 
     _invisible_page: function(page) {

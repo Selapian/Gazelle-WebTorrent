@@ -12,8 +12,9 @@ function initializeUpload(){
 
 	//editing edition
 	if(!$.isEmptyObject(params)){
+		//source has a uuid, autofilling from .get("/upload")
 		if(params.uuid){
-
+			//this comes from the href
 			uploadModel.uuid = params.uuid;
 			$("#uploadHeading a").text("Editing");
 			$("#uploadHeading a").attr("href", "#upload?uuid=" + uploadModel.uuid);
@@ -28,6 +29,7 @@ function initializeUpload(){
 			//get the data for this uuid, it's a new format being added
 			
 			caller = setTimeout(function(){
+				//retreives source, class, author nodes from TEMPLAR.uuid
 				$.get("/upload/" + uploadModel.uuid, function(data){
 					$("#up_submit").prop("disabled", false)
 					if(!data.record){
@@ -65,9 +67,11 @@ function initializeUpload(){
 							$("#newEdition").hide();
 						}
 						else{
+							//shows new edition input=text
 							$("#newEdition").show();
 						}
 					})
+					//iterates over each edition node from .get/upload
 					data.record._fields[4].forEach(function(edition, j){
 						var option = document.createElement("option");
 						var publisherHtml = "";
@@ -84,6 +88,7 @@ function initializeUpload(){
 									editionField += " "
 								}
 				      })
+			      		//for rome i need to decodeEntities two or even three times
 				      editionField += data.record._fields[3] ? "(" + decodeEntities(decodeEntities(data.record._fields[3])) + (edition.date ? "-" + 
 				      	decodeEntities(decodeEntities(edition.date)) + "). " : "). ") : ""
 				      editionField += decodeEntities(decodeEntities(data.record._fields[0])) + ". "
@@ -115,6 +120,7 @@ function initializeUpload(){
 						$(option).val(editionField);
 						$(option).text(editionField);
 						$("#edition_select").append(option);
+						//pushes the literal edition node (server) to the uploadModel (client). then the server processes that node in .post/upload existing condition
 						uploadModel.editions.push(edition);
 					})
 				
@@ -214,7 +220,6 @@ function initializeUpload(){
 		}
 	}
 	if($.isEmptyObject(params)){
-			console.log(types);
 			types.forEach(function(val){
 				var option = document.createElement("option");
 				$(option).val(val);
@@ -241,15 +246,38 @@ function initializeUpload(){
 
 			})
 
+			pdf_resolutions.forEach(function(val){
+				var option = document.createElement("option");
+				$(option).val(val);
+				$(option).text(decodeEntities(decodeEntities(val)));
+				$("#pdf_resolutions").append(option);
+				uploadModel.torrent.res = $("#pdf_resolutions").val();
+
+			})
+
+			music_resolutions.forEach(function(val){
+				var option = document.createElement("option");
+				$(option).val(val);
+				$(option).text(decodeEntities(decodeEntities(val)));
+				$("#music_resolutions").append(option);
+				uploadModel.torrent.res = $("#music_resolutions").val();
+
+			})
+
+			video_resolutions.forEach(function(val){
+				var option = document.createElement("option");
+				$(option).val(val);
+				$(option).text(decodeEntities(decodeEntities(val)));
+				$("#video_resolutions").append(option);
+				uploadModel.torrent.res = $("#video_resolutions").val();
+
+			})
+
+
 	}
 
-	$("#format").change(function(){
-		uploadModel.torrent.format = $(this).val();
-	})
 
-	$("#media").change(function(){
-		uploadModel.torrent.media = $(this).val();
-	})
+
 		
 
 }
@@ -341,7 +369,9 @@ function htmlUpload(){
 
 		      }
 		      editionField += uploadModel.title + '. '
-		      editionField = editionField.replace(':', " - ");
+		      editionField = editionField.replaceAll(':', " - ");
+		      editionField = editionField.replaceAll("/", "_");
+		      editionField = editionField.replaceAll("\\", "_")
           editionField = editionField.substring(0,150)
 		   		if(editionField.length === 150){
 		   			editionField = editionField + "..."
@@ -353,27 +383,27 @@ function htmlUpload(){
 		      	}
 		      	else{
 		        	publisherHtml += (uploadModel.edition.edition_publisher ? uploadModel.edition.edition_publisher : " ") + 
-		        	(uploadModel.type !== "Journal" ? ". " : (uploadModel.edition.edition_title ? ", " : "."))
+		        	(uploadModel.type !== "Journal Article" ? ". " : (uploadModel.edition.edition_title ? ", " : "."))
 		      	}
 		      }
-		     if(uploadModel.type === "Journal"){
+		     if(uploadModel.type === "Journal Article"){
 		     	  editionField += publisherHtml;
 		     }
 		      if(uploadModel.edition.edition_title && uploadModel.edition.edition_title !== ""){
 		      	if(!uploadModel.edition.edition_title.endsWith(".")){
-		      		editionField += uploadModel.edition.edition_title + (uploadModel.type !== "Journal" ? ". " : "")
+		      		editionField += uploadModel.edition.edition_title + (uploadModel.type !== "Journal Article" ? ". " : "")
 		      	}
 		      	else{
 		      		editionField += uploadModel.edition.edition_title + " ";
 		      	}
 		      }
-		      if(uploadModel.type !== "Journal"){
+		      if(uploadModel.type !== "Journal Article"){
 		      	editionField += publisherHtml;
 		      }
 		      if(uploadModel.edition.edition_no){
 		      	editionField += "(" + uploadModel.edition.edition_no + ")"
 		      	if(uploadModel.edition.edition_pages){
-		      		editionField += ": "
+		      		editionField += ", "
 		      	}
 		      }
 		      if(uploadModel.edition.edition_pages){
@@ -452,11 +482,47 @@ function htmlUpload(){
 	})
 
 	$("#media").change(function(){
-		uploadModel.torrent.media = $("#media").val();
+		uploadModel.torrent.media = $(this).val();
+	})
+	
+	$("#format").change(function(){
+		uploadModel.torrent.format = $(this).val();
+
+		//codec UI
+		$(".resolutions").hide();
+		switch($(this).val()){
+			case "mp3":
+				$("#music_resolutions").fadeIn(333);
+				break;
+			case "FLAC":
+				$("#music_resolutions").fadeIn(333);
+				break;
+			case "mp4":
+				$("#video_resolutions").fadeIn(333);
+				break;
+			case "mkv (x264)":
+				$("#video_resolutions").fadeIn(333);
+				break;
+			case "mkv":
+				$("#video_resolutions").fadeIn(333);
+				break;
+			case "png":
+				$("#image_resolutions").fadeIn(333);
+				break;
+			case "JPEG":
+				$("#image_resolutions").fadeIn(333);
+				break;
+			case "PDF":
+				$("#pdf_resolutions").fadeIn(333);
+				break;
+
+		}
+		uploadModel.torrent.res = $(this).val();
 	})
 
-	$("#format").change(function(){
-		uploadModel.torrent.format = $("#format").val();
+	$(".resolutions").change(function(){
+		var res = $(this).val();
+		uploadModel.torrent.res = res;
 	})
 
 	$("#edition_publisher").change(function(){
@@ -528,8 +594,9 @@ function htmlUpload(){
 			 function(data){
 			 	$("body").css("cursor", "default");
 			if(data.errors && data.errors.length > 0){
+				console.log(data.errors)
 				addError(data.errors[0].msg);
-        alert(data.errors[0].msg)
+       			alert(data.errors[0].msg)
 				$("#up_submit").prop("disabled", false)
         return;
 			}
@@ -549,82 +616,81 @@ function htmlUpload(){
 }
 
 function resetUpload(){
-		
+	$(".resolutions").hide();
+	$("#pdf_resolutions").show();
+	$(".newUpload").show();
+	$("#newUploadHeader a").text("")
+	authorCount = 0;
 
-    
-		$(".newUpload").show();
-		$("#newUploadHeader a").text("")
-		authorCount = 0;
+	$("#edition_select").empty();
+	$("#edition_select").off("change");
+	$(".torrentArea").empty();
+	uploadModel.torrent = {infoHash : "", media : "", format : ""};
+	uploadModel.uuid = undefined;
+	uploadModel.edition = {
+	edition_date : "",
+	edition_title : "",
+	edition_img : "",
+	edition_publisher : "",
+	edition_no : "",
+	edition_pages : "",
+	edition_uuid : "null"
+	};
 
-		$("#edition_select").empty();
-		$("#edition_select").off("change");
-		$(".torrentArea").empty();
-		uploadModel.torrent = {infoHash : "", media : "", format : ""};
-		uploadModel.uuid = undefined;
-		uploadModel.edition = {
-		edition_date : "",
-		edition_title : "",
-		edition_img : "",
-		edition_publisher : "",
-		edition_no : "",
-		edition_pages : "",
-		edition_uuid : "null"
-		};
+	uploadModel.editions = [];
+	uploadModel.date = "";
+	uploadModel.authors = [];
+	uploadModel.classes = []
+	uploadModel.title = "";
 
-		uploadModel.editions = [];
-		uploadModel.date = "";
-		uploadModel.authors = [];
-		uploadModel.classes = []
-		uploadModel.title = "";
-	
-		$(".merge_source").hide();
-		$("#merge_source_input").val("");
-		$("#uploadHeading a").text("Upload")
+	$(".merge_source").hide();
+	$("#merge_source_input").val("");
+	$("#uploadHeading a").text("Upload")
 
-		$(".torrent_a").remove();
+	$(".torrent_a").remove();
 
-		$("#title").val("");
-		$("#date").val("");
+	$("#title").val("");
+	$("#date").val("");
 
-		$("#author_input").val("");
-		$(".removeAuthor").click();
-		$(".author_break").remove();
+	$("#author_input").val("");
+	$(".removeAuthor").click();
+	$(".author_break").remove();
 
-		$("#upload_files").val(null);
-		$("#classes_input").val("");
-	
+	$("#upload_files").val(null);
+	$("#classes_input").val("");
 
-		$("#edition_publisher").val("");
-		$("#edition_pages").val("");
-		$("#edition_title").val("");
-		$("#edition_date").val("");
-		$("#edition_img").val("");
-		$("#edition_no").val("");
 
-		$("#edition_title").prop("disabled",false)
-		$("#edition_date").prop("disabled",false)
-		$("#edition_no").prop("disabled",false)
-		$("#edition_publisher").prop("disabled",false)
-		$("#edition_pages").prop("disabled",false)
+	$("#edition_publisher").val("");
+	$("#edition_pages").val("");
+	$("#edition_title").val("");
+	$("#edition_date").val("");
+	$("#edition_img").val("");
+	$("#edition_no").val("");
 
-		//$("#tags_select").val("----")
+	$("#edition_title").prop("disabled",false)
+	$("#edition_date").prop("disabled",false)
+	$("#edition_no").prop("disabled",false)
+	$("#edition_publisher").prop("disabled",false)
+	$("#edition_pages").prop("disabled",false)
 
-		$("#edition_check").prop("checked", false)
-		$("#edition").hide();
+	//$("#tags_select").val("----")
 
-		//$("#edition_select").append("<option selected value='Standard Edition'>Standard Edition</option>")
-		$("#edition_select").hide();
-		$(".existing_edition").hide();
-		//$("#media").val("ebook");
-		//$("#format").val("PDF")
+	$("#edition_check").prop("checked", false)
+	$("#edition").hide();
 
-		$(".break").remove();
+	//$("#edition_select").append("<option selected value='Standard Edition'>Standard Edition</option>")
+	$("#edition_select").hide();
+	$(".existing_edition").hide();
+	//$("#media").val("ebook");
+	//$("#format").val("PDF")
 
-		$("#type").empty();
-		$("#media").empty();
-		$("#format").empty();
-		$("#up_submit").prop("disabled", false)
+	$(".break").remove();
 
-		//$("#errorsDiv").empty();
+	$("#type").empty();
+	$("#media").empty();
+	$("#format").empty();
+	$("#up_submit").prop("disabled", false)
+
+	//$("#errorsDiv").empty();
 }
 	

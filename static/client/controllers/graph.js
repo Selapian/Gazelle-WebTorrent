@@ -8,7 +8,9 @@ function initializeGraph(){
 		type : TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "",
 		media : TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : "",
 		format : TEMPLAR.paramREC() ? TEMPLAR.paramREC().format : "",
-		search : TEMPLAR.paramREC() ? TEMPLAR.paramREC().search : ""}, function(data){
+        res: TEMPLAR.paramREC() ? TEMPLAR.paramREC().res : "",
+		search : TEMPLAR.paramREC() ? TEMPLAR.paramREC().search : ""}, 
+        function(data){
 			graph(data)
 		})
 	}
@@ -68,6 +70,7 @@ function graph(data) {
                     let isMatch = titles.some(t => field.properties.name.toLowerCase().includes(t));
                     Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Source" : "Source", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "darkgoldenrod" : "#17627C" });
                 } else if (field.labels[0] === "Author") {
+
                     let isMatch = TEMPLAR.paramREC()?.author && TEMPLAR.paramREC().author.toLowerCase().includes(field.properties.searchable.toLowerCase());
                     Obelisk.nodes.push({ id: field.properties.uuid, group: isMatch ? "Find Author" : "Author", name: decodeEntities(decodeEntities(field.properties.name)), count: 1, color: isMatch ? "darkgoldenrod" : "blue" });
                 } else if (field.labels[0] === "Class") {
@@ -133,7 +136,7 @@ function graphRender(selector) {
     /** * Precise Modification: 
      * Calculate scale for 7 clicks out (1/1.3^7 ≈ 0.159)
      */
-    const initialScale = 0.07; 
+    const initialScale = 0.0185; 
     
     // Create the identity and center it
     const initialTransform = d3.zoomIdentity
@@ -145,19 +148,25 @@ function graphRender(selector) {
     
     const simulation = d3.forceSimulation(Obelisk.nodes)
     // 1. Increase link distance to push connected nodes further apart
-    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(1337)) 
+    .force("link", d3.forceLink(Obelisk.links).id(d => d.id).distance(8888)) 
     
     // 2. Stronger negative charge (repulsion). -1000 to -1500 is better for high-density text
-    .force("charge", d3.forceManyBody().strength(-1775))
+    .force("charge", d3.forceManyBody().strength(-7777))
     
     // 3. Collision force prevents text labels from sitting directly on top of each other
-    .force("collide", d3.forceCollide().radius(512)) 
-    
+    // Add padding so labels don't touch edges
+
+    .force("collide", d3.forceCollide().radius(d => {
+        // If text width isn't measured yet, use a safe default
+        const width = d.__textWidth || 500; 
+        return (width / 2) + 1250;
+    }))
+        
     .force("center", d3.forceCenter(width / 2, height / 2));
 
     setTimeout(() => {
         simulation.stop();
-    }, 5555);
+    }, 8888);
 
     // --- PREVENT PAGE SCROLL & ENABLE HOVER ZOOM ---
     const zoom = d3.zoom()
@@ -266,6 +275,6 @@ function graphRender(selector) {
         }
     });
 
-    simulation.alphaTarget(1.2).restart();
+    simulation.alphaTarget(.777).restart();
 }
 

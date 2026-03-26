@@ -5,14 +5,16 @@ var uploadModel = {
 		size : "",
 		release : "",
 		media : "",
-		format : ""
+		format : "",
+		res : ""
 	},
 	edition: {
 		edition_date : "",
 		edition_title : "",
 		edition_publisher : "",
-		edition_pages : "",
-		edition_img : ""
+		edition_no : "",
+		edition_pages : ""
+
 	},
 	editions : [],
 	title : ""

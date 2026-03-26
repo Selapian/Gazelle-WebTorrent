@@ -60,6 +60,7 @@ function initializeTorrents(table) {
             { targets: [2, 3, 4], className: "dt-left" }, // Revs, Date, Time (aligned left)
             { targets: 5, responsivePriority: 1 } // Download
         ],
+        order: [[ 4, "desc" ]],
         processing: true,
         searching: false,
         paging: true,
@@ -81,6 +82,7 @@ function initializeTorrents(table) {
                 type: TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "",
                 media: TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : "",
                 format: TEMPLAR.paramREC() ? TEMPLAR.paramREC().format : "",
+                res : TEMPLAR.paramREC() ? TEMPLAR.paramREC().res : ""
             },
             dataSrc: function(data) {
                 refreshDTRecs();
@@ -162,7 +164,7 @@ function initializeTorrents(table) {
 
                         if (editionsAdded.indexOf(edition_torrent.edition.properties.uuid) === -1) {
                             // NEW EDITION: Create the full table wrapper
-                            var fullTable = "<table class='torrentsTable'><thead><tr><th>Format</th><th>Download</th><th>Revs</th><th>Size</th></tr></thead><tbody>" + 
+                            var fullTable = "<table class='torrentsTable'><thead><tr><th>Format</th><th>Resolution</th><th>Download</th><th>Revs</th><th>Size</th></tr></thead><tbody>" + 
                                             torrentsTableRows + "</tbody></table>";
                             
                             assertFirstEditionRow(record, edition_torrent, editionsAdded, currentApa, sourceIMG, dateField, authorField, classesField, fullTable);
@@ -186,13 +188,18 @@ function initializeTorrents(table) {
             });
             */
 
-            $(".webtorrent").click(function(){
+            // Handle Copy Event
+            $("table tbody").off('contextmenu', ".magnetURI").on('contextmenu', ".magnetURI", function() {
+                const infoHash = $(this).data("infohash");
+                $.post("/rev/" + infoHash);
+            });
+            $(".webtorrent").off("click").click(function(){
                 const infoHash = $(this).data("infohash");
                 const APA = $(this).data("apa");                            
                 TEMPLAR.route("file?infoHash=" + infoHash + "&APA=" + encodeURIComponent(APA));                
             })
 
-            $("table tbody").on("click", ".magnetURI", function(){
+            $("table tbody").off("click", ".magnetURI").on("click", ".magnetURI", function(){
                 const infoHash = $(this).data("infohash");
                 $.post("/rev/" + infoHash)
             })

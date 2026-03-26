@@ -92,7 +92,8 @@ function assertButtonTab(){
 }
 
 function assertGraphButton(searchable){
-    $("#graph_search").click(function(e){
+    $("#graph_search").off("click")
+    $("#graph_search").on("click", function(e){
         e.preventDefault();
         switch(TEMPLAR.paramREC().label){
             case "source":

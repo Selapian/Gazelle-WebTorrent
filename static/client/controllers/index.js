@@ -18,13 +18,12 @@ function mount() {
                     initializeTorrents("torrents");
                     
                     // Priority 2: Defer the heavy graph and search logic
-                    setTimeout(() => {
-                        if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-                            initializeGraph(); // Likely the source of the 710ms reflow
-                            $(".graph_search").fadeIn(333);
-                        }                        
-                    }, 50); // Small delay to allow Torrent list to render first
-                    
+          
+                    if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
+                        initializeGraph(); // Likely the source of the 710ms reflow
+                        $(".graph_search").show();
+                     // Small delay to allow Torrent list to render first
+                    }
                     advAutocomplete();
                     
                 }

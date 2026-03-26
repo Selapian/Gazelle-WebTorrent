@@ -17,7 +17,11 @@ function assertSourceIMG(record) {
         "Encyclopedia": "img/encyclopedia.png",
         "Textbook": "img/textbook.png",
         "Classical Music": "img/classical_music.png",
-        "Chant": "img/chant.png"
+        "Chant": "img/chant.png",
+        "Lecture" : "img/lecture.png",
+        "Letter" : "img/letter.png",
+        "Renaissance Art": "img/renaissance_art.png",
+        "Documentary" : "img/documentary.png"
     };
 
     sourceIMG = mapping[type] || "img/download.png";
@@ -222,6 +226,8 @@ function assertAdvSearchUI(){
     $("#adv_media").append("<option value='all'>All Media</option>");
     $("#adv_format").empty();
     $("#adv_format").append("<option value='all'>All Formats</option>");
+    $("#adv_res").empty();
+    $("#adv_res").append("<option value='all'>All Resolutions</option>")
     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().class_all === "true"){
       $("#adv_class_all").prop("checked", true);
       $("adv_class_any").prop("checked", false);
@@ -235,14 +241,9 @@ function assertAdvSearchUI(){
       var option = document.createElement("option");
       $(option).val(val);
       $(option).text(decodeEntities(decodeEntities(val)));
-      var option2 = document.createElement("option");
-      $(option2).val(val);
-      $(option2).text(decodeEntities(decodeEntities(val)));
       $("#adv_type").append(option);
-      $("#top10_type").append(option2);
       if (TEMPLAR.paramREC() && TEMPLAR.paramREC().type) {
         $("#adv_type").val(TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "");
-        $("#top10_type").val(TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "");
       }
     });
     media.forEach(function (val) {
@@ -250,16 +251,8 @@ function assertAdvSearchUI(){
       $(option).val(val);
       $(option).text(decodeEntities(decodeEntities(val)));
       $("#adv_media").append(option);
-      var option2 = document.createElement("option");
-      $(option2).val(val);
-      $(option2).text(decodeEntities(decodeEntities(val)));
-      $("#top10_media").append(option2);
       if (TEMPLAR.paramREC() && TEMPLAR.paramREC().media) {
         $("#adv_media").val(TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : "");
-
-        $("#top10_media").val(
-          TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : ""
-        );
       }
     });
     formats.forEach(function (val) {
@@ -267,21 +260,39 @@ function assertAdvSearchUI(){
       $(option).val(val);
       $(option).text(decodeEntities(decodeEntities(val)));
       $("#adv_format").append(option);
-      var option2 = document.createElement("option");
-      $(option2).val(val);
-      $(option2).text(decodeEntities(decodeEntities(val)));
-      $("#top10_format").append(option2);
       if (TEMPLAR.paramREC() && TEMPLAR.paramREC().format) {
         $("#adv_format").val(
           TEMPLAR.paramREC() ? TEMPLAR.paramREC().format : ""
         );
 
-        $("#top10_format").val(
-          TEMPLAR.paramREC() ? TEMPLAR.paramREC().format : ""
-        );
       }
     });
+
+    video_resolutions.forEach(function(val){
+      var option = document.createElement("option");
+      $(option).val(val);
+      $(option).text(decodeEntities(decodeEntities(val)));
+      $("#adv_res").append(option);
+    })
+
+    music_resolutions.forEach(function(val){
+        var option2 = document.createElement("option");
+        $(option2).val(val);
+        $(option2).text(decodeEntities(decodeEntities(val)));
+        $("#adv_res").append(option2);
+      })
   //});
+    var option = document.createElement("option");
+    $(option).val("Digital");
+    $(option).text("Digital");
+    $("#adv_res").append(option);
+    var option2 = document.createElement("option");
+    $(option2).val("Scan");
+    $(option2).text("Scan");
+    $("#adv_res").append(option2);
+    if (TEMPLAR.paramREC() && TEMPLAR.paramREC().res) {
+        $("#adv_res").val(TEMPLAR.paramREC().res);
+    }
 }
 
 function assertAdvButton(){
@@ -306,9 +317,11 @@ function assertAdvButton(){
         "&media=" +
         $("#adv_media").val() +
         "&format=" +
-        $("#adv_format").val()
+        $("#adv_format").val() +
+        "&res=" +
+        $("#adv_res").val()
     );
-    initializeTorrents("torrents");
+    //initializeTorrents("torrents");
   });
 }
 
@@ -317,6 +330,7 @@ function assertTr(record, edition_torrent, apaHtml){
     const cleanApa = apaHtml.replace(/<[^>]*>?/gm, '');
      var tr = "<tr>";
       tr += "<td>" + edition_torrent.torrent.properties.format + "</td>";          
+      tr += "<td>" + edition_torrent.torrent.properties.res + "</td>"
       
      /*   tr +=
         "<td class='here'>" +
