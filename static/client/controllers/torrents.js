@@ -188,6 +188,8 @@ function initializeTorrents(table) {
             });
             */
 
+            assertNodeTraverse();
+
             // Handle Copy Event
             $("table tbody").off('contextmenu', ".magnetURI").on('contextmenu', ".magnetURI", function() {
                 const infoHash = $(this).data("infohash");
@@ -223,6 +225,13 @@ function initializeTorrents(table) {
                     block: 'start' 
                 });
             }
+
+             if(settings.iDraw === 1 && TEMPLAR.pageREC() === "torrents" && TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
+
+                $('div.TEMPLAR').animate({
+                    scrollTop: $("#graph_scroll").offset().top
+                }, 500);
+            } 
         },
     })
     if (TEMPLAR.pageREC() === "top10") $('th').unbind('click.DT')

@@ -52,12 +52,53 @@ function assertNodeNameFromData() {
     }
 }
 
+
+
+function assertTitleLoading(){
+  $("h2 span a").hide();
+
+  $("h2 span a").text("Loading...").addClass("loading").fadeIn()
+}
+
+function assertTitleLoaded(){
+
+  switch (TEMPLAR.pageREC()) {
+    case "torrents":
+      if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
+        $("#torrentsTitle span a").text("Graph Search").attr("href", "#torrents?search=true&title=&author=&classes=&class_all=false&publisher=&type=all&media=all&format=all&res=all").removeClass("loading").fadeIn(3333)
+
+      }
+      else{
+        $("#torrentsTitle span a").text("Torrents").attr("href", "#torrents").removeClass("loading").fadeIn(3333)
+
+      }
+      break;
+    case "top10":
+      $("#top10Title span a").text("Top 10").removeClass("loading").show();
+      break;
+    case "node":
+      //TODO: maybe multiple calls here
+      //$.get("/source_info/" + TEMPLAR.paramREC().uuid, function (data) {
+        assertNodeNameFromData()
+        /*$("#addFormat").click(function () {
+          TEMPLAR.route("#upload?uuid=" + TEMPLAR.paramREC().uuid);
+        });*/
+     
+        //TEMPLAR.DOM();
+      //});
+      break;
+    default:
+      $("#torrentsTitle span a").text("Torrents").removeClass("loading").fadeIn(3333)
+
+  }
+}
+
 function updateTitleUI(name, label) {
     const colors = {
-        source: "#F8F8F8",
-        author: "gold",
-        class: "#50C777",
-        publisher: "mediumvioletred"
+        source: "white",
+        author: "yellow",
+        class: "green",
+        publisher: "red"
     };
 
     switch(label){
@@ -73,9 +114,22 @@ function updateTitleUI(name, label) {
             break;
     }
 
-        $("#nodeTitle span").text(name)
-                   .removeClass("loading")
-                   .css("color", colors[label] || "white").removeClass("gold").removeClass("red")                       
+    $("#nodeTitle span a").text(name)
+       .addClass(label)
+       .attr("href", "#node?label=" + label + "&uuid=" + (TEMPLAR.paramREC() ? TEMPLAR.paramREC().uuid : "undefined"))
+       .removeClass("loading")
+       .css("color", colors[label] || "white").removeClass("gold").removeClass("red")   
+
+    TEMPLAR.DOM();
+
+    $(document).off("TEMPLAR_SHIFT").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
+        // 1. Prevent the mobile system menu from appearing
+        e.preventDefault();
+        const $self = $(this);
+        const className = $self.attr('class').split(' ')[2];
+        const text = encodeURIComponent($self.text());
+        traverseGraph(className, text);
+    })                  
 }
 
 function assertButtonTab(){
@@ -91,64 +145,41 @@ function assertButtonTab(){
     }
 }
 
+
+
+function assertNodeTraverse(){
+   
+        // Configuration
+        const LONG_TAP_DURATION = 600; // ms
+        let touchTimer;
+
+        $(document).on('touchstart', 'a.TEMPLAR', function(e) {
+            if (e.originalEvent.touches.length >= 2) {
+                // TWO FINGERS DETECTED
+                e.preventDefault(); 
+                
+                const $self = $(this);
+                traverseGraph($self.attr('class').split(' ')[2], encodeURIComponent($self.text()));
+            }
+        });
+
+        // Add this to your second script (the one that loads AFTER Templar)
+        $(document).off("TEMPLAR_SHIFT").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
+            // 1. Prevent the mobile system menu from appearing
+            const $self = $(this);
+            const className = $self.attr('class').split(' ')[2];
+            const text = encodeURIComponent($self.text());
+            traverseGraph(className, text);
+        })
+
+    
+}
+
 function assertGraphButton(searchable){
     $("#graph_search").off("click")
     $("#graph_search").on("click", function(e){
         e.preventDefault();
-        switch(TEMPLAR.paramREC().label){
-            case "source":
-              TEMPLAR.route(
-                  "#titles?search=true&title=" +
-                    searchable +
-                    "&author=" +                    
-                    "&classes=" +                    
-                    "&class_all=false" +                    
-                    "&publisher=" +
-                    "&type=all" +
-                    "&media=all" +                   
-                    "&format=all"                     
-                );
-                break;
-            case "author":
-                TEMPLAR.route(
-                      "#titles?search=true" +
-                      "&title=" +                         
-                        "&author=" + searchable +                        
-                        "&classes=" +                        
-                        "&class_all=false" +                        
-                        "&publisher=" +
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all"                     
-                    );
-                break;
-            case "class":
-                TEMPLAR.route(
-                      "#titles?search=true" +
-                      "&title=" +                         
-                        "&author=" +                         
-                        "&classes=" + JSON.stringify(searchable) +               
-                        "&class_all=false" +                        
-                        "&publisher=" +
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all"                
-                    );
-                break;
-            case "publisher":
-                TEMPLAR.route(
-                      "#titles?search=true" +
-                      "&title=" +                         
-                        "&author=" +                      
-                        "&classes=" +                        
-                        "&class_all=false" +                        
-                        "&publisher=" + searchable +  
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all"                 
-                    );
-                break;
-
-        }
+        traverseGraph(TEMPLAR.paramREC().label, searchable);
+        
     })
 }

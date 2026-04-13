@@ -80,12 +80,14 @@ object{
 
 
 
-#upload_inst{
-  font-size:20px;
-  font-family:"Roboto", sans-serif;
+.upload_inst{
+  font-size:16px;
+  font-family:"Arial", sans-serif;
   color:black;
   display:block;
-  width:1164px;
+  text-align:justify !important;
+  width:100%;
+  padding-right:5px;
 }
 
 
@@ -124,16 +126,23 @@ object{
   margin-right:5px;
   width:calc(100% - 10px);
   border-radius:14px;
-  background-color:#000;
+  background-color:#CDCDCD;
   border:3px solid goldenrod;
+  position:relative;
 }
 
+#graph_inst{
+  position:absolute;
+  right:5px;
+  bottom:1px;
+  color:white;
+  font-family:"Oswald", serif;
+}
 
 .dataTables_length{
   padding-top:10px;
   padding-bottom:10px;
 }
-
 
 /* TORRENT */
 
@@ -394,7 +403,7 @@ h2{
 
 }
 
-h2 span{
+h2 span a{
   
   /*color:#196B7D;
   color:#BCBCBC;
@@ -404,11 +413,8 @@ h2 span{
   line-height:40px;
   color:mediumvioletred;
   letter-spacing:7px;
-  font-variant:small-caps;
   padding:0;
-  font-variant:small-caps;
   text-shadow:1px 2px black;
-  font-family:"Pirata One", serif;
   
 }
   
@@ -496,6 +502,7 @@ background: #01D3CC;
 }
 
 
+
 .tabs{
   width:1080px;
   left: 0;
@@ -505,6 +512,12 @@ background: #01D3CC;
   position:relative;
 }
 
+#header_stream{
+  position:relative;
+  top:43px;
+
+}
+
 .tabs li{
   width: 196px !important; 
 }
@@ -512,7 +525,6 @@ background: #01D3CC;
 .tabs li a, .mobile_tabs li a{
   color:darkviolet !important;
   letter-spacing:3px;
-  font-variant:small-caps !important;
   
 }
 
@@ -521,8 +533,9 @@ background: #01D3CC;
   /*font-family:"Atkinson Hyperlegible Mono", serif;*/
   color:lightgoldenrodyellow;
   text-decoration:underline;
-  font-size:21px;  
-  font-family:"Crimson Text", sans-serif;
+  font-size:25px;  
+  font-family:"Oswald", sans-serif;
+  font-variant:small-caps;
   
 }
 
@@ -539,7 +552,7 @@ background: #01D3CC;
   margin-right: auto;
 }
 
-.titleBreak h2 span{
+.titleBreak h2 span a{
   text-decoration:none;
 }
 
@@ -558,8 +571,8 @@ background: #01D3CC;
 }
 
 h1{
-  display:block;
-  text-align:center;
+
+ text-align:center;
 }
 
 
@@ -630,11 +643,6 @@ text-align:center;
 
 
 
-#upload_inst, #disclaimer{
-  display:block;
-  margin:0 auto;
-  text-align:center;
-}
 
 
 
@@ -863,7 +871,7 @@ thead:not(.torrentsTable thead) th {
   color:black !important;
   text-shadow:1px 1px white;
   letter-spacing:1px;
-  font-family:"Pirata One", system-ui !important;
+  font-family:"Bitcount Grid Double", system-ui !important;
   font-size:20px;
 }
 
@@ -973,12 +981,12 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   width: calc(100% - 111px);
   float: left;
   padding-left: 0;
+  height:100%;
 
 }
 
 .torrentClasses{
   padding-left:10px;
-  box-sizing:border-box;
 }
 
 #payment, #payWhatYouWant{
@@ -1072,7 +1080,7 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
   box-sizing: border-box;
   width: 100%;
   letter-spacing:3px;
-  line-height:18px !important;
+  line-height:23px !important;
 }
 
 .tableHeading a{
@@ -1081,13 +1089,8 @@ table.dataTable tr.dtrg-group th a:not(.torrentClasses a){
 
 .torrentClasses{
 
-  display: flex;
-  flex-wrap: wrap;       /* Allows wrapping to new lines */
-  gap: 0px 4px;         /* Vertical gap: 8px, Horizontal gap: 12px */
   padding-left:8px;       /* Keep vertical padding, remove horizontal padding */
   width: 100%;       
-  margin-top:13px;    /* Ensure it spans the full container */
-  box-sizing: border-box;
 }
 
 td{
@@ -1095,11 +1098,6 @@ td{
 }
 
 
-
-.dataTable td, .dataTable td a{
-  font-family:"Share Tech Mono", sans-serif;
-  font-size:14px;
-}
 
 a:not(".adv_plus", ".adv_minus"){
   color: #83DAC0;
@@ -1121,12 +1119,12 @@ a:visited:not(".adv_toggle"){
 }
 
 .torrentClasses{
-  color:black;
+  color:mediumvioletred !important;
 }
 
 a.class, a.class:visited,{
   font-style:italic !important;
-  font-family:"Share Tech Mono", sans-serif !important;
+  font-size:16px !important;
 }
 
 
@@ -1148,9 +1146,10 @@ a.class, a.class:visited,{
 
 .torrentClasses{
   float: left;
-  position: relative;
-  font-size: 13px;
-  width:100%;
+}
+
+.torrentClasses a{
+  padding-right:4px !important;
 }
 
 /* HEADER SILOS */
@@ -1206,7 +1205,7 @@ input{
 body .ui-menu-item {
   /* font-family to all */
  /* box-shadow:4px 4px 5px #83DAC0;*/
-  background-color:#007BFF;
+  background-color:green;
   text-align:justify;
   font-size:16px;
   padding:7px 0px 7px 0px;
@@ -1214,12 +1213,12 @@ body .ui-menu-item {
 .ui-autocomplete{
   max-height:310px;
   width:270px;
-  color:palegoldenrod !important;
+  color:white !important;
   font-family: "Share Tech Mono", system-ui;
   position:relative;
   z-index:9999;
   overflow-y:auto;
-  border: 2px solid #007BFF !important;
+  border: 2px solid red!important;
   border-radius:15px;
     
   /* A soft, deep shadow to give the menu elevation */
@@ -1373,8 +1372,8 @@ a.adv_toggle{
 /* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:black !important;
-  color:#50C777 !important;
+  background-color:blue !important;
+  color:green !important;
 }
 
 
@@ -1561,13 +1560,11 @@ a.adv_toggle{
 }
 
 .torrentClasses a, .torrentClasses a:visited{
-  font-family:"Share Tech Mono", sans-serif;
-  font-size:13px;
   text-decoration:none;
 }
 
 .classComma{
-  color:silver;
+  color:darkviolet;
 }
 
 a.publisher{
@@ -1596,7 +1593,7 @@ background:#CDCDCD;
 
 
 a.source, .source span{
-  color:#F8F8F8;
+  color:white;
 }
 
 .sourceAuthor{
@@ -1618,15 +1615,15 @@ a.source, .source span{
   color:mediumvioletred;
 }
 
-div.authors h2 span{
+div.authors h2 span a{
   color:blue !important;
 }
 
-div.classes h2 span{
+div.classes h2 span a{
   color:darkgoldenrod !important;
 }
 
-div.publishers h2 span{
+div.publishers h2 span a{
   color:mediumvioletred !important;
 }
 
@@ -1646,19 +1643,20 @@ div.publishers h2 span{
 
 
 h1, h1 a, h1 a:visited{
-  text-align:center;
-  font-size:38px;
+  font-size:34px;
   color:black;
-  text-shadow:2px 2px white;
-  position:relative;
-  letter-spacing:5px;
-  font-family:"Pirata One", serif;
-  text-decoration:none;
+  text-shadow:2px 3px white;
+  position:fixed;
+  letter-spacing:1px;
+  top:7px;
+  left:127px;
+  font-family:"Pirata One", serif !important;
+
 }
 
 /* CAPTAIN'S LOG 12/19/2025 "9:05" */
 a.author, span.author{
-  color:gold !important;
+  color:yellow !important;
 }
 
 .tableHeading a.author{
@@ -1666,11 +1664,11 @@ a.author, span.author{
 }
 
 a.class, span.class{
-  color:#50C777;
+  color:green;
 }
 
 a.publisher, span.publisher{
-  color:mediumvioletred !important;
+  color:red !important;
 }
 
 /* 12;22 */
@@ -1744,10 +1742,6 @@ label.adv_class, input.adv_class{
   line-height:16px;
 }
 
-.tableHeading, .tableHeading a{
-  font-family: "Crimson Text" , serif !important;
-  font-size:16px !important;
-}
 
 /* 8:26 */
 .mobile_panel li{
@@ -1756,6 +1750,8 @@ label.adv_class, input.adv_class{
 
 .torrentClasses a{
   font-family:"Share Tech Mono", system-ui !important;
+  font-size:14px;
+  letter-spacing:1px;
 }
 
 a.source, a.author{
@@ -1806,7 +1802,7 @@ a.source, a.author{
 
 
 button{
-  font-family:"Share Tech Mono", system-ui !important;
+  font-family:"Crimson Text", system-ui !important;
 }
 
 
@@ -1815,14 +1811,14 @@ button{
   top:15px;
 }
 
-h2 span{
+h2 span a{
   
   font-size:24px;
 }
 
 
-#torrentsTitle span:not(.loading), #top10Title span:not(.loading){
-  color:white !important;
+#torrentsTitle span a:not(.loading), #top10Title span a:not(.loading){
+  color: black !important;
 }
 
 .dtr-control{
@@ -1831,9 +1827,9 @@ h2 span{
 
 .sourceType{
   color:black !important;
-  text-shadow:1px 2px gold;
-  font-size:21px !important;
-  font-family:"Pirata One", sans-serif !important;
+  text-shadow:1px 1px gold !important;
+  font-size:17px !important;
+  font-family:"Oswald", sans-serif !important;
   text-align:center !important;
   font-variant:small-caps;
   width:98px;
@@ -1847,13 +1843,13 @@ h2 span{
 
 .torrentSource{
   position:relative;
-  top:-13px;
+  top:-16px;
 }
 
 .ui-menu .ui-menu-item-wrapper.ui-state-active {
-    background: gold !important;
+    background: yellow !important;
     font-weight:bold !important;
-    color:#50C777 !important; /* Adjust text color for readability */
+    color:green !important; /* Adjust text color for readability */
 }
 
 input{
@@ -1883,8 +1879,8 @@ h3{
 }
 
 .titleBreak{
-  padding-top:77px;
-  padding-bottom:77px;
+  padding-top:60px;
+  padding-bottom:60px;
 }
 
 .gold{
@@ -2006,17 +2002,10 @@ footer{
 }
 
 .torrentClasses {
-    display: flex;
-    flex-wrap: wrap;       /* Allows tags to move to the next line */
-    gap: 14px;              /* Standardized spacing between tags */
-    max-width: 100%;       /* Constraints container to viewport */
-    word-break: break-word; /* Safety for extremely long single strings */
+
 }
 
 .torrentClasses a {
-    line-height:12px;
-    display: inline-block; /* Essential for proper margin/padding/wrapping */
-    white-space: nowrap;   /* Keeps individual tag names on one line */
     padding-top:8px;
 }
 
@@ -2138,6 +2127,10 @@ div.top10 .dt-container{
   text-decoration:none;
 }
 
+.set a.author{
+  text-shadow:1px 1px black !important;
+}
+
 .set table thead th:nth-last-child(2){
   border-radius:0;
 }
@@ -2166,38 +2159,52 @@ header, #hero{
 #status{color: white !important;}
 
 header{
-  box-shadow:3px 4px 7px gold !important;
-  background:linear-gradient(180deg, #007BFF, #50C777, lightcyan) !important;
-  border-bottom:4px solid mediumvioletred !important;
+  box-shadow:3px 4px 5px yellow !important;
+  background:blue !important;
+  border-bottom:5px solid red !important;
 }
 
 .dataTable thead th{
   box-shadow:none !important;
-  border-bottom:2px solid darkviolet;
+  border-bottom:2px solid green;
   /* 1. Define your gradient */
-  background:linear-gradient(180deg, darkcyan, #50C777) !important;
+  background:red !important;
   border-top:2px solid black !important;
-  font-size:21px !important;
+  font-size:24px !important;
   font-family:"Pirata One", serif !important;
+  color:#F8F8F8 !important;
+  text-shadow:none !important;
 }
 
 table.dataTable tr.dtrg-group th{
-  background:linear-gradient(90deg, #007BFF) !important;
+  background:blue !important;
   border-top:2px solid darkviolet !important;
   border-bottom:2px solid goldenrod !important;
 }
 
+.tableHeading, .tableHeading a{
+  font-family: "Oswald" , serif !important;
+  font-size:16px !important;
+}
+
+
+.dataTable td, .dataTable td a{
+  font-family:"Share Tech Mono", serif !important;
+  font-size:14px !important;
+  text-align:justify;
+}
+
 .loading{
-  color:#50C777 !important;
-  font-family:"Crimson Text", serif;
+  color:green !important;
+  font-family:"Pirata One", serif;
 }
 
 div.TEMPLAR{
-  background:black !important;
+  background-color:white !important;
 }
 
 .torrentsTable thead th{
-  background:darkgoldenrod !important;
+  background:blue !important;
   border-bottom:none !important;
   box-shadow:none !important;
 }
@@ -2208,62 +2215,64 @@ div.TEMPLAR{
 }
 
 .adv_search{
-  background:lightcyan !important;
-  border: 3px solid gold !important;
-  font-family:"Lato", sans-serif !important;
-  color:darkviolet !important;
+  background:yellow !important;
+  border: 4px solid blue !important;
+  color:yellow !important;
 }
 
 .adv_search label{
-  color:mediumvioletred !important;
+  color:blue !important;
 }
 
 #adv_heading{
-  color:darkcyan !important;
+  color:green !important;
   font-size:24px !important;
+  font-family:"Share Tech Mono", serif !important;
+  text-decoration:none;
+  letter-spacing:0px;
 }
 
 .dt-container{
-  border:3px solid gold;
-  background:lightgoldenrodyellow !important;
+  border:3px solid blue;
+  background:yellow !important;
 }
 
 .torrentsTable a{
-  color:#007BFF !important;
+  color:goldenrod !important;
 }
 
 #graph_search, #adv_submit, .upload button{
-  border:2px solid #50C777 !important;
-  background:goldenrod !important;
-  color:darkcyan !important;
-  font-family:"Pirata One", system-ui !important;
-  font-size:24px;
+  border:2px solid green !important;
+  background:yellow !important;
+  color:red !important;
+  font-family:"Share Tech Mono", system-ui !important;
+  font-size:16px;
+  font-variant:none;
 }
 
 #graph_search:hover, #adv_submit:hover, .upload button:hover{
-  box-shadow:3px 4px 3px #007BFF !important;
+  box-shadow:3px 4px 3px white !important;
   font-weight:bold !important;
-  border:4px solid gold !important;
+  border:4px solid blue !important;
 }
 
 #warp{
-  font-family:"Pirata One", system-ui !important;
+  font-family:"Felipa", system-ui !important;
   font-size:24px;
 }
 
 #warp:hover{
-  border:2px solid gold;
+  border:2px solid yellow;
 }
 
-h2 span{
-  font-size:33px;
-  font-family:"Crimson Text", serif;
+h2 span a{
+  font-size:40px;
+  font-family:"Oswald", serif !important;
   padding-left:5px;
-  text-shadow:1px 2px cyan;
 }
 
 #hero{
-  border-top:3px solid lightgoldenrodyellow !important;
+  border-top:3px solid yellow !important;
   background:mediumvioletred !important;
 }
 
@@ -2272,24 +2281,25 @@ h2 span{
 }
 
 .tabs li a, .mobile_tabs li a{
-  color:lightgoldenrodyellow !important;
+  color:yellow !important;
 }
 
 .panel li a, .mobile_panel li a{
-  color:palevioletred !important;
+  color:green !important;
   font-family:"Share Tech Mono", sans-serif !important;
 }
 
 input[type="text"], input::placeholder{
-  font-family:"Share Tech Mono", serif !important;
+  font-family:"Crimson Text", serif !important;
 }
 
 .dataTable td{
-  background-color:lightcyan;
+  background-color:white;
 }
 
 .graph_search{
-  border:3px solid cyan;
+  border:3px solid blue;
+  background-color:black;
 }
 
 div.upload{
@@ -2297,11 +2307,44 @@ div.upload{
 }
 
 .pi{
-  height:95px;
+  height:77px;
   position:fixed;
   left:5px;
-  top:0px;
+  top:11px;
   z-index:9998;
+}
+
+.torrentClasses{
+  display: flex;
+  flex-wrap: wrap;       /* Allows wrapping to new lines */
+  gap: 0px 4px;         /* Vertical gap: 8px, Horizontal gap: 12px */
+  padding-left:8px;       /* Keep vertical padding, remove horizontal padding */
+  width: 100%;       
+  margin-top:8px;    /* Ensure it spans the full container */
+  box-sizing: border-box;
+}
+
+.torrentClasses a {
+    line-height:12px;
+    display: inline-block; /* Essential for proper margin/padding/wrapping */
+    white-space: nowrap;   /* Keeps individual tag names on one line */
+    padding-top:8px;
+}
+
+
+@media only screen and (max-width:1299px){
+  .pi{
+    display:none !important;
+  }
+
+  h1 a, h1 a:visited{
+    position:fixed !important;
+    margin:0 auto !important;
+    text-align:center;
+    width:100%;
+    left:0;
+    top:4px !important;
+  }
 }
 
 @media only screen and (max-width: 1079px) {
@@ -2310,8 +2353,10 @@ div.upload{
   }
 
   .pi{
-    height:60px;
+    height:40px;
     right:5px;
+    top:6px;
+    display:block !important;
     left:auto;
   }
 
@@ -2331,9 +2376,8 @@ div.upload{
   }
 
   h1, h1 a, h1 a :visited{
-    font-size:33px;
     position:relative;
-    top:5px;
+    top:10px;
   }
 
   
@@ -2427,12 +2471,12 @@ div.upload{
     overflow-y:auto;
     overflow-x:hidden;
     width:100%;
-    height:calc(100% - 145px);
+    height:calc(100% - 83px);
     position:fixed;
-    top:57px;
+    top:63px;
     z-index:9998;
     bottom:88px;
-    background-color:#007BFF !important;
+    background-color:red !important;
   }
   
 
@@ -2580,10 +2624,7 @@ div.upload{
     border-top:1px solid #CDCDCD;
   }
 
-  .upload_inst{
-    width:290px;
-    color:goldenrod !important;
-  }
+
 
 
   .health a, .health span{
@@ -2632,7 +2673,6 @@ div.upload{
 
   
   .torrentClasses{
-    font-size:14px;
     color:mediumvioletred;
     width:100%;
   }
@@ -2657,7 +2697,7 @@ div.upload{
  
   
   #mobile_quick{
-    color:palegoldenrod;
+    color:white;
     font-variant:small-caps;
     font-size:18px;
     font-family:"Crimson Text", serif;
@@ -2687,7 +2727,7 @@ div.upload{
     width:250px;
   }
 
-  h2 span{
+  h2 span a{
     font-size:29px;
     line-height:30px;
   }
@@ -2705,3 +2745,4 @@ div.upload{
   }
 
 }
+

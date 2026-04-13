@@ -38,13 +38,16 @@ var TEMPLAR = {
 
         $.get("../" + this._dir + "/header.html", function(data) {
             $("header").html(data);
-
-            // 1. POPSTATE: The ship's response to the 'Back' and 'Forward' currents.
             window.addEventListener('popstate', (event) => {
-                // We render directly from the URL truth without re-triggering 'route'
                 const target = that.pageREC();
-                $(document).trigger("TEMPLAR");
-                that.render(target); 
+                
+                // Check if we are already on this page to avoid double-rendering
+                if (that.currentPage === target) {
+                    // Just update the helm/params if needed, don't re-render the whole HTML
+                    that.helm(target); 
+                    return;
+                }
+
             });
 
             // 2. INITIAL HORIZON
@@ -110,6 +113,11 @@ var TEMPLAR = {
         if (this._isBound) return; 
 
         $(document).off("click", "a.TEMPLAR").on("click", "a.TEMPLAR", function(e) {
+            if(e.shiftKey){
+                e.preventDefault(); // Added here as a secondary fallback
+                $(this).trigger("TEMPLAR_SHIFT");
+                return;
+            }
             const $target = $(this);
             const href = $target.attr("href");
 

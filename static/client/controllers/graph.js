@@ -1,5 +1,6 @@
 function initializeGraph(){
-	if(TEMPLAR.pageREC() === "titles" && TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
+    if ($("#graph-container").children().length > 0) return; // Already sailed!
+	if(TEMPLAR.pageREC() === "torrents" && TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
 		$.post("/graph_search",  {title : TEMPLAR.paramREC() ? TEMPLAR.paramREC().title : "",
 		author : TEMPLAR.paramREC() ? TEMPLAR.paramREC().author : "",
 		classes : TEMPLAR.paramREC() ? TEMPLAR.paramREC().classes : "",
@@ -226,17 +227,17 @@ function graphRender(selector) {
         const currentFontSize = baseFontSize / transform.k;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `${currentFontSize}px Space Mono`;
+        ctx.font = `${currentFontSize}px Share Tech Mono`;
 
         Obelisk.nodes.forEach(d => {
             if (d.group.includes("Find")) {
                 ctx.fillStyle = "cyan";
             } else {
                 switch (d.group) {
-                    case "Source": ctx.fillStyle = "#F8F8F8"; break;
-                    case "Author": ctx.fillStyle = "gold"; break;
-                    case "Class": ctx.fillStyle = "#50C777"; break;
-                    case "Publisher": ctx.fillStyle = "mediumvioletred"; break;
+                    case "Source": ctx.fillStyle = "white"; break;
+                    case "Author": ctx.fillStyle = "yellow"; break;
+                    case "Class": ctx.fillStyle = "green"; break;
+                    case "Publisher": ctx.fillStyle = "red"; break;
                     default: ctx.fillStyle = "palegoldenrod"; break;
                 }
             }
@@ -251,7 +252,44 @@ function graphRender(selector) {
 
     simulation.on("tick", render);
 
-    d3Canvas.on("click", (event) => {
+
+    function handleNormalClick(clickedNode){
+        if (clickedNode) {
+            const d = clickedNode;
+            const routeMap = { "Source": "source", "Author": "author", "Class": "class", "Publisher": "publisher", "Find Source" : "source", "Find Author" : "author", "Find Class" : "class", "Find Publisher" : "publisher" };
+            const label = routeMap[d.group] || d.group.toLowerCase();
+            TEMPLAR.route(`#node?label=${label}&uuid=${d.id}`);
+        }
+    }
+
+    d3Canvas.on("touchstart", (e) => {
+        if (e.originalEvent.touches.length >= 2) {
+            // Prevent the default ghost click on mobile
+            const point = transform.invert([e.offsetX, e.offsetY]);
+            const mouseX = point[0];
+            const mouseY = point[1];
+
+            const clickedNode = Obelisk.nodes.find(d => {
+                const textWidth = d.__textWidth || 0;
+                const textHeight = d.__fontSize || 0;
+                const padding = 5; 
+                const left = d.x - (textWidth / 2) - padding;
+                const right = d.x + (textWidth / 2) + padding;
+                const top = d.y - (textHeight / 2) - padding;
+                const bottom = d.y + (textHeight / 2) + padding;
+                return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
+            });
+
+            const searchable = encodeURIComponent(clickedNode.name)
+            traverseGraph(clickedNode.group.toLowerCase(), searchable);
+        }
+    
+    })
+    .on("touchend", () => {
+        clearTimeout(touchTimer);
+    })
+    .on("click", (event) => {
+        // Desktop Shift + Click
         const point = transform.invert([event.offsetX, event.offsetY]);
         const mouseX = point[0];
         const mouseY = point[1];
@@ -267,14 +305,15 @@ function graphRender(selector) {
             return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
         });
 
-        if (clickedNode) {
-            const d = clickedNode;
-            const routeMap = { "Source": "source", "Author": "author", "Class": "class", "Publisher": "publisher", "Find Source" : "source", "Find Author" : "author", "Find Class" : "class", "Find Publisher" : "publisher" };
-            const label = routeMap[d.group] || d.group.toLowerCase();
-            TEMPLAR.route(`#node?label=${label}&uuid=${d.id}`);
+        if (event.shiftKey) {
+            const searchable = encodeURIComponent(clickedNode.name)
+            traverseGraph(clickedNode.group.toLowerCase(), searchable);
+        } else {
+            // Your existing normal click logic here
+            handleNormalClick(clickedNode);
         }
     });
 
-    simulation.alphaTarget(.777).restart();
+    simulation.alphaTarget(1.337).restart();
 }
 

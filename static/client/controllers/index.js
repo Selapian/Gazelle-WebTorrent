@@ -6,13 +6,13 @@ function mount() {
     $(".autosuggestBox").hide();
 
     TEMPLAR.initialize({
-        defaultPage: "titles",
+        defaultPage: "torrents",
         dir: "client/partials",
         fade: true,
-        pages: ["file", "top10", "titles", "node", "set", "upload"],
+        pages: ["file", "top10", "torrents", "node", "set", "upload"],
         helm: [
             {
-                page: "titles",
+                page: "torrents",
                 fn: function() {
                     // Priority 1: Get the list visible                    
                     initializeTorrents("torrents");
@@ -97,6 +97,7 @@ function mount() {
                 $(".academic").prop("selectedIndex", 0)
                 $(".academic").trigger("change");
             }            
+           
         })
 
     });

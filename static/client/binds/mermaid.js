@@ -5,18 +5,18 @@ function assertMermaid(){
     $("#warp").prop("disabled", true)
     e.preventDefault();
     
-    $("#sourceTitle span").text("Loading...")
-    $("#sourceTitle span").addClass("loading")
+    $("#sourceTitle span a").text("Loading...")
+    $("#sourceTitle span a").addClass("loading")
     processMermaid(assertMermaidComplete)
   })
 }
 
 function assertF8(){
   if(mermaid){
-    $("h2 span").removeClass("loading").text("True-Random").addClass("gold")
+    $("h2 span a").removeClass("loading").text("True-Random").addClass("gold")
   }
   else{
-    $("h2 span").removeClass("loading").text("Pseudo-Random").addClass("red");
+    $("h2 span a").removeClass("loading").text("Pseudo-Random").addClass("red");
   }
 }
 

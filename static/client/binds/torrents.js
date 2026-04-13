@@ -45,7 +45,7 @@ function assertFirstEditionRow(record, edition_torrent, editionsAdded, citationH
           "<div class='tableHeading'><a id='sourceTab' class='TEMPLAR node source' href='#node?label=source&uuid=" + record._fields[0].properties.uuid + "'>" +
           //(record._fields[0].properties.name.length > 45 ? decodeEntities(record._fields[0].properties.name.substring(0, 45)) + "..." : decodeEntities(record._fields[0].properties.name)) +
           decodeEntities(decodeEntities(record._fields[0].properties.name)) +
-          "</a>" + dateField + authorField + "</div><br><div class='torrentClasses normal'>" + classesField + "</div></div>",
+          "</a>" + dateField + authorField + "</div><br><div class='torrentClasses'>" + classesField + "</div></div>",
 
           "<span class='apa-trigger'>" + // Removed title='Click to copy citation'
               "<span class='apa-text' id='edition_" + edition_torrent.edition.properties.uuid + "_field'>" +
@@ -128,21 +128,21 @@ function assertAPACitation(record, edition_torrent){
 
 
 function assertTitleLoading(){
-  $("h2 span").hide();
+  $("h2 span a").hide();
 
-  $("h2 span").text("Loading...").addClass("loading").fadeIn()
+  $("h2 span a").text("Loading...").addClass("loading").fadeIn()
 }
 
 function assertTitleLoaded(){
 
   switch (TEMPLAR.pageREC()) {
-    case "titles":
+    case "torrents":
       if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
         $("#torrentsTitle span").text("Graph Search").removeClass("loading").fadeIn(3333)
 
       }
       else{
-        $("#torrentsTitle span").text("Titles").removeClass("loading").fadeIn(3333)
+        $("#torrentsTitle span").text("Torrents").removeClass("loading").fadeIn(3333)
 
       }
       break;
@@ -161,7 +161,7 @@ function assertTitleLoaded(){
       //});
       break;
     default:
-      $("#torrentsTitle span").text("Titles").removeClass("loading").fadeIn(3333)
+      $("#torrentsTitle span").text("Torrents").removeClass("loading").fadeIn(3333)
 
   }
 }
@@ -300,7 +300,7 @@ function assertAdvButton(){
   $("#adv_submit").click(function () {
     
     TEMPLAR.route(
-      "#titles?search=true&title=" +
+      "#torrents?search=true&title=" +
         encodeURIComponent($("#adv_title").val()) +
         "&author=" +
         encodeURIComponent($("#adv_author").val()) +
