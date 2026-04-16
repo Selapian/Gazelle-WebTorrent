@@ -517,10 +517,11 @@ function htmlUpload(){
 				break;
 
 		}
-		uploadModel.torrent.res = $(this).val();
+		uploadModel.torrent.res = $('.resolution[showing="true"]').val();
 	})
 
 	$(".resolutions").change(function(){
+		console.log($(this).val())
 		var res = $(this).val();
 		uploadModel.torrent.res = res;
 	})

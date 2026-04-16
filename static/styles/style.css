@@ -134,8 +134,8 @@ object{
 #graph_inst{
   position:absolute;
   right:5px;
-  bottom:1px;
-  color:white;
+  bottom:4px;
+  color:black;
   font-family:"Oswald", serif;
 }
 
@@ -523,15 +523,13 @@ background: #01D3CC;
 }
 
 .tabs li a, .mobile_tabs li a{
-  color:darkviolet !important;
-  letter-spacing:3px;
   
 }
 
 .tabs a, .tabs a:visited, .mobile_tabs a, .mobile_tabs a:visited{
   
   /*font-family:"Atkinson Hyperlegible Mono", serif;*/
-  color:lightgoldenrodyellow;
+  color:white !important;
   text-decoration:underline;
   font-size:25px;  
   font-family:"Oswald", sans-serif;
@@ -539,7 +537,7 @@ background: #01D3CC;
   
 }
 
-.tabs, .mobile_tabs, h2{
+.tabs, .mobile_tabs{
   font-size:21px;
 }
 
@@ -746,51 +744,6 @@ h2{
   border-bottom:5px solid black;
 }
 
-
-thead:not(.torrentsTable thead) th{
-  padding:8px 0px 8px 0px;
-  /*background-color:#cc70d1;*/
-  color:black;
-  text-shadow:1px 1px white;
-  /*box-shadow:1px 2px 3px palevioletred;*/
-  font-variant:small-caps;
-  font-size:23px;
-  font-family:"Pirata One", serif;
-  position:relative;
-  letter-spacing:1px;
-  z-index:22;
-  border-bottom:3px solid darkviolet;
-  box-shadow:1px 2px 3px gold;
-
-  
-
-}
-
-thead:not(.torrentsTable thead){
-  position:relative;
-  z-index:16;
-}
-
-thead:not(.torrentsTable thead) th{
-    /* 180deg makes the gradient move from TOP to BOTTOM */
-   background: linear-gradient(
-        180deg, 
-        #50C777 0%,    /* Start: Neon Cyan */
-        #007BFF 100%
-    );
-   background-repeat: no-repeat;
-   background-size: cover;
-   background:goldenrod;
-   background: linear-gradient(
-        180deg, 
-        #007BFF 0%,    /* Start: Neon Cyan (Glow at the very top) */
-        silver 33%, 
-        darkviolet 66%   /* End: DarkViolet (Thin horizon line at the bottom) */
-    );
-
-  
-    /* Bottom border to define the end of the cell */
-}
 
 thead th:first-child{
   border-radius-left:8px;
@@ -1372,8 +1325,8 @@ a.adv_toggle{
 /* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:blue !important;
-  color:green !important;
+  background-color:green !important;
+  color:yellow !important;
 }
 
 
@@ -1400,7 +1353,7 @@ a.adv_toggle{
   
 }
 
-.adv_search input:not(.adv_class){
+.adv_search input:not(.adv_all){
   font-size:16px;
   height:27px;
   font-family:"Lato", sans-serif;
@@ -1429,14 +1382,14 @@ a.adv_toggle{
 }
 
 
-.adv_class, .graph_class{
+.adv_all, .graph_class{
   width:33px;
   color:black;
   font-weight:bold;
   padding-top:5px;
 }
 
-.adv_search input:not(.adv_class){
+.adv_search input:not(.adv_all){
   width:270px;
   background-color:white;
   
@@ -1474,16 +1427,16 @@ a.adv_toggle{
 
 
 
-.authors a{
-  color:blue !important;
+.authors{
+  color:yellow !important;
 }
 
-.classes a{
-  color:darkgoldenrod !important;
+.classes{
+  color:green !important;
 }
 
-.publishers a{
-  color:mediumvioletred !important;
+.publishers{
+  color:red !important;
 }
 
 .red, .red:visited{
@@ -1643,7 +1596,7 @@ div.publishers h2 span a{
 
 
 h1, h1 a, h1 a:visited{
-  font-size:34px;
+  font-size:29px;
   color:black;
   text-shadow:2px 3px white;
   position:fixed;
@@ -1659,8 +1612,13 @@ a.author, span.author{
   color:yellow !important;
 }
 
-.tableHeading a.author{
+.tableHeading{
   padding-left:11px;
+}
+
+.set h2 span a.author{
+  text-shadow:1px 1px black;
+
 }
 
 a.class, span.class{
@@ -1672,18 +1630,13 @@ a.publisher, span.publisher{
 }
 
 /* 12;22 */
-label.adv_class, input.adv_class{
+label.adv_all, input.adv_all{
   padding-top:10px;
 }
 
 #top10Title span{
   color: white;
 }
-
-/* 9:16; */
-.loading{
-  color:#007BFF !important;
- }
 
 .red{
   color:red !important;
@@ -1849,7 +1802,7 @@ h2 span a{
 .ui-menu .ui-menu-item-wrapper.ui-state-active {
     background: yellow !important;
     font-weight:bold !important;
-    color:green !important; /* Adjust text color for readability */
+    color:red !important; /* Adjust text color for readability */
 }
 
 input{
@@ -1879,8 +1832,8 @@ h3{
 }
 
 .titleBreak{
-  padding-top:60px;
-  padding-bottom:60px;
+  padding-top:20px;
+  padding-bottom:20px;
 }
 
 .gold{
@@ -2090,12 +2043,8 @@ footer{
   margin-top:14px !important;
 }
 
-.dt-container:not(div.top10 .dt-container){
-  margin-top:175px;
-}
-
-div.top10 .dt-container{
-  margin-top:32px;
+.dt-container:not(div.top10 .dt-container, #set_wrapper){
+  margin-top:0px;
 }
 
 .dt-container{  
@@ -2107,6 +2056,11 @@ div.top10 .dt-container{
 
 .author span{
   color:silver !important;
+}
+
+h3{
+  margin-top:60px;
+  margin-bottom:21px;
 }
 
 .mobile_panel li a, .panel li a{
@@ -2170,7 +2124,7 @@ header{
   /* 1. Define your gradient */
   background:red !important;
   border-top:2px solid black !important;
-  font-size:24px !important;
+  font-size:22px !important;
   font-family:"Pirata One", serif !important;
   color:#F8F8F8 !important;
   text-shadow:none !important;
@@ -2178,8 +2132,7 @@ header{
 
 table.dataTable tr.dtrg-group th{
   background:blue !important;
-  border-top:2px solid darkviolet !important;
-  border-bottom:2px solid goldenrod !important;
+  border-bottom:2px solid green !important;
 }
 
 .tableHeading, .tableHeading a{
@@ -2218,16 +2171,18 @@ div.TEMPLAR{
   background:yellow !important;
   border: 4px solid blue !important;
   color:yellow !important;
+  margin-bottom:33px;
+  margin-top:33px;
 }
 
 .adv_search label{
-  color:blue !important;
+  color:green !important;
 }
 
 #adv_heading{
-  color:green !important;
+  color:red !important;
   font-size:24px !important;
-  font-family:"Share Tech Mono", serif !important;
+  font-family:"Oswald", serif !important;
   text-decoration:none;
   letter-spacing:0px;
 }
@@ -2241,10 +2196,26 @@ div.TEMPLAR{
   color:goldenrod !important;
 }
 
+.inst{
+  color:blue;
+  text-align:center;
+  font-size:16px;
+  font-family:"Share Tech Mono", sans-serif;
+  padding:0px 5px 0px 5px;
+}
+
+.graph_search, a.TEMPLAR{
+
+    /* Prevents all native browser touch actions (scroll, zoom, swipe-to-back) */
+    touch-action: pan-y;
+    /* Standardizes the cursor for a 'grab' feel */
+
+}
+
 #graph_search, #adv_submit, .upload button{
   border:2px solid green !important;
   background:yellow !important;
-  color:red !important;
+  color:blue !important;
   font-family:"Share Tech Mono", system-ui !important;
   font-size:16px;
   font-variant:none;
@@ -2252,8 +2223,10 @@ div.TEMPLAR{
 
 #graph_search:hover, #adv_submit:hover, .upload button:hover{
   box-shadow:3px 4px 3px white !important;
+  background-color:blue !important;
+  color:yellow !important;
   font-weight:bold !important;
-  border:4px solid blue !important;
+  border:4px solid green !important;
 }
 
 #warp{
@@ -2267,7 +2240,7 @@ div.TEMPLAR{
 
 h2 span a{
   font-size:40px;
-  font-family:"Oswald", serif !important;
+  font-family:"Pirata One", serif !important;
   padding-left:5px;
 }
 
@@ -2280,12 +2253,8 @@ h2 span a{
   font-family:"Share Tech Mono", serif !important;
 }
 
-.tabs li a, .mobile_tabs li a{
+.panel li a, .panel li a:visited, .mobile_panel li a, .mobile_panel li a:visited{
   color:yellow !important;
-}
-
-.panel li a, .mobile_panel li a{
-  color:green !important;
   font-family:"Share Tech Mono", sans-serif !important;
 }
 
@@ -2299,7 +2268,7 @@ input[type="text"], input::placeholder{
 
 .graph_search{
   border:3px solid blue;
-  background-color:black;
+  background-color:silver;
 }
 
 div.upload{
@@ -2332,6 +2301,21 @@ div.upload{
 }
 
 
+.mobile_inst{
+  display:none;
+}
+
+@media (pointer:coarse) {
+  .mobile_inst{
+    display:inline;
+
+  }
+
+  .desktop_inst{
+    display:none;
+  }
+}
+
 @media only screen and (max-width:1299px){
   .pi{
     display:none !important;
@@ -2343,7 +2327,7 @@ div.upload{
     text-align:center;
     width:100%;
     left:0;
-    top:4px !important;
+    top:8px !important;
   }
 }
 
@@ -2355,7 +2339,7 @@ div.upload{
   .pi{
     height:40px;
     right:5px;
-    top:6px;
+    top:10px;
     display:block !important;
     left:auto;
   }
@@ -2457,14 +2441,14 @@ div.upload{
     font-size:40px;
     width:49px;
     height:49px;
-    color:#CDCDCD !important;
+    color:green !important;
     top:9px;
     left:5px;
     z-index:9999;
   }
 
   #mobile_menu:hover{
-    color: #CDCDCD !important;
+    color: yellow !important;
   }
 
   .mobile_menu{
@@ -2583,8 +2567,7 @@ div.upload{
       font-size:24px;
       padding:13px 0px 13px 0px;
       border-top:1px solid #fae1ec;
-    font-family:Crimson Text, serif;
-    /*color:lightseagreen;*/
+     /*color:lightseagreen;*/
     font-variant:small-caps;
     display:block;
     width:299px;
@@ -2697,7 +2680,7 @@ div.upload{
  
   
   #mobile_quick{
-    color:white;
+    color:blue;
     font-variant:small-caps;
     font-size:18px;
     font-family:"Crimson Text", serif;

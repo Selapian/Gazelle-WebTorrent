@@ -4,7 +4,7 @@ function initializeGraph(){
 		$.post("/graph_search",  {title : TEMPLAR.paramREC() ? TEMPLAR.paramREC().title : "",
 		author : TEMPLAR.paramREC() ? TEMPLAR.paramREC().author : "",
 		classes : TEMPLAR.paramREC() ? TEMPLAR.paramREC().classes : "",
-		class_all : TEMPLAR.paramREC() ? TEMPLAR.paramREC().class_all : "",
+		all : TEMPLAR.paramREC() ? TEMPLAR.paramREC().all : "",
 		publisher : TEMPLAR.paramREC() ? TEMPLAR.paramREC().publisher : "",
 		type : TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "",
 		media : TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : "",
@@ -167,16 +167,27 @@ function graphRender(selector) {
 
     setTimeout(() => {
         simulation.stop();
-    }, 8888);
+    }, 4500);
 
-    // --- PREVENT PAGE SCROLL & ENABLE HOVER ZOOM ---
+    // --- ZOOM only for DOUBLE-FINGER ---
     const zoom = d3.zoom()
-        .scaleExtent([0.0001, 20])
-        .on("zoom", (event) => {
-            transform = event.transform;
-            render(); 
-        });
-
+    .scaleExtent([0.0001, 20])
+    // THE FILTER: Only allow zoom/pan if it's NOT a single-touch gesture
+    .filter(event => {
+        // Allow all mouse events (wheel, etc.)
+        if (event.type === 'wheel') return true;
+        if (event.type === 'mousedown') return true;
+        
+        // On mobile: ONLY allow if there are 2 or more touches (pinch/pan)
+        if (event.touches && event.touches.length > 1) return true;
+        
+        // Block everything else (single-finger touch)
+        return false;
+    })
+    .on("zoom", (event) => {
+        transform = event.transform;
+        render(); 
+    });
     // Prevent default browser scrolling when the wheel is used over the canvas
     canvas.addEventListener('wheel', function(e) {
         e.preventDefault();
@@ -211,9 +222,9 @@ function graphRender(selector) {
         Obelisk.links.forEach(d => {
             if (d.source && d.target && d.isGold) {
                 ctx.beginPath();
-                ctx.strokeStyle = "#FFD700"; // Gold
+                ctx.strokeStyle = "gold"; // Gold
                 ctx.lineWidth = 2 / transform.k;
-                ctx.shadowColor = "#FFD700"; // Glow
+                ctx.shadowColor = "gold"; // Glow
                 ctx.shadowBlur = 4;
                 ctx.moveTo(d.source.x, d.source.y);
                 ctx.lineTo(d.target.x, d.target.y);
@@ -227,11 +238,11 @@ function graphRender(selector) {
         const currentFontSize = baseFontSize / transform.k;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `${currentFontSize}px Share Tech Mono`;
+        ctx.font = `${currentFontSize}px Pirata One`;
 
         Obelisk.nodes.forEach(d => {
             if (d.group.includes("Find")) {
-                ctx.fillStyle = "cyan";
+                ctx.fillStyle = "blue";
             } else {
                 switch (d.group) {
                     case "Source": ctx.fillStyle = "white"; break;
@@ -252,7 +263,6 @@ function graphRender(selector) {
 
     simulation.on("tick", render);
 
-
     function handleNormalClick(clickedNode){
         if (clickedNode) {
             const d = clickedNode;
@@ -261,34 +271,111 @@ function graphRender(selector) {
             TEMPLAR.route(`#node?label=${label}&uuid=${d.id}`);
         }
     }
+let startX, startY, startTime;
+let startClientX, startClientY; // Add variables to store the actual starting coords
+const canvasNode = d3Canvas.node();
+canvasNode.addEventListener('touchstart', function(e) {
+    const t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    // Store these specifically for the node lookup later
+    startClientX = t.clientX; 
+    startClientY = t.clientY;
+    startTime = Date.now();
+}, { passive: false });
 
-    d3Canvas.on("touchstart", (e) => {
-        if (e.originalEvent.touches.length >= 2) {
-            // Prevent the default ghost click on mobile
-            const point = transform.invert([e.offsetX, e.offsetY]);
-            const mouseX = point[0];
-            const mouseY = point[1];
+canvasNode.addEventListener('touchend', function(e) {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    const duration = Date.now() - startTime;
 
-            const clickedNode = Obelisk.nodes.find(d => {
-                const textWidth = d.__textWidth || 0;
-                const textHeight = d.__fontSize || 0;
-                const padding = 5; 
-                const left = d.x - (textWidth / 2) - padding;
-                const right = d.x + (textWidth / 2) + padding;
-                const top = d.y - (textHeight / 2) - padding;
-                const bottom = d.y + (textHeight / 2) + padding;
-                return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
-            });
-
-            const searchable = encodeURIComponent(clickedNode.name)
-            traverseGraph(clickedNode.group.toLowerCase(), searchable);
-        }
+    // 1. GESTURE: PECHA UNROLL (Swipe Right)
+    if (dx > 70 && Math.abs(dy) < 40) {
+        // USE startClientX/Y so we find the node we started on!
+        processInput(startClientX, startClientY, true);
+    } 
+    else if (dx < -70 && Math.abs(dy) < 40) {
+        processInput(startClientX, startClientY, true, true);
+    }
+    // 2. GESTURE: SNAP TAP
+    else if (Math.abs(dx) < 5 && Math.abs(dy) < 5 && duration < 300) {
+        processInput(t.clientX, t.clientY, false, false);
+    }
     
-    })
-    .on("touchend", () => {
-        clearTimeout(touchTimer);
-    })
-    .on("click", (event) => {
+    startX = null;
+}, { passive: false });
+
+/**
+ * processInput handles both swipes and taps by converting 
+ * screen coords to the current D3 Transform space.
+ * * @param {number} clientX - The x-coordinate from the touch event
+ * @param {number} clientY - The y-coordinate from the touch event
+ * @param {boolean} isSwipe - Whether the detected gesture was a swipe
+ * @param {boolean} reset - Whether the swipe was a 'Reset' (Left) or 'Walk' (Right)
+ */
+function processInput(clientX, clientY, isSwipe, reset) {
+    if (!canvasNode || !transform) return;
+
+    const rect = canvasNode.getBoundingClientRect();
+    
+    // 1. Convert Screen space to Canvas space
+    const canvasX = clientX - rect.left;
+    const canvasY = clientY - rect.top;
+
+    // 2. Invert the transform to find the 'Graph Space' coordinate
+    // This accounts for your current zoom (transform.k) and pan (transform.x, transform.y)
+    const point = transform.invert([canvasX, canvasY]);
+    const graphX = point[0];
+    const graphY = point[1];
+
+    // 3. Define the proximity radius
+    // We scale the hitbox so that it remains a consistent "physical" size 
+    // on the screen regardless of zoom level. 
+    // Increasing 50 to 60-80 makes it easier to hit nodes when zoomed out.
+    const hitRadius = 60 / transform.k; 
+
+    // 4. Find the closest node within the hitRadius
+    let closestNode = null;
+    let minDistance = Infinity;
+
+    Obelisk.nodes.forEach(d => {
+        const dx = graphX - d.x;
+        const dy = graphY - d.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < hitRadius && distance < minDistance) {
+            minDistance = distance;
+            closestNode = d;
+        }
+    });
+
+    // 5. Execute Graph Logic
+    if (closestNode) {
+        if (isSwipe) {
+            if (reset) {
+                // GESTURE: PECHA UNROLL (Swipe Left)
+                console.log("Tibetan Library: Unrolling Pecha " + closestNode.name);
+                // Lowercase the group for URL consistency, encode name for safety
+                const groupKey = closestNode.group ? closestNode.group.toLowerCase() : "";
+                traverseGraph(groupKey, encodeURIComponent(closestNode.name));
+            } else {
+                // GESTURE: WALK GRAPH (Swipe Right)
+                console.log("Tibetan Library: Walking Path " + closestNode.name);
+                walkGraph(closestNode.group, closestNode.name);
+            }
+        } else {
+            // GESTURE: SNAP TAP (Single Click)
+            // Handle standard node selection or focusing here
+            console.log("Node Tapped: " + closestNode.name);
+            // Example: focusNode(closestNode);
+        }
+    } else {
+        console.warn("Touch detected, but no node found within radius at graph coords:", graphX, graphY);
+    }
+}
+
+ d3Canvas.on("click", (event) => {
         // Desktop Shift + Click
         const point = transform.invert([event.offsetX, event.offsetY]);
         const mouseX = point[0];
@@ -305,15 +392,37 @@ function graphRender(selector) {
             return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
         });
 
-        if (event.shiftKey) {
+        if (clickedNode && event.shiftKey) {
             const searchable = encodeURIComponent(clickedNode.name)
             traverseGraph(clickedNode.group.toLowerCase(), searchable);
-        } else {
+        }
+        else if(clickedNode && event.ctrlKey){
+            walkGraph(clickedNode.group.toLowerCase(), clickedNode.name)
+        } else if (clickedNode){
             // Your existing normal click logic here
             handleNormalClick(clickedNode);
         }
     });
 
+// 4. THE EXECUTION CORE
+function handleExecution(clientX, clientY) {
+    const rect = el.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    // Use Obelisk node detection
+    const node = Obelisk.nodes.find(d => Math.hypot(x - d.x, y - d.y) < 45);
+
+    if (node) {
+        const group = node.group.toLowerCase();
+        const searchable = encodeURIComponent(node.name);
+        
+        console.log(`Unrolling ${node.name} via ${group}`);
+        if (navigator.vibrate) navigator.vibrate(20);
+        
+        traverseGraph(group, searchable);
+    }
+}
     simulation.alphaTarget(1.337).restart();
 }
 

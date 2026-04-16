@@ -65,7 +65,7 @@ function assertTitleLoaded(){
   switch (TEMPLAR.pageREC()) {
     case "torrents":
       if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
-        $("#torrentsTitle span a").text("Graph Search").attr("href", "#torrents?search=true&title=&author=&classes=&class_all=false&publisher=&type=all&media=all&format=all&res=all").removeClass("loading").fadeIn(3333)
+        $("#torrentsTitle span a").text("Graph Search").attr("href", "#torrents?search=true&title=&author=&classes=&all=false&publisher=&type=all&media=all&format=all&res=all").removeClass("loading").fadeIn(3333)
 
       }
       else{
@@ -122,7 +122,7 @@ function updateTitleUI(name, label) {
 
     TEMPLAR.DOM();
 
-    $(document).off("TEMPLAR_SHIFT").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
+    $(document).off("TEMPLAR_SHIFT", "a.TEMPLAR").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
         // 1. Prevent the mobile system menu from appearing
         e.preventDefault();
         const $self = $(this);
@@ -150,26 +150,68 @@ function assertButtonTab(){
 function assertNodeTraverse(){
    
         // Configuration
-        const LONG_TAP_DURATION = 600; // ms
-        let touchTimer;
+        let startX, startY;
 
-        $(document).on('touchstart', 'a.TEMPLAR', function(e) {
-            if (e.originalEvent.touches.length >= 2) {
-                // TWO FINGERS DETECTED
-                e.preventDefault(); 
-                
-                const $self = $(this);
-                traverseGraph($self.attr('class').split(' ')[2], encodeURIComponent($self.text()));
+        $(document).off("touchstart", "a.TEMPLAR").on('touchstart', 'a.TEMPLAR', function(e) {
+            const touch = e.originalEvent.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+        });
+
+        $(document).off('touchmove', 'a.TEMPLAR').on('touchmove', 'a.TEMPLAR', function(e) {
+            if (!startX) return;
+
+            const touch = e.originalEvent.touches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+
+            // If movement is horizontal, prevent vertical scrolling
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+                if (e.cancelable) e.preventDefault();
             }
         });
 
+        $(document).off('touchmove', 'a.TEMPLAR').on('touchend', 'a.TEMPLAR', function(e) {
+            if (!startX) return;
+
+            const name = $(this).text().trim();
+            const group = $(this).attr("class").split(" ")[2];             
+               
+
+            const touch = e.originalEvent.changedTouches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+
+            // Threshold: Swipe Right > 70px
+            if (dx > 70 && Math.abs(dy) < 40) {
+               walkGraph(group, name)
+              
+            }            
+            else if (dx < -70 && Math.abs(dy) < 40) {
+             
+                // Execute the deep traversal
+                traverseGraph(group, encodeURIComponent(name));
+            }
+
+            startX = null;
+        });
+
         // Add this to your second script (the one that loads AFTER Templar)
-        $(document).off("TEMPLAR_SHIFT").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
+        $(document).off("TEMPLAR_SHIFT", "a.TEMPLAR").on("TEMPLAR_SHIFT", "a.TEMPLAR", function(e){
             // 1. Prevent the mobile system menu from appearing
+            e.preventDefault();
             const $self = $(this);
             const className = $self.attr('class').split(' ')[2];
             const text = encodeURIComponent($self.text());
             traverseGraph(className, text);
+        })
+
+        $(document).off("TEMPLAR_CTRL", "a.TEMPLAR").on("TEMPLAR_CTRL", "a.TEMPLAR", function(e){
+            e.preventDefault();
+            const $self = $(this);
+            const className = $self.attr('class').split(' ')[2];
+            const text = $self.text();
+            walkGraph(className, text);
         })
 
     

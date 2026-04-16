@@ -6,7 +6,7 @@ function traverseGraph(set, searchable){
                     searchable +
                     "&author=" +                    
                     "&classes=" +                    
-                    "&class_all=false" +                    
+                    "&all=false" +                    
                     "&publisher=" +
                     "&type=all" +
                     "&media=all" +                   
@@ -20,7 +20,7 @@ function traverseGraph(set, searchable){
                       "&title=" +                         
                         "&author=" + searchable +                        
                         "&classes=" +                        
-                        "&class_all=false" +                        
+                        "&all=false" +                        
                         "&publisher=" +
                         "&type=all" +
                         "&media=all" +                   
@@ -34,7 +34,7 @@ function traverseGraph(set, searchable){
                       "&title=" +                         
                         "&author=" +                         
                         "&classes=" + JSON.stringify(searchable) +               
-                        "&class_all=false" +                        
+                        "&all=false" +                        
                         "&publisher=" +
                         "&type=all" +
                         "&media=all" +                   
@@ -48,7 +48,7 @@ function traverseGraph(set, searchable){
                       "&title=" +                         
                         "&author=" +                      
                         "&classes=" +                        
-                        "&class_all=false" +                        
+                        "&all=false" +                        
                         "&publisher=" + searchable +  
                         "&type=all" +
                         "&media=all" +                   
@@ -58,4 +58,25 @@ function traverseGraph(set, searchable){
                 break;
 
         }
+}
+
+function scrollBind() {
+    const $container = $('div.TEMPLAR');
+    const $target = $("#graph_scroll");
+
+    // Ensure elements exist before running
+    if (!$container.length || !$target.length) return;
+
+    // Check if the container is currently at the top
+    const isAtTop = $container.scrollTop() <= 5; 
+
+    if (isAtTop) {
+        // CORRECT MATH: 
+        // (Target's distance from document top) - (Container's distance from document top)
+        const targetScrollPos = $target.offset().top - $container.offset().top + $container.scrollTop();
+
+        $container.stop(true, false).animate({
+            scrollTop: targetScrollPos
+        }, 400); // Added a default speed for smoothness
+    }
 }

@@ -62,20 +62,21 @@ function crossWard() {
 }
 
 function assertSetTitleLoaded(){
-    $("#setTitle span").text(toTitleCase(TEMPLAR.paramREC().ward)).removeClass("loading")
+    $("#setTitle span a").text(toTitleCase(TEMPLAR.paramREC().ward)).removeClass("loading")
     switch(TEMPLAR.paramREC().ward){
         case "authors":
-            $("#setTitle span").addClass("author");
+            $("#setTitle span a").addClass("authors").attr("href", "#set?ward=authors");
             break;
         case "classes":
-            $("#setTitle span").addClass("class");
+            $("#setTitle span a").addClass("classes").attr("href", "#set?ward=classes");
             break;
         case "publishers":
-            $("#setTitle span").addClass("publisher");
+            $("#setTitle span a").addClass("publishers").attr("href", "#set?ward=publishers");
             break;
     }
+
 }
 
 function assertSetLoading(){
-  $("h2 span").text("Loading...").addClass("loading").fadeIn()
+  $("h2 span a").text("Loading...").removeClass(".authors, .classes, .publishers").addClass("loading").fadeIn()
 }

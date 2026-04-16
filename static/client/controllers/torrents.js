@@ -77,7 +77,7 @@ function initializeTorrents(table) {
                 title: TEMPLAR.paramREC() ? TEMPLAR.paramREC().title : "",
                 author: TEMPLAR.paramREC() ? TEMPLAR.paramREC().author : "",
                 classes: TEMPLAR.paramREC() ? TEMPLAR.paramREC().classes : "",
-                class_all: TEMPLAR.paramREC() ? TEMPLAR.paramREC().class_all : "",
+                all: TEMPLAR.paramREC() ? TEMPLAR.paramREC().all : "",
                 publisher: TEMPLAR.paramREC() ? TEMPLAR.paramREC().publisher : "",
                 type: TEMPLAR.paramREC() ? TEMPLAR.paramREC().type : "",
                 media: TEMPLAR.paramREC() ? TEMPLAR.paramREC().media : "",
@@ -224,14 +224,7 @@ function initializeTorrents(table) {
                     behavior: 'smooth', 
                     block: 'start' 
                 });
-            }
-
-             if(settings.iDraw === 1 && TEMPLAR.pageREC() === "torrents" && TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-
-                $('div.TEMPLAR').animate({
-                    scrollTop: $("#graph_scroll").offset().top
-                }, 500);
-            } 
+            }            
         },
     })
     if (TEMPLAR.pageREC() === "top10") $('th').unbind('click.DT')

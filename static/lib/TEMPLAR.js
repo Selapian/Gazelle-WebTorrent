@@ -41,11 +41,12 @@ var TEMPLAR = {
             window.addEventListener('popstate', (event) => {
                 const target = that.pageREC();
                 
-                // Check if we are already on this page to avoid double-rendering
-                if (that.currentPage === target) {
-                    // Just update the helm/params if needed, don't re-render the whole HTML
+                // If the path has actually changed, we must re-disclose the Truth (render)
+                if (that.currentPage !== target) {
+                    $(document).trigger("TEMPLAR"); 
+                } else {
+                    // If only parameters changed, just update the helm rituals
                     that.helm(target); 
-                    return;
                 }
 
             });
@@ -60,9 +61,10 @@ var TEMPLAR = {
         });
     },
 
-    route: function(origin) {
+    route: function(origin = window.location.hash) {
         // PRECISE INSTRUCTION: Update the History Hold first.
         // The origin should be a full hash string, e.g., "#home?id=1"
+
         history.pushState({ path: origin }, '', origin);
 
         // Instead of triggering an event that might loop, we call the Lookout directly.
@@ -71,6 +73,22 @@ var TEMPLAR = {
         //this.render(page);
         $(document).trigger("TEMPLAR");
     },
+    routeParams: function(newAnchor) {
+        // 1. Get the current hash (e.g., "#home?id=123&user=jane")
+        const currentHash = window.location.hash;
+
+        // 2. Extract the parameters (everything after and including the '?')
+        const paramIndex = currentHash.indexOf('?');
+        const params = paramIndex !== -1 ? currentHash.substring(paramIndex) : '';
+
+        // 3. Ensure the newAnchor is formatted correctly (starts with #)
+        const base = newAnchor.startsWith('#') ? newAnchor : `#${newAnchor}`;
+
+        // 4. Combine and route
+        const destination = base + params;
+        this.route(destination);
+    }
+    ,
     render: function(page) {
         var that = this;
         if (!page) page = this._default;
@@ -116,6 +134,11 @@ var TEMPLAR = {
             if(e.shiftKey){
                 e.preventDefault(); // Added here as a secondary fallback
                 $(this).trigger("TEMPLAR_SHIFT");
+                return;
+            }
+            else if(e.ctrlKey){
+                e.preventDefault();
+                $(this).trigger("TEMPLAR_CTRL");
                 return;
             }
             const $target = $(this);
@@ -195,8 +218,9 @@ var TEMPLAR = {
         for (const [key, value] of Object.entries(kvPairs)) {
             params.set(key, value);
         }
-
-        const newHash = pathPart + "?" + params.toString();
+        // FIX: Convert the '+' back to '%20' after the API generates the string
+        const queryString = params.toString().replace(/\+/g, "%20");
+        const newHash = pathPart + "?" + queryString;
         const newUrl = window.location.origin + window.location.pathname + newHash;
 
         if (createNewEntry) {

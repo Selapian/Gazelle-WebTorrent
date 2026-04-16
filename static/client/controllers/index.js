@@ -8,7 +8,7 @@ function mount() {
     TEMPLAR.initialize({
         defaultPage: "torrents",
         dir: "client/partials",
-        fade: true,
+        fade: false,
         pages: ["file", "top10", "torrents", "node", "set", "upload"],
         helm: [
             {
@@ -22,7 +22,11 @@ function mount() {
                     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
                         initializeGraph(); // Likely the source of the 710ms reflow
                         $(".graph_search").show();
+                        
                      // Small delay to allow Torrent list to render first
+                    }
+                    else{
+                        $(".graph_search").hide();
                     }
                     advAutocomplete();
                     

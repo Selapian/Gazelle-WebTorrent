@@ -127,57 +127,18 @@ function assertAPACitation(record, edition_torrent){
 }
 
 
-function assertTitleLoading(){
-  $("h2 span a").hide();
-
-  $("h2 span a").text("Loading...").addClass("loading").fadeIn()
-}
-
-function assertTitleLoaded(){
-
-  switch (TEMPLAR.pageREC()) {
-    case "torrents":
-      if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search){
-        $("#torrentsTitle span").text("Graph Search").removeClass("loading").fadeIn(3333)
-
-      }
-      else{
-        $("#torrentsTitle span").text("Torrents").removeClass("loading").fadeIn(3333)
-
-      }
-      break;
-    case "top10":
-      $("#top10Title span").text("Top 10").removeClass("loading").show();
-      break;
-    case "node":
-      //TODO: maybe multiple calls here
-      //$.get("/source_info/" + TEMPLAR.paramREC().uuid, function (data) {
-        assertNodeNameFromData()
-        /*$("#addFormat").click(function () {
-          TEMPLAR.route("#upload?uuid=" + TEMPLAR.paramREC().uuid);
-        });*/
-     
-        //TEMPLAR.DOM();
-      //});
-      break;
-    default:
-      $("#torrentsTitle span").text("Torrents").removeClass("loading").fadeIn(3333)
-
-  }
-}
-
 function assertGraphSearch(){
-  $("#adv_class_all").prop("checked", false);
-  $("#adv_class_any").prop("checked", true)
+  $("#adv_all").prop("checked", false);
+  $("#adv_any").prop("checked", true)
   
-  if(TEMPLAR.paramREC() && TEMPLAR.paramREC().class_all === "true"){
+  if(TEMPLAR.paramREC() && TEMPLAR.paramREC().all === "true"){
     
-    $("#adv_class_all").prop("checked", true);
-    $("#adv_class_any").prop("checked", false);
+    $("#adv_all").prop("checked", true);
+    $("#adv_any").prop("checked", false);
   }
   else{
-    $("#adv_class_all").prop("checked", false);
-    $("#adv_class_any").prop("checked", true);
+    $("#adv_all").prop("checked", false);
+    $("#adv_any").prop("checked", true);
   }
   $("#adv_title").val(
     TEMPLAR.paramREC() && TEMPLAR.paramREC().title
@@ -228,14 +189,14 @@ function assertAdvSearchUI(){
     $("#adv_format").append("<option value='all'>All Formats</option>");
     $("#adv_res").empty();
     $("#adv_res").append("<option value='all'>All Resolutions</option>")
-    if(TEMPLAR.paramREC() && TEMPLAR.paramREC().class_all === "true"){
-      $("#adv_class_all").prop("checked", true);
-      $("adv_class_any").prop("checked", false);
+    if(TEMPLAR.paramREC() && TEMPLAR.paramREC().all === "true"){
+      $("#adv_all").prop("checked", true);
+      $("adv_any").prop("checked", false);
 
     }
     else{
-      $("adv_class_any").prop("checked", true);
-      $("#adv_class_all").prop("checked", false);
+      $("adv_any").prop("checked", true);
+      $("#adv_all").prop("checked", false);
     }
     types.forEach(function (val) {
       var option = document.createElement("option");
@@ -308,8 +269,8 @@ function assertAdvButton(){
         ($("#adv_classes").val()
           ? JSON.stringify(encodeURIComponent($("#adv_classes").val()))
           : "") +
-        "&class_all=" +
-        $("#adv_class_all").prop("checked") +
+        "&all=" +
+        $("#adv_all").prop("checked") +
         "&publisher=" +
         encodeURIComponent($("#adv_publisher").val()) +
         "&type=" +
