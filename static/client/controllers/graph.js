@@ -124,7 +124,7 @@ function graphRender(selector) {
     if (!container) return;
 
     const width = container.clientWidth || $(container).width();
-    const height = 324;
+    const height = 493;
 
     container.innerHTML = ''; 
     const canvas = d3.select(container).append("canvas")

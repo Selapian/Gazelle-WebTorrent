@@ -120,14 +120,12 @@ object{
 }
 
 .graph_search{
-  margin-top:175px;
-  height:333px;
+  height:500px;
   margin-left:5px;
   margin-right:5px;
   width:calc(100% - 10px);
   border-radius:14px;
   background-color:#CDCDCD;
-  border:3px solid goldenrod;
   position:relative;
 }
 
@@ -2132,7 +2130,7 @@ header{
 
 table.dataTable tr.dtrg-group th{
   background:blue !important;
-  border-bottom:2px solid green !important;
+  border-bottom:2px solid yellow !important;
 }
 
 .tableHeading, .tableHeading a{
@@ -2254,7 +2252,8 @@ h2 span a{
 }
 
 .panel li a, .panel li a:visited, .mobile_panel li a, .mobile_panel li a:visited{
-  color:yellow !important;
+  color:green !important;
+  text-shadow:1px 1px yellow !important;
   font-family:"Share Tech Mono", sans-serif !important;
 }
 
@@ -2267,7 +2266,7 @@ input[type="text"], input::placeholder{
 }
 
 .graph_search{
-  border:3px solid blue;
+  border:3px solid yellow;
   background-color:silver;
 }
 
