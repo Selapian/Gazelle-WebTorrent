@@ -1,0 +1,72 @@
+<div class="titleBreak">
+  <h2 id="torrentsTitle"><span><a href="#torrents" class="TEMPLAR torrents">Torrents</a></span></h2>
+</div>
+<div class="adv_search">
+	<span id="adv_heading">Graph Search VR</span>	
+	<div class="adv_show"></a>		
+		<select class="adv_type "id="adv_type"><option value="all">Type</option></select><br>
+		<select class="adv_media" id="adv_media"><option value="all">Media</option></select><br>
+		<select class="adv_format" id="adv_format"><option value="all">Format</option></select><br>
+		<select class="adv_res" id="adv_res"><option value="all">Resolution</option></select><br>
+
+		<br>
+		<label for="adv_all" class="adv_all">AND</label>
+		<input type="radio" class="adv_all" name="adv_all_toggle" id="adv_all">
+		<label for="adv_any" class="adv_all">OR</label>
+		<input type="radio" class="adv_all" name="adv_all_toggle" id="adv_any">
+
+		<input id="adv_title" placeholder = "Title">
+		<br>
+		<input id="adv_author" placeholder="Author">
+		<br>
+		<input id="adv_classes" placeholder="Classes (comma-separated)">		
+		<br>
+		<input id="adv_publisher" placeholder="Publisher"><br>
+
+		<button id="adv_submit" class="graph_button">VR Search</button>
+	</div>
+</div>
+
+<script>
+	document.querySelector('.adv_search').addEventListener('keydown', function(event) {
+	    // Check if the pressed key is 'Enter'
+	    if (event.key === 'Enter') {
+	        // Identify if the active element is an input or select within this div
+	        const isField = event.target.matches('input, select, textarea');
+	        
+	        if (isField) {
+	            // Prevent default behavior (like submitting a hidden form)
+	            event.preventDefault();
+	            
+	            const submitBtn = document.querySelector('#adv_submit');
+	            if (submitBtn) {
+	                submitBtn.click();
+	            }
+	        }
+	    }
+	});
+
+	// Update tooltips dynamically to avoid showing "Click to copy" over the publisher
+	$(document).on('mouseenter', '.apa-former', function() {
+	    $(this).closest('.apa-trigger').attr('title', 'Click to copy citation');
+	}).on('mouseleave', '.apa-former', function() {
+	    $(this).closest('.apa-trigger').removeAttr('title');
+	});
+</script>
+<div class="graph_search"></div>
+<button id="mobile_fullscreen">Fullsreen</button>
+<p id='info'>Welcome back! This site hosts infoHashes of public domain educational media. qBitTorrent5.3beta1 currently has WebTorrent support enabled by default. Please download and seed whatever you can using a WebTorrent-enabled client (BiglyBT w/ WebTorrent Plugin, WebTorrent Desktop, qbittorrent 5.3 beta1) to make healthy swarms.</p>
+<table width="100%" max-width="100%" id="torrents" class="torrents">
+	<thead>
+		<tr>
+			<th>Source / Date / Author</th> <!--hidden column header !-->
+			<th class="table_edition">Title</th> <!--edition !-->			
+			<th>Snatches</th>
+      		<th class="table_date">Date</th>
+			<th>Time</th>
+			<th class="none torrents"></th> <!-- hidden responsive + !-->
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
