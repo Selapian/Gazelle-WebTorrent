@@ -4,11 +4,7 @@ Platonopolis is an Open Source BitTorrent Indexer for WebTorrent inspired by the
 
 My site is propagate.info, meant for public domain, educational Ebooks, Audiobooks, Classical Music, Documentaries, and Renaissance Art. Starting with an educational use-case, I have decided to Open-Source this Software, because the way that Gazelle structures Libraries could be very innovative for research, ethics, and scholarship. This work was conceived in December 2013, and WebTorrent came out in 2016. qBitTorrent is to add webtorrent support in v5.3. The site is back as of 8/3/26.
 
-Fully built in and plug-in play is a Quantum Random Neo4J Recommendation Engine, which also works on mobile, making this the first quantum mobile app. There is also graph visualization (with VR-toggle), which coheres with an Advanced Search feature, so that users can search by title, author, class, publisher, source type, media, format, and resolution.
-
-In the future we will allow some or all torrents to be minted with a Crypto Address, using the Pay-What-You-Want Structure coined by by Radiohead. 
-
-Once Metamask is added to the information architecture, this will be a plug and play Quantum Web 3.0 WebTorrent Indexer. Oracles TBD.
+Fully built in and plug-in play is a Quantum Random Neo4J Recommendation Engine. There is also graph visualization (with VR-toggle), which coheres with an Advanced Search feature, so that users can search by title, author, class, publisher, source type, media, format, and resolution.
 
 # GETTING STARTED
 
