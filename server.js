@@ -259,7 +259,7 @@ app.post("/node/:label", [
         // We use DISTINCT here to ensure Torrent A doesn't appear under Edition B
         WITH s1, full_count, authorList, classList, 
              collect(DISTINCT {publisher: p, edition: e, torrent: t}) AS edition_torrents
-        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy + ` SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)`;
+        RETURN s1, authorList, edition_torrents, classList, full_count ORDER BY ` + orderBy + ` , s1.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)`;
 
     try {
         const result = await session.run(cypherQuery, {
@@ -588,48 +588,48 @@ query += "WITH s, e, t, count " +
     }
   switch(column){
     case '0':
-      query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+      query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       break;
     case '1':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.name DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       break;
     case '2':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY TOINTEGER(s.snatches) ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY TOINTEGER(s.snatches) ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY TOINTEGER(s.snatches) DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY TOINTEGER(s.snatches) DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       }
       break;
     case '3':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.adjDate ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.adjDate DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       break;    
     case '4':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       }
       break;
     default :
-      query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+      query += "RETURN s, authors, edition_torrents, classes, count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       break;
 
   }
@@ -1068,54 +1068,54 @@ app.post("/torrents", [check("start").trim().escape(), check("length").trim().es
          "WITH s, totalCount as count "; // Pass 'count' into the next part of the query
 
 query += torrentQuery;
-var column = 0;
+var column = '0';
 if(req.body.order){
     column = req.body.order[0].column;
 }
   switch(column){
     case '0':
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       break;
     case '1':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.title DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       break;
     case '3':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.adjDate DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       break;    
     case '2':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.snatches DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       }
       break;
     case '4':
       if(req.body.order[0].dir === 'asc'){
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated ASC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated ASC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
 
       }
       else{
-        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+        query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       }
       break;
     default :
-      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
+      query += "RETURN s, collect(DISTINCT a), edition_torrents, collect(DISTINCT c), count ORDER BY s.updated DESC, s.uuid DESC SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit) "
       break;
 
   }
