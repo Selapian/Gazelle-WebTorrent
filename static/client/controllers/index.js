@@ -1,11 +1,11 @@
 const config = {
-        defaultPage: "sources",
+        defaultPage: "torrents",
         dir: "client/partials",
         fade: false,
-        pages: ["webtorrent", "sources", "top10", "node", "set", "upload", "privacy"],
+        pages: ["webtorrent", "torrents", "top10", "node", "set", "upload", "privacy"],
         helm: [
             {
-                page: "sources",
+                page: "torrents",
                 fn: function() {
                     // Priority 1: Get the list visible                    
                     initializeTorrents("torrents");

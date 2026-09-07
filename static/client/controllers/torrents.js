@@ -8,7 +8,7 @@ function initializeTorrents(table) {
     $("#mobile_fullscreen").hide();
 
     //shiv for sources and top10
-    if(TEMPLAR.pageREC() === "sources" || TEMPLAR.pageREC() === "top10"){
+    if(TEMPLAR.pageREC() === "torrents" || TEMPLAR.pageREC() === "top10"){
         $("h2 span a").show();
     }
     
@@ -315,7 +315,7 @@ function initializeTorrents(table) {
 
     //called on webtorrent route load, either refresh or a.webtorrent route()
         if ($existing.length === 0){
-            $(this).text("[Revving..!]");
+            $(this).text("[Queued..!]");
             $(this).css('color', '#50C777');
         }
         else{

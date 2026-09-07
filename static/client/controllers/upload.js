@@ -2,7 +2,6 @@ var upload;
 var initialized;
 
 function initializeUpload(){
-    console.log("HERE")
 	htmlUpload();
 	$("#errorsDiv").empty();
 	var uuid;
@@ -214,32 +213,21 @@ function initializeUpload(){
 							uploadModel.torrent.format = $("#format").val();
 					})
 
+										// Populate dropdown options without immediately assigning uploadModel.torrent.res
 					pdf_resolutions.forEach(function(val){
-						var option = document.createElement("option");
-						$(option).val(val);
-						$(option).text(decodeEntities(decodeEntities(val)));
-						$("#pdf_resolutions").append(option);
-						uploadModel.torrent.res = $("#pdf_resolutions").val();
-
-					})
+					    $("#pdf_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+					});
 
 					music_resolutions.forEach(function(val){
-						var option = document.createElement("option");
-						$(option).val(val);
-						$(option).text(decodeEntities(decodeEntities(val)));
-						$("#music_resolutions").append(option);
-						uploadModel.torrent.res = $("#music_resolutions").val();
-
-					})
+					    $("#music_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+					});
 
 					video_resolutions.forEach(function(val){
-						var option = document.createElement("option");
-						$(option).val(val);
-						$(option).text(decodeEntities(decodeEntities(val)));
-						$("#video_resolutions").append(option);
-						uploadModel.torrent.res = $("#video_resolutions").val();
+					    $("#video_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+					});
 
-					})
+					// Set resolution based on whichever dropdown is currently visible/active
+					uploadModel.torrent.res = $('.resolutions:visible').val() || $("#pdf_resolutions").val();
 
 
 			
@@ -275,32 +263,21 @@ function initializeUpload(){
 
 			})
 
+			// Populate dropdown options without immediately assigning uploadModel.torrent.res
 			pdf_resolutions.forEach(function(val){
-				var option = document.createElement("option");
-				$(option).val(val);
-				$(option).text(decodeEntities(decodeEntities(val)));
-				$("#pdf_resolutions").append(option);
-				uploadModel.torrent.res = $("#pdf_resolutions").val();
-
-			})
+			    $("#pdf_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+			});
 
 			music_resolutions.forEach(function(val){
-				var option = document.createElement("option");
-				$(option).val(val);
-				$(option).text(decodeEntities(decodeEntities(val)));
-				$("#music_resolutions").append(option);
-				uploadModel.torrent.res = $("#music_resolutions").val();
-
-			})
+			    $("#music_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+			});
 
 			video_resolutions.forEach(function(val){
-				var option = document.createElement("option");
-				$(option).val(val);
-				$(option).text(decodeEntities(decodeEntities(val)));
-				$("#video_resolutions").append(option);
-				uploadModel.torrent.res = $("#video_resolutions").val();
+			    $("#video_resolutions").append(new Option(decodeEntities(decodeEntities(val)), val));
+			});
 
-			})
+			// Set resolution based on whichever dropdown is currently visible/active
+			uploadModel.torrent.res = $('.resolutions:visible').val() || $("#pdf_resolutions").val();
 
 
 	}
@@ -485,8 +462,24 @@ function htmlUpload(){
 	    const files = this.files;
 
   		uploadModel.torrent.size = totalSize;
+  		// Get default browser WebSocket trackers
+		var defaultWsTrackers = (window.WebTorrent && window.WebTorrent.WEBTORRENT_ANNOUNCE) ? window.WebTorrent.WEBTORRENT_ANNOUNCE : [
+		    'wss://tracker.openwebtorrent.com',
+		    'wss://tracker.btorrent.xyz'
+		];
 
-  		client.seed(files, function(torrent){
+		// Define traditional UDP / HTTP trackers for desktop clients
+		var udpTrackers = [
+		    'udp://tracker.opentrackr.org:1337/announce',
+		    'udp://explodie.org:6969/announce'
+		];
+
+		// Combine all trackers together
+		var allTrackers = defaultWsTrackers.concat(udpTrackers, [
+		    'wss://tracker.webtorrent.dev'
+		]);
+
+		client.seed(files, { announce: allTrackers }, function(torrent) {
   			console.log(torrent);
 			uploadModel.torrent.infoHash = torrent.infoHash;
 			// 1. Create a Blob from the raw torrent file buffer
@@ -499,7 +492,7 @@ function htmlUpload(){
 
 			// 3. Append the download link using the valid Blob URL
 			$("#MG").append('<br><a href="' + torrentBlobURL + '" download="' + fileName + '">[Torrent]</a>');
-            $("#MG").append("&nbsp;<a href='magnet:?xt=urn:btih:" + torrent.infoHash + "&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337'>[magnetURI]</a>");     		
+            $("#MG").append("&nbsp;<a href='" + getMagnetURI(torrent.infoHash) + "'>[magnetURI]</a>");     		
 		});
   	})
 
@@ -728,10 +721,7 @@ function resetUpload(){
 	$("#type").empty();
 	$("#media").empty();
 	$("#format").empty();
-	$("#resolutions").empty();
-	$("#pdf_resolutions").empty();
-	$("#music_resolutions").empty();
-	$("#video_resolutions").empty();
+	$(".resolutions").empty();
 	$("#up_submit").prop("disabled", false)
 
 	//$("#errorsDiv").empty();
