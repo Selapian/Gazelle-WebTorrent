@@ -12,12 +12,12 @@ function assertTitleLoaded(){
 
       }
       else{
-        $("#torrentsTitle span a").text("Sources").attr("href", "#sources").show();
+        $("#torrentsTitle span a").text("Torrents").attr("href", "#torrents").show();
 
       }
       break;
     case "top10":
-      $("#top10Title span a").text("Top 10").show();
+      $("#top10Title span a").text("Top 10").attr("href", "top10").show();
       break;
     case "node":
       //TODO: maybe multiple calls here
@@ -31,7 +31,7 @@ function assertTitleLoaded(){
       //});*/
       break;
     default:
-      $("#torrentsTitle span a").text("Sources").show();
+      $("#torrentsTitle span a").text("Torrents").attr("href", "#torrents").show();
       break;
 
   }
