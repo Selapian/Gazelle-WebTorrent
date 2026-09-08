@@ -30,7 +30,7 @@ function walkGraph(label, name, route=true){
 			graphParams.author = name;
 			break;
 		case "class":
-			graphParams.classes = "[" + name + "]";
+			graphParams.classes = '"' + name + '"';
 			break;
 		case "publisher":
 			graphParams.publisher = name;
