@@ -1,89 +1,59 @@
-function traverseGraph(set, searchable){
-    switch(set){
-            case "torrents":
-              TEMPLAR.route(
-                  "#torrents?search=true&title=" +
-                    searchable +
-                    "&author=" +                    
-                    "&classes=" +                    
-                    "&all=false" +                    
-                    "&publisher=" +
-                    "&type=all" +
-                    "&media=all" +                   
-                    "&format=all" +
-                    "&res=all"                     
-                );
-                break;
-            case "author":
-                TEMPLAR.route(
-                      "#torrents?search=true" +
-                      "&title=" +                         
-                        "&author=" + searchable +                        
-                        "&classes=" +                        
-                        "&all=false" +                        
-                        "&publisher=" +
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all" +
-                        "&res=all"                  
-                    );
-                break;
-            case "class":
-                TEMPLAR.route(
-                      "#torrents?search=true" +
-                      "&title=" +                         
-                        "&author=" +                         
-                        "&classes=" + JSON.stringify(searchable) +               
-                        "&all=false" +                        
-                        "&publisher=" +
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all" +
-                        "&res=all"    
-                    );
-                break;
-            case "publisher":
-                TEMPLAR.route(
-                      "#torrents?search=true" +
-                      "&title=" +                         
-                        "&author=" +                      
-                        "&classes=" +                        
-                        "&all=false" +                        
-                        "&publisher=" + searchable +  
-                        "&type=all" +
-                        "&media=all" +                   
-                        "&format=all" +
-                        "&res=all"                
-                    );
-                break;
-
-        }
+var Obelisk = {
+	nodes : [
+	],
+	links : [
+	]
 }
 
-function assertScrollPause(){
-    function stopScroll(e){
-        if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-              e.preventDefault();
-        }
-      }
-
-      $(".graph_search").on("mouseenter", function () {
-            // Your existing keydown logic
-            window.addEventListener("keydown", stopScroll);
-
-            // FIX: Explicitly handle the wheel event on the graph container
-            // Use the native DOM element to set passive: false
-            this.addEventListener('wheel', function(e) {
-                // If the graph is focused, we likely want to prevent page scroll
-                // so the user can zoom the graph instead.
-                if (e.ctrlKey || $(this).is(":hover")) {
-                     e.preventDefault(); // The library usually handles this, 
-                     // but declaring the listener as non-passive stops the warning.
-                }
-            }, { passive: false }); 
-        });
-
-      $(".graph_search").on('mouseleave', function () {
-        window.removeEventListener("keydown", stopScroll);
-      });
+function renewObelisk(){
+	Obelisk = {
+		nodes :[],
+		links: []
+	}
 }
+
+var graphParams = {
+	"source" : "",
+	"author" : "",
+	"classes" : "",
+	"publisher" : ""
+}
+
+function walkGraph(label, name, route=true){
+
+	switch(label.toLowerCase()){
+		case "source":
+			graphParams.source = graphParams.source ? graphParams.source + " " + name : name;
+			break;
+		case "author":
+			graphParams.author = graphParams.author ? graphParams.author + " " + name : name;
+			break;
+		case "class":
+			graphParams.classes = graphParams.classes ? ('"' + graphParams.classes.replace(/"/g, "") + "," + name + '"') : '"' + name + '"';
+			break;
+		case "publisher":
+			graphParams.publisher = graphParams.publisher ? graphParams.publisher + " " + name : name;
+			break;
+	}
+
+	if(route){
+	    TEMPLAR.paramSET({
+	    	"search" : "true", 
+	    	"all" : TEMPLAR.paramREC() && TEMPLAR.paramREC().all ? TEMPLAR.paramREC().all : "false",
+	    	"title" : graphParams.source,
+			"author" : graphParams.author,
+			"classes" : graphParams.classes,
+			"publisher" : graphParams.publisher
+		})
+	
+    	TEMPLAR.routeParams("#torrents");
+    }
+}
+
+function resetGraphParams(){
+	graphParams.source = "";
+	graphParams.author = "";
+	graphParams.classes = "";
+	graphParams.publisher = "";
+}
+
