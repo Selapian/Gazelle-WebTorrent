@@ -81,6 +81,7 @@ function initializeTorrents(table) {
         processing: true,
         searching: false,
         paging: true,
+        stateSave : (TEMPLAR.pageREC() === "torrents" && !TEMPLAR.paramREC()) ? true : false,
         info: true,
         rowGroup: {
             dataSrc: 0,
