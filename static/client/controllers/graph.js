@@ -247,7 +247,7 @@ function setupMobileFullscreen(Graph) {
 // Update your initializeGraph to call the VR version
 function initializeGraph() {
     if ($("#graph-container").children().length > 0) return;
-    if(TEMPLAR.pageREC() === "sources" && TEMPLAR.paramREC()?.search){
+    if(TEMPLAR.pageREC() === "torrents" && TEMPLAR.paramREC()?.search){
         $.post("/graph_search", TEMPLAR.paramREC(), function(data){
             // Prepare Obelisk.nodes/links exactly as you do now
             graph(data); 

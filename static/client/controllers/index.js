@@ -2,7 +2,7 @@ const config = {
         defaultPage: "torrents",
         dir: "client/partials",
         fade: false,
-        pages: ["webtorrent", "torrents", "top10", "node", "set", "upload", "privacy"],
+        pages: ["mission", "webtorrent", "torrents", "top10", "node", "set", "upload", "privacy"],
         helm: [
             {
                 page: "torrents",
@@ -11,7 +11,7 @@ const config = {
                     initializeTorrents("torrents");
                                         
                     if(TEMPLAR.paramREC() && TEMPLAR.paramREC().search === "true"){
-                        initializeGraph(); // Likely the source of the 710ms reflow
+                        initializeGraph();
                         $(".graph_search").show();                        
                     }
                     else{
@@ -82,7 +82,13 @@ const config = {
             {
                 page:  "privacy",
                 fn : function(){
-                    $(".TEMPLAR.privacy").show();
+                    $(".TEMPLAR .privacy h2 span a").show();
+                }
+            },
+            {
+                page:  "mission",
+                fn : function(){
+                    $(".TEMPLAR .mission h2 span a").show();
                 }
             }
         ]
