@@ -1,6 +1,6 @@
 function traverseGraph(set, searchable){
     switch(set){
-            case "source":
+            case "torrents":
               TEMPLAR.route(
                   "#torrents?search=true&title=" +
                     searchable +

@@ -326,7 +326,7 @@ function assertAdvButton(){
     }*/
     
     TEMPLAR.route(
-      "#sources?search=true&title=" +
+      "#torrents?search=true&title=" +
         encodeURIComponent($("#adv_title").val()) +
         "&author=" +
         encodeURIComponent($("#adv_author").val()) +
