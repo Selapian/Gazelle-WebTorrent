@@ -765,8 +765,8 @@ a.adv_toggle{
 /* CAPTAIN'S LOG 8:28 */
  
 .active .page-link{
-  background-color:black !important;
-  color:goldenrod !important;
+  background-color:goldenrod !important;
+  color:deepskyblue !important;
 }
 
 
@@ -1386,13 +1386,13 @@ h3{
 header{
   box-shadow:2px 2px 2px black;
   background:deepskyblue;
-  border-bottom:2px solid coral;
+  border-bottom:2px solid gold;
 }
 
 .dataTable thead th{
   box-shadow:none;
   box-shadow:2px 2px 2px black;
-  border-bottom:2px solid coral;
+  border-bottom:2px solid gold;
   /* 1. Define your gradient */
   background-color:goldenrod;
   color:black;
@@ -1472,7 +1472,7 @@ div.TEMPLAR{
   color:palegoldenrod !important;
   margin-bottom:35px;
   box-shadow:2px 2px 3px black;
-  border:2px solid coral !important;
+  border:2px solid gold !important;
 }
 
 .adv_search label{
@@ -1566,7 +1566,7 @@ canvas:-webkit-full-screen {
   top:-49px;
   border:1px solid #50C777 !important;
   box-shadow:2px 3px 2px gold !important;
-  width:99px;
+  width:80px;
   height:40px;
   background-color:palegoldenrod !important;
   color:skyblue !important;
@@ -1574,7 +1574,7 @@ canvas:-webkit-full-screen {
 }
 
 #graph_search, #adv_submit, .upload button{
-  border:2px solid coral;
+  border:2px solid gold;
   background:goldenrod;
   box-shadow:2px 2px 3px black !important;
   color:skyblue;
@@ -1637,7 +1637,7 @@ h2 span a{
 
 
 footer{
-  border-top:3px solid white;
+  border-top:2px solid gold;
   box-shadow:2px -2px 2px black;
   position:fixed;
   z-index:9998;
@@ -1807,7 +1807,7 @@ div.upload{
     font-size:40px;
     width:49px;
     height:49px;
-    color:coral !important;
+    color:gold !important;
     top:9px;
     left:5px;
     z-index:9999;
