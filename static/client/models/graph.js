@@ -20,22 +20,23 @@ var graphParams = {
 }
 
 function walkGraph(label, name, route=true){
+	resetGraphParams();
 
 	switch(label.toLowerCase()){
 		case "source":
-			graphParams.source = graphParams.source ? graphParams.source + " " + name : name;
+			graphParams.source = name;
 			break;
 		case "author":
-			graphParams.author = graphParams.author ? graphParams.author + " " + name : name;
+			graphParams.author = name;
 			break;
 		case "class":
-			graphParams.classes = graphParams.classes ? ('"' + graphParams.classes.replace(/"/g, "") + "," + name + '"') : '"' + name + '"';
+			graphParams.classes = "[" + name + "]";
 			break;
 		case "publisher":
-			graphParams.publisher = graphParams.publisher ? graphParams.publisher + " " + name : name;
+			graphParams.publisher = name;
 			break;
 	}
-
+	
 	if(route){
 	    TEMPLAR.paramSET({
 	    	"search" : "true", 
